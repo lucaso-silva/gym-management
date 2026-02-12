@@ -1,6 +1,7 @@
 package com.lucas.gym_management.application.service;
 
 import com.lucas.gym_management.application.domain.model.*;
+import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
 import com.lucas.gym_management.application.ports.inbound.create.ForCreatingUser;
@@ -15,6 +16,7 @@ import com.lucas.gym_management.application.ports.outbound.repository.UserReposi
 import jakarta.inject.Named;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Named
@@ -80,7 +82,10 @@ public class UserService implements ForCreatingUser,
 
     @Override
     public GetUserOutput getUserById(UUID id) {
-        return null;
+        Optional<User> userById = userRepository.findById(id);
+
+        return userById.map(GetUserOutput::from)
+                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
     }
 
     @Override

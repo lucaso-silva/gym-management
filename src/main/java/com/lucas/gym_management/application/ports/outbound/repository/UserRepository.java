@@ -13,6 +13,8 @@ public interface UserRepository {
 
     Optional<User> findByNameLike(String name);
 
+    Optional<User> findById(UUID id);
+
     Optional<User> findByLogin(String login);
 
     User update(User user);
