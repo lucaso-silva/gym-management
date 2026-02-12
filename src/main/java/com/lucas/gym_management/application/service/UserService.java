@@ -8,15 +8,12 @@ import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUser
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserByLogin;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
-import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
-import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import jakarta.inject.Named;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -35,6 +32,14 @@ public class UserService implements ForCreatingUser,
 
     @Override
     public CreateUserOutput createUser(final CreateUserInput userInput) {
+
+        Address userAddress = Address.newAddress(userInput.address().street(),
+                userInput.address().number(),
+                userInput.address().neighborhood(),
+                userInput.address().zipCode(),
+                userInput.address().city(),
+                userInput.address().state());
+
         User newUser = switch(userInput.userType()){
             case STUDENT -> Student.newStudent(
                     userInput.name(),
@@ -42,7 +47,7 @@ public class UserService implements ForCreatingUser,
                     userInput.login(),
                     userInput.password(),
                     userInput.phone(),
-                    userInput.address(),
+                    userAddress,
                     userInput.birthDate(),
                     userInput.active());
             case ADMINISTRATOR -> Administrator.newAdministrator(
@@ -51,7 +56,7 @@ public class UserService implements ForCreatingUser,
                     userInput.login(),
                     userInput.password(),
                     userInput.phone(),
-                    userInput.address(),
+                    userAddress,
                     userInput.gymName());
             case INSTRUCTOR -> Instructor.newInstructor(
                     userInput.name(),
@@ -59,10 +64,11 @@ public class UserService implements ForCreatingUser,
                     userInput.login(),
                     userInput.password(),
                     userInput.phone(),
-                    userInput.address(),
+                    userAddress,
                     userInput.cref(),
                     userInput.specialty());
         };
+
         var user = userRepository.create(newUser);
         return CreateUserOutput.from(user);
     }
