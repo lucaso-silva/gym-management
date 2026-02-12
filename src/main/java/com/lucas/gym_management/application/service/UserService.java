@@ -77,6 +77,9 @@ public class UserService implements ForCreatingUser,
 
     @Override
     public void deleteUserById(UUID id) {
+        userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("User with id " + id + " not found")
+        );
         userRepository.deleteById(id);
     }
 
