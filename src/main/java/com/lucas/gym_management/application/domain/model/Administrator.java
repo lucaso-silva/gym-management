@@ -1,5 +1,8 @@
 package com.lucas.gym_management.application.domain.model;
 
+import lombok.Getter;
+
+@Getter
 public class Administrator extends User {
     private String gymName;
 

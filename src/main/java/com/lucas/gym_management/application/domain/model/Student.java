@@ -1,7 +1,10 @@
 package com.lucas.gym_management.application.domain.model;
 
+import lombok.Getter;
+
 import java.util.Date;
 
+@Getter
 public class Student extends User {
     private Date birthDate;
     private boolean active;

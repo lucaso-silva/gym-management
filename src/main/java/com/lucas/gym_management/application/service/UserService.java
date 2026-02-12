@@ -9,12 +9,15 @@ import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUser
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserByLogin;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
+import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
+import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import jakarta.inject.Named;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +26,7 @@ import java.util.UUID;
 public class UserService implements ForCreatingUser,
         ForGettingUserById,
         ForGettingUserByLogin,
+        ForListingUsers,
         ForUpdateUser,
         ForDeletingUserById {
 
@@ -85,7 +89,7 @@ public class UserService implements ForCreatingUser,
 
     @Override
     public GetUserOutput getUserById(UUID id) {
-        Optional<User> userById = userRepository.findById(id);
+        var userById = userRepository.findById(id);
 
         return userById.map(GetUserOutput::from)
                 .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
@@ -93,11 +97,23 @@ public class UserService implements ForCreatingUser,
 
     @Override
     public GetUserOutput getUserByLogin(String login) {
-        return null;
+        var userByLogin = userRepository.findByLogin(login);
+
+        return userByLogin.map(GetUserOutput::from)
+                .orElseThrow(()-> new NotFoundException("User with login %s not found".formatted(login)));
     }
 
     @Override
     public UpdatedUserOutput updateUser(UpdateUserInput userInput) {
         return null;
+    }
+
+    @Override
+    public List<ListUserOutput> listUsers(String name) {
+        List<User> userList = name == null || name.isBlank()
+                ? userRepository.findAll()
+                : userRepository.findByNameLike(name);
+
+        return userList.stream().map(ListUserOutput::from).toList();
     }
 }

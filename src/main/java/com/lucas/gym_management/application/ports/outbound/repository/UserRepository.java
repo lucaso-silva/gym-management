@@ -11,7 +11,7 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    Optional<User> findByNameLike(String name);
+    List<User> findByNameLike(String name);
 
     Optional<User> findById(UUID id);
 
