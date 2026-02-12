@@ -1,5 +1,8 @@
 package com.lucas.gym_management.application.domain.model;
 
+import lombok.Getter;
+
+@Getter
 public class Address {
     private String street;
     private int number;

@@ -1,4 +1,4 @@
-package com.lucas.gym_management.application.ports.inbound.create;
+package com.lucas.gym_management.application.dto;
 
 public record AddressDTO(
         String street,

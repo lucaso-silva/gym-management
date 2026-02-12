@@ -1,6 +1,7 @@
 package com.lucas.gym_management.application.ports.inbound.create;
 
 import com.lucas.gym_management.application.domain.model.UserType;
+import com.lucas.gym_management.application.dto.AddressDTO;
 
 import java.util.Date;
 
