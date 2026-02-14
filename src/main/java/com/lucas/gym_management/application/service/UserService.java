@@ -1,5 +1,6 @@
 package com.lucas.gym_management.application.service;
 
+import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.*;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
@@ -19,7 +20,6 @@ import jakarta.inject.Named;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Named
@@ -27,8 +27,8 @@ public class UserService implements ForCreatingUser,
         ForGettingUserById,
         ForGettingUserByLogin,
         ForListingUsers,
-        ForUpdateUser,
-        ForDeletingUserById {
+        ForDeletingUserById,
+        ForUpdateUser {
 
     private final UserRepository userRepository;
 
@@ -104,16 +104,42 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
-    public UpdatedUserOutput updateUser(UpdateUserInput userInput) {
-        return null;
-    }
-
-    @Override
     public List<ListUserOutput> listUsers(String name) {
         List<User> userList = name == null || name.isBlank()
                 ? userRepository.findAll()
                 : userRepository.findByNameLike(name);
 
         return userList.stream().map(ListUserOutput::from).toList();
+    }
+
+    @Override
+    public UpdatedUserOutput updateUser(UpdateUserInput input) {
+        var userById = userRepository.findById(input.id())
+                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(input.id())));
+
+        Address address = null;
+
+        if(input.address() != null){
+            address = Address.newAddress(input.address().street(),
+                    input.address().number(),
+                    input.address().neighborhood(),
+                    input.address().zipCode(),
+                    input.address().city(),
+                    input.address().state());
+        }
+
+        var updateData = new UpdateUserData(input.name(),
+                input.email(),
+                input.phone(),
+                address,
+                input.gymName(),
+                input.cref(),
+                input.specialty(),
+                input.birthDate(),
+                input.activeMembership());
+
+        userById.applyUpdates(updateData);
+
+        return UpdatedUserOutput.from(userRepository.updateUser(userById));
     }
 }
