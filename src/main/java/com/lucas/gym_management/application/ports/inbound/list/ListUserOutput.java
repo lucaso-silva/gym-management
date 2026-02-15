@@ -1,7 +1,6 @@
 package com.lucas.gym_management.application.ports.inbound.list;
 
 import com.lucas.gym_management.application.domain.model.User;
-import com.lucas.gym_management.application.domain.model.UserType;
 
 import java.util.UUID;
 

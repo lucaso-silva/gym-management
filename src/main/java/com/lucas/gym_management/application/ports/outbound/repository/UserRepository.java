@@ -17,7 +17,7 @@ public interface UserRepository {
 
     Optional<User> findByLogin(String login);
 
-    User update(User user);
+    User updateUser(User user);
 
     void deleteById(UUID id);
 

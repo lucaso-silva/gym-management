@@ -1,58 +1,77 @@
 package com.lucas.gym_management.application.domain.model;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
+import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
 
 @Getter
 public class Student extends User {
-    private Date birthDate;
+    private LocalDate birthDate;
     private boolean activeMembership;
 
-    private Student(String name, String email, String login, String password, String phone, Address address, Date birthDate, boolean activeMembership) {
+    private Student(String name, String email, String login, String password, String phone, Address address, LocalDate birthDate) {
         super(name, email, login, password, phone, address);
-        this.birthDate = birthDate;
-        this.activeMembership = activeMembership;
+        fixBirthDate(birthDate);
+        activateMembership();
     }
 
-    public static Student newStudent(String name, String email, String login, String password, String phone, Address address, Date birthDate, boolean active) {
-        //TODO: validations
+    public static Student newStudent(String name, String email, String login, String password, String phone, Address address, LocalDate birthDate) {
 
-        return new Student(name, email, login, password, phone, address, birthDate, active);
+        return new Student(name, email, login, password, phone, address, birthDate);
     }
 
     @Override
-    public void applyUpdates(UpdateUserData data) {
-        super.applyUpdates(data);
+    protected boolean applySpecificUpdates(UpdateUserData data) {
+        boolean updated = false;
 
         if(data.birthDate() != null){
-            //TODO: validations
             this.fixBirthDate(data.birthDate());
+            updated = true;
         }
 
         if(data.activeMembership() != null){
             if(data.activeMembership()){
                 this.activateMembership();
+                updated = true;
             }else{
                 this.deactivateMembership();
+                updated = true;
             }
         }
+
+        return updated;
     }
 
-    private void fixBirthDate(Date birthDate) {
-        //TODO: validations
+    private void fixBirthDate(LocalDate birthDate) {
+        if(birthDate == null){
+            throw new DomainException("Birth date cannot be empty");
+        }
+
+        var today = LocalDate.now();
+        if(birthDate.isAfter(today)){
+            throw new DomainException("Birth date cannot be in the future");
+        }
+
+        var age = Period.between(birthDate, today).getYears();
+        if(age < 16){
+            throw new DomainException("Student must be at least 16 years old");
+        }
+
         this.birthDate = birthDate;
-        updateInfo();
     }
 
     private void deactivateMembership() {
+        if(!this.activeMembership) return;
+
         this.activeMembership = false;
-        updateInfo();
     }
 
     private void activateMembership() {
+        if(this.activeMembership) return;
+
         this.activeMembership = true;
-        updateInfo();
     }
 }

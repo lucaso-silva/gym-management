@@ -54,8 +54,7 @@ public class UserService implements ForCreatingUser,
                     userInput.password(),
                     userInput.phone(),
                     userAddress,
-                    userInput.birthDate(),
-                    userInput.active());
+                    userInput.birthDate());
             case ADMINISTRATOR -> Administrator.newAdministrator(
                     userInput.name(),
                     userInput.email(),

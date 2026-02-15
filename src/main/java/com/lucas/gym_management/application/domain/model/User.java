@@ -1,6 +1,7 @@
 package com.lucas.gym_management.application.domain.model;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
+import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -15,70 +16,99 @@ public abstract class User {
     private String password;
     private String phone;
     private Address address;
+    private LocalDateTime createdDate;
     private LocalDateTime lastUpdateDate;
 
     protected User(String name, String email, String login, String password, String phone, Address address) {
-        //TODO: validations
-        this.name = name;
-        this.email = email;
-        this.login = login;
-        this.password = password;
-        this.phone = phone;
-        this.address = address;
-        this.lastUpdateDate = LocalDateTime.now();
+        renameTo(name);
+        changeEmail(email);
+        changeLogin(login);
+        changePassword(password);
+        updatePhone(phone);
+        updateAddress(address);
+        this.createdDate = LocalDateTime.now();
+        this.lastUpdateDate = null;
     }
 
     private void renameTo(String newName){
+        if(newName == null || newName.isBlank()) {
+            throw new DomainException("Name cannot be empty");
+        }
         this.name = newName;
-        updateInfo();
     }
 
     private void changeEmail(String newEmail){
+        if(newEmail == null || newEmail.isBlank()) {
+            throw new DomainException("Email cannot be empty");
+        }
         this.email = newEmail;
-        updateInfo();
     }
 
     private void changeLogin(String newLogin){
+        if(newLogin == null || newLogin.isBlank()) {
+            throw new DomainException("Login cannot be empty");
+        }
         this.login = newLogin;
-        updateInfo();
     }
 
     private void changePassword(String newPassword){
+        if(newPassword == null || newPassword.isBlank()) {
+            throw new DomainException("Password cannot be empty");
+        }
         this.password = newPassword;
-        updateInfo();
     }
 
-    private void changePhone(String newPhone){
+    private void updatePhone(String newPhone){
+        if(newPhone == null || newPhone.isBlank()) {
+            throw new DomainException("Phone cannot be empty");
+        }
         this.phone = newPhone;
-        updateInfo();
     }
 
     private void updateAddress(Address newAddress){
+        if(newAddress == null) {
+            throw new DomainException("Address cannot be empty");
+        }
         this.address = newAddress;
-        updateInfo();
+    }
+
+    public final void applyUpdates(UpdateUserData data){
+        boolean updated = applyBaseUpdates(data);
+        updated |= applySpecificUpdates(data);
+
+        if(updated) updateInfo();
     }
 
     protected void updateInfo(){
         this.lastUpdateDate = LocalDateTime.now();
     }
 
-    public void applyUpdates(UpdateUserData data){
-        if(data.name() != null && !data.name().isBlank()){
+    protected boolean applyBaseUpdates(UpdateUserData data){
+        boolean updated = false;
+
+        if(data.name() != null){
             this.renameTo(data.name());
+            updated = true;
         }
 
-        if(data.email() != null && !data.email().isBlank()){
-            //TODO: check email uniqueness
+        if(data.email() != null){
             this.changeEmail(data.email());
+            updated = true;
         }
 
-        if(data.phone() != null && !data.phone().isBlank()){
-            this.changePhone(data.phone());
+        if(data.phone() != null){
+            this.updatePhone(data.phone());
+            updated = true;
         }
 
         if(data.address() != null) {
             this.updateAddress(data.address());
+            updated = true;
         }
+
+        return updated;
     }
+
+    protected abstract boolean applySpecificUpdates(UpdateUserData data);
 }
 
