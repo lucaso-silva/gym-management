@@ -11,14 +11,19 @@ public interface UserRepository {
 
     List<User> findAll();
 
-    Optional<User> findByNameLike(String name);
+    List<User> findByNameLike(String name);
 
     Optional<User> findById(UUID id);
 
     Optional<User> findByLogin(String login);
 
-    User update(User user);
+    User updateUser(User user);
 
     void deleteById(UUID id);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByLogin(String login);
+
+    boolean existsByEmailIdNot(String email, UUID id);
 }

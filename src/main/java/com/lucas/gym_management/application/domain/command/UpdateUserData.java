@@ -1,16 +1,14 @@
-package com.lucas.gym_management.application.ports.inbound.update;
+package com.lucas.gym_management.application.domain.command;
 
-import com.lucas.gym_management.application.dto.AddressDTO;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
-public record UpdateUserInput(
-        UUID id,
+public record UpdateUserData(
         String name,
         String email,
         String phone,
-        AddressDTO address,
+        Address address,
         String gymName,
         String cref,
         String specialty,
