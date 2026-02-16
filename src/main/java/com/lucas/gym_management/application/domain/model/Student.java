@@ -2,6 +2,7 @@ package com.lucas.gym_management.application.domain.model;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -33,11 +34,14 @@ public class Student extends User {
         }
 
         if(data.activeMembership() != null){
-            if(data.activeMembership()){
-                this.activateMembership();
-                updated = true;
-            }else{
-                this.deactivateMembership();
+            boolean newState = data.activeMembership();
+
+            if(this.activeMembership != newState){
+                if(newState){
+                    activateMembership();
+                }else {
+                    deactivateMembership();
+                }
                 updated = true;
             }
         }

@@ -16,7 +16,6 @@ public record CreateUserInput(
         String gymName,
         String cref,
         String specialty,
-        LocalDate birthDate,
-        Boolean active
+        LocalDate birthDate
 ) {
 }

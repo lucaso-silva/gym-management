@@ -2,6 +2,9 @@ package com.lucas.gym_management.application.service;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.*;
+import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
+import com.lucas.gym_management.application.exceptions.BusinessException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
@@ -39,6 +42,14 @@ public class UserService implements ForCreatingUser,
     @Override
     public CreateUserOutput createUser(final CreateUserInput userInput) {
 
+        if(userRepository.existsByEmail(userInput.email())){
+            throw new BusinessException("Email %s already used.".formatted(userInput.email()));
+        }
+
+        if(userRepository.existsByLogin(userInput.login())){
+            throw new BusinessException("Login %s already used.".formatted(userInput.login()));
+        }
+
         Address userAddress = Address.newAddress(userInput.address().street(),
                 userInput.address().number(),
                 userInput.address().neighborhood(),
@@ -47,42 +58,64 @@ public class UserService implements ForCreatingUser,
                 userInput.address().state());
 
         User newUser = switch(userInput.userType()){
-            case STUDENT -> Student.newStudent(
-                    userInput.name(),
-                    userInput.email(),
-                    userInput.login(),
-                    userInput.password(),
-                    userInput.phone(),
-                    userAddress,
-                    userInput.birthDate());
-            case ADMINISTRATOR -> Administrator.newAdministrator(
-                    userInput.name(),
-                    userInput.email(),
-                    userInput.login(),
-                    userInput.password(),
-                    userInput.phone(),
-                    userAddress,
-                    userInput.gymName());
-            case INSTRUCTOR -> Instructor.newInstructor(
-                    userInput.name(),
-                    userInput.email(),
-                    userInput.login(),
-                    userInput.password(),
-                    userInput.phone(),
-                    userAddress,
-                    userInput.cref(),
-                    userInput.specialty());
+            case STUDENT -> {
+                if (userInput.birthDate() == null)
+                    throw new BusinessException("Birth date is required to register a new student.");
+
+                yield Student.newStudent(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userAddress,
+                        userInput.birthDate());
+            }
+            case ADMINISTRATOR -> {
+                if (userInput.gymName() == null || userInput.gymName().isBlank())
+                    throw new BusinessException("Gym name is required to register a new administrator.");
+
+                yield Administrator.newAdministrator(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userAddress,
+                        userInput.gymName());
+            }
+            case INSTRUCTOR -> {
+                if (userInput.cref() == null || userInput.cref().isBlank() ||
+                        userInput.specialty() == null || userInput.specialty().isBlank())
+                    throw new BusinessException("Cref and specialty are required to register a new instructor.");
+
+                yield Instructor.newInstructor(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userAddress,
+                        userInput.cref(),
+                        userInput.specialty());
+            }
         };
 
         var user = userRepository.create(newUser);
+
         return CreateUserOutput.from(user);
+
     }
 
     @Override
     public void deleteUserById(UUID id) {
-        userRepository.findById(id).orElseThrow(
+        var user = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("User with id " + id + " not found")
         );
+
+        if(user instanceof Student student && student.isActiveMembership())
+            throw new BusinessException("Cannot delete a student with active membership, id %s".formatted(id));
+
         userRepository.deleteById(id);
     }
 
@@ -116,16 +149,18 @@ public class UserService implements ForCreatingUser,
         var userById = userRepository.findById(input.id())
                 .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(input.id())));
 
-        Address address = null;
+        if(input.email() != null) {
+            if(userRepository.existsByEmailIdNot(input.email(),input.id()))
+                throw new BusinessException("Email %s already used.".formatted(input.email()));
+        }
 
-        if(input.address() != null){
-            address = Address.newAddress(input.address().street(),
+        Address address = input.address() == null ? null :
+                Address.newAddress(input.address().street(),
                     input.address().number(),
                     input.address().neighborhood(),
                     input.address().zipCode(),
                     input.address().city(),
                     input.address().state());
-        }
 
         var updateData = new UpdateUserData(input.name(),
                 input.email(),

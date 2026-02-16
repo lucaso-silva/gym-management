@@ -2,6 +2,7 @@ package com.lucas.gym_management.application.domain.model;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
 @Getter

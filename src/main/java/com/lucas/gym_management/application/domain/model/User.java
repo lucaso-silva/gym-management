@@ -2,6 +2,7 @@ package com.lucas.gym_management.application.domain.model;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -40,6 +41,9 @@ public abstract class User {
     private void changeEmail(String newEmail){
         if(newEmail == null || newEmail.isBlank()) {
             throw new DomainException("Email cannot be empty");
+        }
+        if(!newEmail.matches("^(.+)@(\\S+)$")) {
+            throw new DomainException("Invalid email address");
         }
         this.email = newEmail;
     }

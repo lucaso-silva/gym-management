@@ -1,6 +1,6 @@
 package com.lucas.gym_management.application.domain.command;
 
-import com.lucas.gym_management.application.domain.model.Address;
+import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 
 import java.time.LocalDate;
 

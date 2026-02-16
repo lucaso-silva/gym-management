@@ -1,4 +1,4 @@
-package com.lucas.gym_management.application.domain.model;
+package com.lucas.gym_management.application.domain.model.valueObjects;
 
 import lombok.Getter;
 
