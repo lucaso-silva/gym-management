@@ -17,18 +17,19 @@ public abstract class User {
     private String password;
     private String phone;
     private Address address;
-    private LocalDateTime createdDate;
-    private LocalDateTime lastUpdateDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     protected User(String name, String email, String login, String password, String phone, Address address) {
+        this.id = UUID.randomUUID();
         renameTo(name);
         changeEmail(email);
         changeLogin(login);
         changePassword(password);
         updatePhone(phone);
         updateAddress(address);
-        this.createdDate = LocalDateTime.now();
-        this.lastUpdateDate = null;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = null;
     }
 
     private void renameTo(String newName){
@@ -84,7 +85,7 @@ public abstract class User {
     }
 
     protected void updateInfo(){
-        this.lastUpdateDate = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     protected boolean applyBaseUpdates(UpdateUserData data){
