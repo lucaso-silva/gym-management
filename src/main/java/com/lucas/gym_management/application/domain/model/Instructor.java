@@ -5,6 +5,9 @@ import com.lucas.gym_management.application.domain.model.exceptions.DomainExcept
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Getter
 public class Instructor extends User {
     private String cref;
@@ -16,9 +19,20 @@ public class Instructor extends User {
         updateSpecialty(specialty);
     }
 
+    private Instructor(UUID id, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, String cref, String specialty) {
+        super(id, name, email, login, password, phone, address, createdAt, updatedAt);
+        this.cref = cref;
+        this.specialty = specialty;
+    }
+
     public static Instructor newInstructor(String name, String email, String login, String password, String phone, Address address, String cref, String specialty) {
 
         return new Instructor(name, email, login, password, phone, address, cref, specialty);
+    }
+
+    public static Instructor restore(UUID id, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, String cref, String specialty) {
+
+        return new Instructor(id, name, email, login, password,  phone, address, createdAt, updatedAt, cref, specialty);
     }
 
     @Override

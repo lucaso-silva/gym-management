@@ -1,11 +1,15 @@
 package com.lucas.gym_management.application.domain.model;
 
+import com.lucas.gym_management.application.domain.command.CreateUserData;
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
+import lombok.AccessLevel;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 @Getter
@@ -14,6 +18,7 @@ public abstract class User {
     private String name;
     private String email;
     private String login;
+    @Getter(AccessLevel.NONE)
     private String password;
     private String phone;
     private Address address;
@@ -30,6 +35,91 @@ public abstract class User {
         updateAddress(address);
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null;
+    }
+
+    protected User(UUID id, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.login = login;
+        this.password = password;
+        this.phone = phone;
+        this.address = address;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public static User createNewUser(CreateUserData userInput) {
+
+        User newUser = switch(userInput.userType()) {
+            case STUDENT -> Student.newStudent(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userInput.address(),
+                        userInput.birthDate());
+            case MANAGER -> Manager.newManager(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userInput.address(),
+                        userInput.gymName());
+            case INSTRUCTOR -> Instructor.newInstructor(
+                        userInput.name(),
+                        userInput.email(),
+                        userInput.login(),
+                        userInput.password(),
+                        userInput.phone(),
+                        userInput.address(),
+                        userInput.cref(),
+                        userInput.specialty());
+        };
+        return newUser;
+    }
+
+    public static User restore(UUID id, UserType userType, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, Map<String, Object> extraFields) {
+
+        return switch(userType){
+            case STUDENT -> Student.restore(id,
+                    name,
+                    email,
+                    login,
+                    password,
+                    phone,
+                    address,
+                    createdAt,
+                    updatedAt,
+                    (LocalDate) extraFields.get("birthDate"),
+                    (Boolean) extraFields.get("activeMembership"));
+
+            case INSTRUCTOR -> Instructor.restore(id,
+                    name,
+                    email,
+                    login,
+                    password,
+                    phone,
+                    address,
+                    createdAt,
+                    updatedAt,
+                    (String) extraFields.get("cref"),
+                    (String) extraFields.get("specialty"));
+
+            case MANAGER -> Manager.restore(id,
+                    name,
+                    email,
+                    login,
+                    password,
+                    phone,
+                    address,
+                    createdAt,
+                    updatedAt,
+                    (String) extraFields.get("gymName"));
+
+        };
     }
 
     private void renameTo(String newName){
