@@ -1,8 +1,9 @@
 package com.lucas.gym_management.application.service;
 
+import com.lucas.gym_management.application.domain.command.CreateUserData;
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
-import com.lucas.gym_management.application.domain.model.*;
-import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.application.domain.model.Student;
+import com.lucas.gym_management.application.domain.model.User;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.exceptions.BusinessException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
@@ -50,61 +51,10 @@ public class UserService implements ForCreatingUser,
             throw new BusinessException("Login %s already used.".formatted(userInput.login()));
         }
 
-        Address userAddress = Address.newAddress(userInput.address().street(),
-                userInput.address().number(),
-                userInput.address().neighborhood(),
-                userInput.address().zipCode(),
-                userInput.address().city(),
-                userInput.address().state());
-
-        User newUser = switch(userInput.userType()){
-            case STUDENT -> {
-                if (userInput.birthDate() == null)
-                    throw new BusinessException("Birth date is required to register a new student.");
-
-                yield Student.newStudent(
-                        userInput.name(),
-                        userInput.email(),
-                        userInput.login(),
-                        userInput.password(),
-                        userInput.phone(),
-                        userAddress,
-                        userInput.birthDate());
-            }
-            case ADMINISTRATOR -> {
-                if (userInput.gymName() == null || userInput.gymName().isBlank())
-                    throw new BusinessException("Gym name is required to register a new administrator.");
-
-                yield Administrator.newAdministrator(
-                        userInput.name(),
-                        userInput.email(),
-                        userInput.login(),
-                        userInput.password(),
-                        userInput.phone(),
-                        userAddress,
-                        userInput.gymName());
-            }
-            case INSTRUCTOR -> {
-                if (userInput.cref() == null || userInput.cref().isBlank() ||
-                        userInput.specialty() == null || userInput.specialty().isBlank())
-                    throw new BusinessException("Cref and specialty are required to register a new instructor.");
-
-                yield Instructor.newInstructor(
-                        userInput.name(),
-                        userInput.email(),
-                        userInput.login(),
-                        userInput.password(),
-                        userInput.phone(),
-                        userAddress,
-                        userInput.cref(),
-                        userInput.specialty());
-            }
-        };
-
-        var user = userRepository.create(newUser);
+        var createUserData = CreateUserData.from(userInput);
+        var user = userRepository.create(User.createNewUser(createUserData));
 
         return CreateUserOutput.from(user);
-
     }
 
     @Override

@@ -6,7 +6,9 @@ import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.UUID;
 
 @Getter
 public class Student extends User {
@@ -19,9 +21,19 @@ public class Student extends User {
         activateMembership();
     }
 
+    private Student(UUID id, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate birthDate, boolean activeMembership) {
+        super(id, name, email, login, password, phone, address, createdAt, updatedAt);
+        this.birthDate = birthDate;
+        this.activeMembership = activeMembership;
+    }
+
     public static Student newStudent(String name, String email, String login, String password, String phone, Address address, LocalDate birthDate) {
 
         return new Student(name, email, login, password, phone, address, birthDate);
+    }
+
+    public static Student restore(UUID id, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDate birthDate, boolean activeMembership) {
+        return new Student(id, name, email, login, password, phone, address, createdAt, updatedAt, birthDate, activeMembership);
     }
 
     @Override
