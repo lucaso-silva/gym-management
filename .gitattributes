@@ -1,2 +1,25 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# ---------------------------
+# GitHub Linguist adjustments
+# ---------------------------
+
+# Force Java detection
+*.java linguist-language=Java
+
+# Ignore build output
+target/** linguist-vendored
+build/** linguist-vendored
+out/** linguist-vendored
+
+# Ignore dependencies and generated code
+.mvn/** linguist-vendored
+gradle/** linguist-vendored
+node_modules/** linguist-vendored
+
+# Ignore configuration files
+*.yml linguist-detectable=false
+*.yaml linguist-detectable=false
+*.properties linguist-detectable=false
+*.sql linguist-detectable=false
