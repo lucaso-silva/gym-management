@@ -1,0 +1,71 @@
+package com.lucas.gym_management.infrastructure.adapters.outbound.persistence;
+
+import com.lucas.gym_management.application.domain.model.User;
+import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
+import com.lucas.gym_management.infrastructure.adapters.outbound.persistence.mapper.UserJPAMapper;
+import com.lucas.gym_management.infrastructure.adapters.outbound.persistence.repository.UserJPARepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+public class UserRepositoryAdapter implements UserRepository {
+    private final UserJPARepository userJPARepository;
+
+    public UserRepositoryAdapter(UserJPARepository userJPARepository) {
+        this.userJPARepository = userJPARepository;
+    }
+
+    @Override
+    public User create(User user) {
+        var userEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
+        return UserJPAMapper.toDomain(userEntity);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return List.of();
+    }
+
+    @Override
+    public List<User> findByNameLike(String name) {
+        return List.of();
+    }
+
+    @Override
+    public Optional<User> findById(UUID id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByLogin(String login) {
+        return Optional.empty();
+    }
+
+    @Override
+    public User updateUser(User user) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByLogin(String login) {
+        return false;
+    }
+
+    @Override
+    public boolean existsByEmailIdNot(String email, UUID id) {
+        return false;
+    }
+}
