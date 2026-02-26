@@ -4,8 +4,10 @@ import com.lucas.gym_management.application.domain.model.UserType;
 import com.lucas.gym_management.application.dto.AddressDTO;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
+import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.ListUserResponse;
 
 public class UserMapper {
 
@@ -30,6 +32,12 @@ public class UserMapper {
         return new CreateUserResponse(output.id(),
                 output.name(),
                 output.login(),
+                output.email());
+    }
+
+    public static ListUserResponse toUserListResponse(ListUserOutput output) {
+        return new ListUserResponse(output.id(),
+                output.name(),
                 output.email());
     }
 

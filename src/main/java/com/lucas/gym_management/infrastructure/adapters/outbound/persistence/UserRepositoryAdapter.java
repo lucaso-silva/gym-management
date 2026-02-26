@@ -4,6 +4,7 @@ import com.lucas.gym_management.application.domain.model.User;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.infrastructure.adapters.outbound.persistence.mapper.UserJPAMapper;
 import com.lucas.gym_management.infrastructure.adapters.outbound.persistence.repository.UserJPARepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,12 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
     private final UserJPARepository userJPARepository;
-
-    public UserRepositoryAdapter(UserJPARepository userJPARepository) {
-        this.userJPARepository = userJPARepository;
-    }
 
     @Override
     public User save(User user) {
@@ -26,7 +24,11 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public List<User> findAll() {
-        return List.of();
+
+        return userJPARepository.findAll()
+                .stream()
+                .map(UserJPAMapper::toDomain)
+                .toList();
     }
 
     @Override
