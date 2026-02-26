@@ -36,6 +36,11 @@ public class Instructor extends User {
     }
 
     @Override
+    public UserType getUserType() {
+        return UserType.INSTRUCTOR;
+    }
+
+    @Override
     protected boolean applySpecificUpdates(UpdateUserData data){
         boolean updated = false;
 

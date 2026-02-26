@@ -18,7 +18,7 @@ public abstract class User {
     private String name;
     private String email;
     private String login;
-    @Getter(AccessLevel.NONE)
+//    @Getter(AccessLevel.NONE)
     private String password;
     private String phone;
     private Address address;
@@ -51,7 +51,7 @@ public abstract class User {
 
     public static User createNewUser(CreateUserData userInput) {
 
-        User newUser = switch(userInput.userType()) {
+        return switch(userInput.userType()) {
             case STUDENT -> Student.newStudent(
                         userInput.name(),
                         userInput.email(),
@@ -78,7 +78,6 @@ public abstract class User {
                         userInput.cref(),
                         userInput.specialty());
         };
-        return newUser;
     }
 
     public static User restore(UUID id, UserType userType, String name, String email, String login, String password, String phone, Address address, LocalDateTime createdAt, LocalDateTime updatedAt, Map<String, Object> extraFields) {
@@ -121,6 +120,8 @@ public abstract class User {
 
         };
     }
+
+    public abstract UserType getUserType();
 
     private void renameTo(String newName){
         if(newName == null || newName.isBlank()) {
