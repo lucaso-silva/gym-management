@@ -19,9 +19,9 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
-    public User create(User user) {
-        var userEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
-        return UserJPAMapper.toDomain(userEntity);
+    public User save(User user) {
+        userJPARepository.save(UserJPAMapper.toEntity(user));
+        return user;
     }
 
     @Override
