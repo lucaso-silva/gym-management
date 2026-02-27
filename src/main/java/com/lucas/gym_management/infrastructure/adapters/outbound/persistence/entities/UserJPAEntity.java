@@ -1,9 +1,7 @@
 package com.lucas.gym_management.infrastructure.adapters.outbound.persistence.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table(name="users")
 public class UserJPAEntity {
     @Id
@@ -59,4 +59,5 @@ public class UserJPAEntity {
 
     @Column(nullable = true)
     private String gymName;
+
 }

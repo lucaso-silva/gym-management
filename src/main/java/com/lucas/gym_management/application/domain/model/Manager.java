@@ -33,6 +33,11 @@ public class Manager extends User {
     }
 
     @Override
+    public UserType getUserType() {
+        return UserType.MANAGER;
+    }
+
+    @Override
     protected boolean applySpecificUpdates(UpdateUserData data) {
         if(data.gymName() != null){
             this.updateGymName(data.gymName());

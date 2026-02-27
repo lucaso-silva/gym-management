@@ -52,7 +52,7 @@ public class UserService implements ForCreatingUser,
         }
 
         var createUserData = CreateUserData.from(userInput);
-        var user = userRepository.create(User.createNewUser(createUserData));
+        var user = userRepository.save(User.createNewUser(createUserData));
 
         return CreateUserOutput.from(user);
     }
