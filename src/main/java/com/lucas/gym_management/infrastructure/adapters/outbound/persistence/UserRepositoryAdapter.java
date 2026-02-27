@@ -33,7 +33,10 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public List<User> findByNameLike(String name) {
-        return List.of();
+        return userJPARepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(UserJPAMapper::toDomain)
+                .toList();
     }
 
     @Override
