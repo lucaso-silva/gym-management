@@ -4,10 +4,13 @@ import com.lucas.gym_management.application.domain.model.UserType;
 import com.lucas.gym_management.application.dto.AddressDTO;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
+import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
 import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRestDTO;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.ListUserResponse;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
 
 public class UserMapper {
 
@@ -41,6 +44,17 @@ public class UserMapper {
                 output.email());
     }
 
+    public static UserResponse toUserResponse(GetUserOutput output) {
+        var address = toAddressDTO(output);
+
+        return new UserResponse(output.id(),
+                output.name(),
+                output.email(),
+                output.login(),
+                output.phone(),
+                address);
+    }
+
     private static UserType toAppUserType(CreateUserRequest input) {
         return UserType.valueOf(input.userType());
     }
@@ -54,5 +68,14 @@ public class UserMapper {
                 input.address().city(),
                 input.address().state()
         );
+    }
+
+    private static AddressRestDTO toAddressDTO(GetUserOutput output) {
+        return new AddressRestDTO(output.address().street(),
+                output.address().number(),
+                output.address().neighborhood(),
+                output.address().zipCode(),
+                output.address().city(),
+                output.address().state());
     }
 }

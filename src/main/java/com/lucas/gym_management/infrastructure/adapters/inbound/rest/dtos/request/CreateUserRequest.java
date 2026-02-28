@@ -1,6 +1,6 @@
 package com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request;
 
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRequestDTO;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRestDTO;
 
 import java.time.LocalDate;
 
@@ -10,7 +10,7 @@ public record CreateUserRequest(String userType,
                                 String login,
                                 String password,
                                 String phone,
-                                AddressRequestDTO address,
+                                AddressRestDTO address,
                                 String gymName,
                                 String cref,
                                 String specialty,
