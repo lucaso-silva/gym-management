@@ -20,13 +20,14 @@ import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
-import jakarta.inject.Named;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Named
+@Service
 public class UserService implements ForCreatingUser,
         ForGettingUserById,
         ForGettingUserByLogin,
@@ -41,6 +42,7 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
+    @Transactional
     public CreateUserOutput createUser(final CreateUserInput userInput) {
 
         if(userRepository.existsByEmail(userInput.email())){
@@ -58,6 +60,7 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
+    @Transactional
     public void deleteUserById(UUID id) {
         var user = userRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("User with id " + id + " not found")
@@ -66,10 +69,13 @@ public class UserService implements ForCreatingUser,
         if(user instanceof Student student && student.isActiveMembership())
             throw new BusinessException("Cannot delete a student with active membership, id %s".formatted(id));
 
+        //TODO: validate logged user (if is manager ?)
+
         userRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GetUserOutput getUserById(UUID id) {
         var userById = userRepository.findById(id);
 
@@ -78,6 +84,7 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GetUserOutput getUserByLogin(String login) {
         var userByLogin = userRepository.findByLogin(login);
 
@@ -86,6 +93,7 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ListUserOutput> listUsers(String name) {
         List<User> userList = name == null || name.isBlank()
                 ? userRepository.findAll()
@@ -95,12 +103,13 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
-    public UpdatedUserOutput updateUser(UpdateUserInput input) {
-        var userById = userRepository.findById(input.id())
-                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(input.id())));
+    @Transactional
+    public UpdatedUserOutput updateUser(UUID id, UpdateUserInput input) {
+        var userById = userRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
 
         if(input.email() != null) {
-            if(userRepository.existsByEmailIdNot(input.email(),input.id()))
+            if(userRepository.existsByEmailIdNot(input.email(),id))
                 throw new BusinessException("Email %s already used.".formatted(input.email()));
         }
 

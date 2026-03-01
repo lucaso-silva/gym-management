@@ -18,8 +18,9 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User save(User user) {
-        userJPARepository.save(UserJPAMapper.toEntity(user));
-        return user;
+        var savedUserEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
+
+        return UserJPAMapper.toDomain(savedUserEntity);
     }
 
     @Override
@@ -41,36 +42,39 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public Optional<User> findById(UUID id) {
-        return Optional.empty();
+        return userJPARepository.findById(id)
+                .map(UserJPAMapper::toDomain);
     }
 
     @Override
     public Optional<User> findByLogin(String login) {
-        return Optional.empty();
+        return userJPARepository.findByLogin(login)
+                .map(UserJPAMapper::toDomain);
     }
 
     @Override
     public User updateUser(User user) {
-        return null;
+        var userEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
+        return UserJPAMapper.toDomain(userEntity);
     }
 
     @Override
     public void deleteById(UUID id) {
-
+        userJPARepository.deleteById(id);
     }
 
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userJPARepository.existsByEmail(email);
     }
 
     @Override
     public boolean existsByLogin(String login) {
-        return false;
+        return userJPARepository.existsByLogin(login);
     }
 
     @Override
     public boolean existsByEmailIdNot(String email, UUID id) {
-        return false;
+        return userJPARepository.existsByEmailAndIdNot(email, id);
     }
 }

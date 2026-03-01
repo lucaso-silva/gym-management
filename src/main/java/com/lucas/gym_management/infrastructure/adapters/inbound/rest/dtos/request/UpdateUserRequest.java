@@ -4,15 +4,13 @@ import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.Addres
 
 import java.time.LocalDate;
 
-public record CreateUserRequest(String userType,
-                                String name,
+public record UpdateUserRequest(String name,
                                 String email,
-                                String login,
-                                String password,
                                 String phone,
                                 AddressRestDTO address,
                                 String gymName,
                                 String cref,
                                 String specialty,
-                                LocalDate birthDate) {
+                                LocalDate birthDate,
+                                Boolean activeMembership) {
 }
