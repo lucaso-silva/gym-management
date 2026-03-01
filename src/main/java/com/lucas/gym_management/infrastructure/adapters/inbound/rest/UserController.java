@@ -50,7 +50,6 @@ public class UserController {
     }
 
     @PostMapping
-    @Transactional
     public ResponseEntity<CreateUserResponse> create(@Valid @RequestBody CreateUserRequest newUSer) {
 
         var userOutput = createUserUseCase.createUser(UserMapper.requestToDTO(newUSer));
