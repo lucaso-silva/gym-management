@@ -48,7 +48,8 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public Optional<User> findByLogin(String login) {
-        return Optional.empty();
+        return userJPARepository.findByLogin(login)
+                .map(UserJPAMapper::toDomain);
     }
 
     @Override
@@ -64,16 +65,16 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        return false;
+        return userJPARepository.existsByEmail(email);
     }
 
     @Override
     public boolean existsByLogin(String login) {
-        return false;
+        return userJPARepository.existsByLogin(login);
     }
 
     @Override
     public boolean existsByEmailIdNot(String email, UUID id) {
-        return false;
+        return userJPARepository.existsByEmailAndIdNot(email, id);
     }
 }
