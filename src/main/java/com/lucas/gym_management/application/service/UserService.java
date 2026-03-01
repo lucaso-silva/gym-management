@@ -66,6 +66,8 @@ public class UserService implements ForCreatingUser,
         if(user instanceof Student student && student.isActiveMembership())
             throw new BusinessException("Cannot delete a student with active membership, id %s".formatted(id));
 
+        //TODO: validate logged user (if is manager ?)
+
         userRepository.deleteById(id);
     }
 

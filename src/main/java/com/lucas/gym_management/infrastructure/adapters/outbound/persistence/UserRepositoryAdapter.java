@@ -57,7 +57,7 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public void deleteById(UUID id) {
-
+        userJPARepository.deleteById(id);
     }
 
     @Override
