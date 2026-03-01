@@ -4,7 +4,9 @@ import com.lucas.gym_management.application.ports.inbound.create.ForCreatingUser
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
 import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
+import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.ListUserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
@@ -28,6 +30,7 @@ public class UserController {
     private final ForListingUsers listUsersUseCase;
     private final ForGettingUserById getUserByIdUseCase;
     private final ForDeletingUserById deleteUserUseCase;
+    private final ForUpdateUser updateUserUseCase;
 
     @GetMapping
     public ResponseEntity<List<ListUserResponse>> listUsers(@RequestParam(name="name", required = false) String filter){
@@ -56,6 +59,14 @@ public class UserController {
 
         return ResponseEntity.created(uri).body(response);
 
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,
+                                                   @RequestBody UpdateUserRequest input){
+        var updatedUser = updateUserUseCase.updateUser(id, UserMapper.toUpdateUserInput(input));
+
+        return ResponseEntity.ok(UserMapper.toUserResponse(updatedUser));
     }
 
     @DeleteMapping("/{id}")

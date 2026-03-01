@@ -18,8 +18,9 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User save(User user) {
-        userJPARepository.save(UserJPAMapper.toEntity(user));
-        return user;
+        var savedUserEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
+
+        return UserJPAMapper.toDomain(savedUserEntity);
     }
 
     @Override
@@ -52,7 +53,8 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        return null;
+        var userEntity = userJPARepository.save(UserJPAMapper.toEntity(user));
+        return UserJPAMapper.toDomain(userEntity);
     }
 
     @Override

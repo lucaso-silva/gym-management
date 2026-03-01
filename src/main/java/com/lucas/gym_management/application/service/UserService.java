@@ -97,12 +97,12 @@ public class UserService implements ForCreatingUser,
     }
 
     @Override
-    public UpdatedUserOutput updateUser(UpdateUserInput input) {
-        var userById = userRepository.findById(input.id())
-                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(input.id())));
+    public UpdatedUserOutput updateUser(UUID id, UpdateUserInput input) {
+        var userById = userRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
 
         if(input.email() != null) {
-            if(userRepository.existsByEmailIdNot(input.email(),input.id()))
+            if(userRepository.existsByEmailIdNot(input.email(),id))
                 throw new BusinessException("Email %s already used.".formatted(input.email()));
         }
 
