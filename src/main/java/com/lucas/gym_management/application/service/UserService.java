@@ -4,7 +4,7 @@ import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.Student;
 import com.lucas.gym_management.application.domain.model.User;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
-import com.lucas.gym_management.application.exceptions.BusinessException;
+import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
 import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
@@ -44,7 +44,7 @@ public class UserService implements ForGettingUserById,
         );
 
         if(user instanceof Student student && student.isActiveMembership())
-            throw new BusinessException("Cannot delete a student with active membership, id %s".formatted(id));
+            throw new ConflictException("Cannot delete a student with active membership, id %s".formatted(id));
 
         //TODO: validate logged user (if is manager ?)
 
@@ -85,10 +85,9 @@ public class UserService implements ForGettingUserById,
         var userById = userRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
 
-        if(input.email() != null) {
-            if(userRepository.existsByEmailIdNot(input.email(),id))
-                throw new BusinessException("Email %s already used.".formatted(input.email()));
-        }
+        if(input.email() != null &&
+                userRepository.existsByEmailIdNot(input.email(),id))
+            throw new ConflictException("Email %s already used.".formatted(input.email()));
 
         Address address = input.address() == null ? null :
                 Address.newAddress(input.address().street(),

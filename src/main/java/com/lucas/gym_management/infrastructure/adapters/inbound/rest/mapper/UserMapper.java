@@ -16,6 +16,7 @@ import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.respon
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
 
 public class UserMapper {
+    private UserMapper() {}
 
     public static CreateUserInput requestToDTO(CreateUserRequest input) {
         var userType = toAppUserType(input);
