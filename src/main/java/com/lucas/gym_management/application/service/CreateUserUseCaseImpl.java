@@ -5,7 +5,6 @@ import com.lucas.gym_management.application.domain.model.User;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
-import com.lucas.gym_management.application.ports.inbound.create.ForCreatingUser;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-public class CreateUserUseCase implements ForCreatingUser {
+public class CreateUserUseCaseImpl implements com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase {
     private UserRepository userRepository;
 
     @Override

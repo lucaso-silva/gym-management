@@ -28,19 +28,17 @@ class CreateUserUseCaseTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private CreateUserUseCase createUserUseCase;
+    private CreateUserUseCaseImpl createUserUseCase;
 
     @Test
-    void create_shouldCreateStudent_whenBirthDateIsProvided(){
+    void create_shouldCreateStudent_whenBirthDateIsValid(){
         var studentInput = UserFactory.buildStudentInput();
         var student = UserFactory.buildStudent();
 
         when(userRepository.existsByEmail(studentInput.email()))
                 .thenReturn(false);
-
         when(userRepository.existsByLogin(studentInput.login()))
                 .thenReturn(false);
-
         when(userRepository.save(any(Student.class)))
                 .thenReturn(student);
 
@@ -49,16 +47,18 @@ class CreateUserUseCaseTest {
         assertNotNull(output);
         assertAll(
                 () -> assertEquals(student.getId(), output.id()),
-                ()-> assertEquals("any-name", output.name()),
-                ()-> assertEquals("test@email.com", output.email()),
-                ()-> assertEquals("any-login", output.login())
+                ()-> assertEquals(student.getName(), output.name()),
+                ()-> assertEquals(student.getEmail(), output.email()),
+                ()-> assertEquals(student.getLogin(), output.login())
         );
 
-        verify(userRepository, times(1)).existsByEmail(studentInput.email());
-        verify(userRepository, times(1)).existsByLogin(studentInput.login());
+        verify(userRepository).existsByEmail(studentInput.email());
+        verify(userRepository).existsByLogin(studentInput.login());
+        verify(userRepository).save(any(Student.class));
         verifyNoMoreInteractions(userRepository);
     }
 
+    //TODO: move to domain tests
     @Test
     void create_shouldThrowDomainException_whenBirthDateLess16Years(){
         LocalDate invalidBirthDate = LocalDate.now().minusYears(15);
@@ -76,7 +76,6 @@ class CreateUserUseCaseTest {
 
         when(userRepository.existsByEmail(invalidStudentInput.email()))
                 .thenReturn(false);
-
         when(userRepository.existsByLogin(invalidStudentInput.login()))
                 .thenReturn(false);
 
@@ -86,8 +85,14 @@ class CreateUserUseCaseTest {
         );
 
         assertEquals("Student must be at least 16 years old", exception.getMessage());
+
+        verify(userRepository).existsByEmail(invalidStudentInput.email());
+        verify(userRepository).existsByLogin(invalidStudentInput.login());
+        verify(userRepository, never()).save(any(Student.class));
+        verifyNoMoreInteractions(userRepository);
     }
 
+    //TODO: move to domain tests
     @Test
     void create_shouldThrowDomainException_whenBirthDateIsInFuture(){
         LocalDate futureDate = LocalDate.now().plusDays(1);
@@ -106,7 +111,6 @@ class CreateUserUseCaseTest {
 
         when(userRepository.existsByEmail(studentInput.email()))
                 .thenReturn(false);
-
         when(userRepository.existsByLogin(studentInput.login()))
                 .thenReturn(false);
 
@@ -117,22 +121,21 @@ class CreateUserUseCaseTest {
 
         assertEquals("Birth date cannot be in the future", exception.getMessage());
 
-        verify(userRepository, times(1)).existsByEmail(studentInput.email());
-        verify(userRepository, times(1)).existsByLogin(studentInput.login());
+        verify(userRepository).existsByEmail(studentInput.email());
+        verify(userRepository).existsByLogin(studentInput.login());
         verify(userRepository, never()).save(any(Student.class));
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
-    void create_shouldCreateManager_whenGymNameIsProvided(){
+    void create_shouldCreateManager_whenGymNameIsValid(){
         var managerInput = UserFactory.buildManagerInput();
         var manager = UserFactory.buildManager();
 
         when(userRepository.existsByEmail(managerInput.email()))
                 .thenReturn(false);
-
         when(userRepository.existsByLogin(managerInput.login()))
                 .thenReturn(false);
-
         when(userRepository.save(any(Manager.class)))
                 .thenReturn(manager);
 
@@ -141,18 +144,19 @@ class CreateUserUseCaseTest {
         assertNotNull(output);
         assertAll(
                 () -> assertEquals(manager.getId(), output.id()),
-                ()-> assertEquals("any-name", output.name()),
-                ()-> assertEquals("any-login", output.login()),
-                ()-> assertEquals("test@email.com", output.email())
+                ()-> assertEquals(manager.getName(), output.name()),
+                ()-> assertEquals(manager.getLogin(), output.login()),
+                ()-> assertEquals(manager.getEmail(), output.email())
         );
 
-        verify(userRepository, times(1)).existsByEmail(managerInput.email());
-        verify(userRepository, times(1)).existsByLogin(managerInput.login());
+        verify(userRepository).existsByEmail(managerInput.email());
+        verify(userRepository).existsByLogin(managerInput.login());
+        verify(userRepository).save(any(Manager.class));
         verifyNoMoreInteractions(userRepository);
     }
 
     @Test
-    void create_shouldCreateInstructor_whenCrefAndSpecialtyAreProvided(){
+    void create_shouldCreateInstructor_whenCrefAndSpecialtyAreValid(){
         var instructorInput = UserFactory.buildInstructorInput();
         var instructor = UserFactory.buildInstructor();
 
@@ -168,13 +172,14 @@ class CreateUserUseCaseTest {
         assertNotNull(output);
         assertAll(
                 ()-> assertEquals(instructor.getId(), output.id()),
-                ()-> assertEquals("any-name", output.name()),
-                ()-> assertEquals("any-login", output.login()),
-                ()-> assertEquals("test@email.com", output.email())
+                ()-> assertEquals(instructor.getName(), output.name()),
+                ()-> assertEquals(instructor.getLogin(), output.login()),
+                ()-> assertEquals(instructor.getEmail(), output.email())
         );
 
-        verify(userRepository, times(1)).existsByEmail(instructorInput.email());
-        verify(userRepository, times(1)).existsByLogin(instructorInput.login());
+        verify(userRepository).existsByEmail(instructorInput.email());
+        verify(userRepository).existsByLogin(instructorInput.login());
+        verify(userRepository).save(any(Instructor.class));
         verifyNoMoreInteractions(userRepository);
     }
 
@@ -192,7 +197,7 @@ class CreateUserUseCaseTest {
 
         assertEquals("Email test@email.com already used.", exception.getMessage());
 
-        verify(userRepository, times(1)).existsByEmail(instructorInput.email());
+        verify(userRepository).existsByEmail(instructorInput.email());
         verify(userRepository, never()).existsByLogin(instructorInput.login());
         verify(userRepository, never()).save(any(Instructor.class));
         verifyNoMoreInteractions(userRepository);
@@ -214,10 +219,9 @@ class CreateUserUseCaseTest {
 
         assertEquals("Login any-login already used.", exception.getMessage());
 
-        verify(userRepository, times(1)).existsByEmail(instructorInput.email());
-        verify(userRepository, times(1)).existsByLogin(instructorInput.login());
+        verify(userRepository).existsByEmail(instructorInput.email());
+        verify(userRepository).existsByLogin(instructorInput.login());
         verify(userRepository, never()).save(any(Instructor.class));
         verifyNoMoreInteractions(userRepository);
     }
-
 }

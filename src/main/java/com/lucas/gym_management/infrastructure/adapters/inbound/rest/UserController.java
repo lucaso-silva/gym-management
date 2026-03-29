@@ -1,8 +1,8 @@
 package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
-import com.lucas.gym_management.application.ports.inbound.create.ForCreatingUser;
+import com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase;
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
-import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
+import com.lucas.gym_management.application.ports.inbound.get.GetUserByIdUseCase;
 import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
@@ -14,7 +14,6 @@ import com.lucas.gym_management.infrastructure.adapters.inbound.rest.mapper.User
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -26,9 +25,9 @@ import java.util.UUID;
 @RequestMapping("/users")
 public class UserController {
 
-    private final ForCreatingUser createUserUseCase;
+    private final CreateUserUseCase createUserUseCase;
     private final ForListingUsers listUsersUseCase;
-    private final ForGettingUserById getUserByIdUseCase;
+    private final GetUserByIdUseCase getUserByIdUseCase;
     private final ForDeletingUserById deleteUserUseCase;
     private final ForUpdateUser updateUserUseCase;
 

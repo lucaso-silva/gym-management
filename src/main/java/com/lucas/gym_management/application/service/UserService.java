@@ -7,9 +7,6 @@ import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
-import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserById;
-import com.lucas.gym_management.application.ports.inbound.get.ForGettingUserByLogin;
-import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
 import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
 import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
@@ -24,9 +21,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class UserService implements ForGettingUserById,
-        ForGettingUserByLogin,
-        ForListingUsers,
+public class UserService implements ForListingUsers,
         ForDeletingUserById,
         ForUpdateUser {
 
@@ -53,24 +48,6 @@ public class UserService implements ForGettingUserById,
 
     @Override
     @Transactional(readOnly = true)
-    public GetUserOutput getUserById(UUID id) {
-        var userById = userRepository.findById(id);
-
-        return userById.map(GetUserOutput::from)
-                .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public GetUserOutput getUserByLogin(String login) {
-        var userByLogin = userRepository.findByLogin(login);
-
-        return userByLogin.map(GetUserOutput::from)
-                .orElseThrow(()-> new NotFoundException("User with login %s not found".formatted(login)));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
     public List<ListUserOutput> listUsers(String name) {
         List<User> userList = name == null || name.isBlank()
                 ? userRepository.findAll()
@@ -86,8 +63,9 @@ public class UserService implements ForGettingUserById,
                 .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
 
         if(input.email() != null &&
-                userRepository.existsByEmailIdNot(input.email(),id))
+                userRepository.existsByEmailIdNot(input.email(),id)) {
             throw new ConflictException("Email %s already used.".formatted(input.email()));
+        }
 
         Address address = input.address() == null ? null :
                 Address.newAddress(input.address().street(),
