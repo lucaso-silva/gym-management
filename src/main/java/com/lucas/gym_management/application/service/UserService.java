@@ -1,11 +1,9 @@
 package com.lucas.gym_management.application.service;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
-import com.lucas.gym_management.application.domain.model.Student;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
-import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
@@ -17,28 +15,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class UserService implements ForDeletingUserById,
-        ForUpdateUser {
+public class UserService implements ForUpdateUser {
 
     private final UserRepository userRepository;
 
     public UserService(final UserRepository userRepository) {
         this.userRepository = Objects.requireNonNull(userRepository);
-    }
-
-    @Override
-    @Transactional
-    public void deleteUserById(UUID id) {
-        var user = userRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("User with id " + id + " not found")
-        );
-
-        if(user instanceof Student student && student.isActiveMembership())
-            throw new ConflictException("Cannot delete a student with active membership, id %s".formatted(id));
-
-        //TODO: validate logged user (if is manager ?)
-
-        userRepository.deleteById(id);
     }
 
     @Override

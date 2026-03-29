@@ -2,6 +2,7 @@ package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.application.exceptions.ConflictException;
+import com.lucas.gym_management.application.exceptions.NotAuthorizedException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import org.springframework.http.*;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -39,6 +40,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false).replace("uri=","")));
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problemDetail);
+    }
+
+    @ExceptionHandler(value = { NotAuthorizedException.class })
+    protected ResponseEntity<ProblemDetail> handleNotAuthorizedException(final NotAuthorizedException ex, final WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problemDetail.setType(URI.create("https://example.com/forbidden"));
+        problemDetail.setTitle("Forbidden");
+        problemDetail.setInstance(URI.create(
+                request.getDescription(false).replace("uri=","")));
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(problemDetail);
     }
 
     @ExceptionHandler(value = { DomainException.class })

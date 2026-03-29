@@ -1,7 +1,7 @@
 package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase;
-import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
+import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserByIdUseCase;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserByIdUseCase;
 import com.lucas.gym_management.application.ports.inbound.list.ListUsersUseCase;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
@@ -28,7 +28,7 @@ public class UserController {
     private final CreateUserUseCase createUserUseCase;
     private final ListUsersUseCase listUsersUseCase;
     private final GetUserByIdUseCase getUserByIdUseCase;
-    private final ForDeletingUserById deleteUserUseCase;
+    private final DeleteUserByIdUseCase deleteUserUseCase;
     private final ForUpdateUser updateUserUseCase;
 
     @GetMapping
@@ -56,7 +56,6 @@ public class UserController {
         var response = UserMapper.responseToDTO(userOutput);
 
         return ResponseEntity.created(uri).body(response);
-
     }
 
     @PatchMapping("/{id}")
@@ -68,9 +67,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteUser(@RequestHeader("x-user-id") UUID loggedInUserId,
+                                           @PathVariable("id") UUID userId) {
 
-        deleteUserUseCase.deleteUserById(id);
+        deleteUserUseCase.deleteUserById(loggedInUserId, userId);
+
         return ResponseEntity.noContent().build();
     }
 }

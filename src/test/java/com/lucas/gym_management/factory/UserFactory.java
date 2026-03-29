@@ -110,7 +110,7 @@ public class UserFactory {
                 "any-state");
     }
 
-    private static Address buildAddress() {
+    public static Address buildAddress() {
         return Address.newAddress("any-street",
                 "any-number",
                 "any-neighborhood",
