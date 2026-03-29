@@ -24,7 +24,7 @@ class GetUserUseCaseTest {
     private GetUserUseCaseImpl getUserUseCase;
 
     @Test
-    void get_shouldReturnUserById_whenUserExists(){
+    void shouldReturnUserById_whenUserExists(){
         var student = UserFactory.buildStudent();
         UUID userId = student.getId();
 
@@ -52,7 +52,7 @@ class GetUserUseCaseTest {
     }
 
     @Test
-    void get_shouldThrowNotFoundException_whenUserDoesNotExist(){
+    void shouldThrowNotFoundException_whenUserDoesNotExist(){
         UUID userId = UUID.randomUUID();
 
         when(userRepository.findById(userId))
@@ -70,7 +70,7 @@ class GetUserUseCaseTest {
     }
 
     @Test
-    void get_shouldReturnUserByLogin_whenLoginExists() {
+    void shouldReturnUserByLogin_whenLoginExists() {
         var student = UserFactory.buildStudent();
         UUID userId = student.getId();
         var login = "any-login";
@@ -99,7 +99,7 @@ class GetUserUseCaseTest {
     }
 
     @Test
-    void get_shouldThrowNotFoundException_whenLoginDoesNotExist() {
+    void shouldThrowNotFoundException_whenLoginDoesNotExist() {
         var invalidLogin = "invalid-login";
 
         when(userRepository.findByLogin(invalidLogin))

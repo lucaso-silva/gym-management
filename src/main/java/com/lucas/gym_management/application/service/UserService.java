@@ -2,13 +2,10 @@ package com.lucas.gym_management.application.service;
 
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.Student;
-import com.lucas.gym_management.application.domain.model.User;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
-import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
-import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
@@ -16,13 +13,11 @@ import com.lucas.gym_management.application.ports.outbound.repository.UserReposi
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
-public class UserService implements ForListingUsers,
-        ForDeletingUserById,
+public class UserService implements ForDeletingUserById,
         ForUpdateUser {
 
     private final UserRepository userRepository;
@@ -44,16 +39,6 @@ public class UserService implements ForListingUsers,
         //TODO: validate logged user (if is manager ?)
 
         userRepository.deleteById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ListUserOutput> listUsers(String name) {
-        List<User> userList = name == null || name.isBlank()
-                ? userRepository.findAll()
-                : userRepository.findByNameLike(name);
-
-        return userList.stream().map(ListUserOutput::from).toList();
     }
 
     @Override

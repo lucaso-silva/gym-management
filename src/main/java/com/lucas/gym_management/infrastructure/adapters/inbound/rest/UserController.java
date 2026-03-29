@@ -3,7 +3,7 @@ package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase;
 import com.lucas.gym_management.application.ports.inbound.delete.ForDeletingUserById;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserByIdUseCase;
-import com.lucas.gym_management.application.ports.inbound.list.ForListingUsers;
+import com.lucas.gym_management.application.ports.inbound.list.ListUsersUseCase;
 import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
@@ -26,7 +26,7 @@ import java.util.UUID;
 public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
-    private final ForListingUsers listUsersUseCase;
+    private final ListUsersUseCase listUsersUseCase;
     private final GetUserByIdUseCase getUserByIdUseCase;
     private final ForDeletingUserById deleteUserUseCase;
     private final ForUpdateUser updateUserUseCase;

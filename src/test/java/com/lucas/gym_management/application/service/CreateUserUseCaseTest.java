@@ -31,7 +31,7 @@ class CreateUserUseCaseTest {
     private CreateUserUseCaseImpl createUserUseCase;
 
     @Test
-    void create_shouldCreateStudent_whenBirthDateIsValid(){
+    void shouldCreateStudent_whenBirthDateIsValid(){
         var studentInput = UserFactory.buildStudentInput();
         var student = UserFactory.buildStudent();
 
@@ -60,7 +60,7 @@ class CreateUserUseCaseTest {
 
     //TODO: move to domain tests
     @Test
-    void create_shouldThrowDomainException_whenBirthDateLess16Years(){
+    void shouldThrowDomainException_whenBirthDateLess16Years(){
         LocalDate invalidBirthDate = LocalDate.now().minusYears(15);
         var invalidStudentInput = new CreateUserInput(UserType.STUDENT,
                 "any-name",
@@ -94,7 +94,7 @@ class CreateUserUseCaseTest {
 
     //TODO: move to domain tests
     @Test
-    void create_shouldThrowDomainException_whenBirthDateIsInFuture(){
+    void shouldThrowDomainException_whenBirthDateIsInFuture(){
         LocalDate futureDate = LocalDate.now().plusDays(1);
 
         var studentInput = new CreateUserInput(UserType.STUDENT,
@@ -128,7 +128,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    void create_shouldCreateManager_whenGymNameIsValid(){
+    void shouldCreateManager_whenGymNameIsValid(){
         var managerInput = UserFactory.buildManagerInput();
         var manager = UserFactory.buildManager();
 
@@ -156,7 +156,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    void create_shouldCreateInstructor_whenCrefAndSpecialtyAreValid(){
+    void shouldCreateInstructor_whenCrefAndSpecialtyAreValid(){
         var instructorInput = UserFactory.buildInstructorInput();
         var instructor = UserFactory.buildInstructor();
 
@@ -184,7 +184,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    void create_shouldThrowConflictException_whenEmailAlreadyExists(){
+    void shouldThrowConflictException_whenEmailAlreadyExists(){
         var instructorInput = UserFactory.buildInstructorInput();
 
         when(userRepository.existsByEmail(instructorInput.email()))
@@ -195,7 +195,7 @@ class CreateUserUseCaseTest {
                 () -> createUserUseCase.createUser(instructorInput)
         );
 
-        assertEquals("Email test@email.com already used.", exception.getMessage());
+        assertEquals("Email " + instructorInput.email() +" already used.", exception.getMessage());
 
         verify(userRepository).existsByEmail(instructorInput.email());
         verify(userRepository, never()).existsByLogin(instructorInput.login());
@@ -204,7 +204,7 @@ class CreateUserUseCaseTest {
     }
 
     @Test
-    void create_shouldThrowConflictException_whenLoginAlreadyExists(){
+    void shouldThrowConflictException_whenLoginAlreadyExists(){
         var instructorInput = UserFactory.buildInstructorInput();
 
         when(userRepository.existsByEmail(instructorInput.email()))
@@ -217,7 +217,7 @@ class CreateUserUseCaseTest {
                 () -> createUserUseCase.createUser(instructorInput)
         );
 
-        assertEquals("Login any-login already used.", exception.getMessage());
+        assertEquals("Login " + instructorInput.login() +" already used.", exception.getMessage());
 
         verify(userRepository).existsByEmail(instructorInput.email());
         verify(userRepository).existsByLogin(instructorInput.login());
