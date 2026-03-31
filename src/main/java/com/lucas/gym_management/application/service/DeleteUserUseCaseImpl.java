@@ -5,7 +5,7 @@ import com.lucas.gym_management.application.domain.model.Student;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotAuthorizedException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
-import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserByIdUseCase;
+import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserUseCase;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class DeleteUserUseCaseImpl implements DeleteUserByIdUseCase {
+public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
     private UserRepository userRepository;
 
     @Override

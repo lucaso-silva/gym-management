@@ -5,7 +5,7 @@ import com.lucas.gym_management.application.dto.AddressDTO;
 
 import java.util.UUID;
 
-public record UpdatedUserOutput(
+public record UpdateUserOutput(
         UUID id,
         String name,
         String login,
@@ -13,7 +13,7 @@ public record UpdatedUserOutput(
         String phone,
         AddressDTO address
 ) {
-    public static UpdatedUserOutput from(User user) {
+    public static UpdateUserOutput from(User user) {
         AddressDTO addressDTO = new AddressDTO(user.getAddress().getStreet(),
                 user.getAddress().getNumber(),
                 user.getAddress().getNeighborhood(),
@@ -21,7 +21,7 @@ public record UpdatedUserOutput(
                 user.getAddress().getCity(),
                 user.getAddress().getState());
 
-        return new UpdatedUserOutput(
+        return new UpdateUserOutput(
                 user.getId(),
                 user.getName(),
                 user.getLogin(),

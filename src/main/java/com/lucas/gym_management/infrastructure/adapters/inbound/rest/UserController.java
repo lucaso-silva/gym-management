@@ -1,10 +1,10 @@
 package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase;
-import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserByIdUseCase;
+import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserUseCase;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserByIdUseCase;
 import com.lucas.gym_management.application.ports.inbound.list.ListUsersUseCase;
-import com.lucas.gym_management.application.ports.inbound.update.ForUpdateUser;
+import com.lucas.gym_management.application.ports.inbound.update.UpdateUserUseCase;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
@@ -28,8 +28,8 @@ public class UserController {
     private final CreateUserUseCase createUserUseCase;
     private final ListUsersUseCase listUsersUseCase;
     private final GetUserByIdUseCase getUserByIdUseCase;
-    private final DeleteUserByIdUseCase deleteUserUseCase;
-    private final ForUpdateUser updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
 
     @GetMapping
     public ResponseEntity<List<ListUserResponse>> listUsers(@RequestParam(name="name", required = false) String filter){
@@ -59,9 +59,10 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable UUID id,
+    public ResponseEntity<UserResponse> updateUser(@RequestHeader("x-user-id") UUID  loggedInUserId,
+                                                   @PathVariable("id") UUID userId,
                                                    @RequestBody UpdateUserRequest input){
-        var updatedUser = updateUserUseCase.updateUser(id, UserMapper.toUpdateUserInput(input));
+        var updatedUser = updateUserUseCase.updateUser(loggedInUserId, userId, UserMapper.toUpdateUserInput(input));
 
         return ResponseEntity.ok(UserMapper.toUserResponse(updatedUser));
     }

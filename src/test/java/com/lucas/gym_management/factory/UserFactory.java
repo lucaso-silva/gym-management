@@ -7,6 +7,7 @@ import com.lucas.gym_management.application.domain.model.UserType;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.dto.AddressDTO;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
+import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -92,7 +93,7 @@ public class UserFactory {
                 "any-student-name",
                 "student@email.com",
                 "any-login-student",
-                "pass-123",
+                "any-password",
                 "student-phone-number",
                 buildAddress(),
                 LocalDateTime.now().minusMinutes(10),
@@ -117,5 +118,42 @@ public class UserFactory {
                 "any-zip-code",
                 "any-city",
                 "any-state");
+    }
+
+    public static UpdateUserInput buildUpdateStudentInput() {
+        return new UpdateUserInput(
+                "updated-student-name",
+                "updated@email.com",
+                "updated-phone",
+                new AddressDTO("updated-street",
+                        "updated-number",
+                        "updated-neighborhood",
+                        "updated-zip-code",
+                        "updated-city",
+                        "updated-state"),
+                null,
+                null,
+                null,
+                LocalDate.now().minusYears(19),
+                false);
+    }
+
+    public static Student buildUpdatedStudent(UUID id) {
+        return Student.restore(id,
+                "updated-student-name",
+                "updated@email.com",
+                "any-login-student",
+                "any-password",
+                "updated-phone",
+                Address.newAddress("updated-street",
+                        "updated-number",
+                        "updated-neighborhood",
+                        "updated-zip-code",
+                        "updated-city",
+                        "updated-state"),
+                LocalDateTime.now().minusHours(1),
+                LocalDateTime.now(),
+                LocalDate.now().minusYears(19),
+                false);
     }
 }
