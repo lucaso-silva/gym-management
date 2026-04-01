@@ -1,0 +1,115 @@
+INSERT INTO users (
+    id, user_type, name, email, login, password, phone,
+    created_at, updated_at,
+    street, number, neighborhood, zip_code, city, state,
+    gym_name, cref, specialty,
+    birthday, status
+) VALUES
+
+-- MANAGER
+(
+    '11111111-1111-1111-1111-111111111111',
+    'MANAGER',
+    'Pedro Silva',
+    'pedro.manager@gym.com',
+    'pedro.manager',
+    'hashed_password',
+    '81999990001',
+    NOW(),
+    NULL,
+    'Rua A', '100', 'Espinheiro', '51000-000', 'Recife', 'PE',
+    'Gym Pro Espinheiro',
+    NULL, NULL,
+    NULL,
+    NULL
+),
+
+-- INSTRUCTORS
+(
+    '22222222-2222-2222-2222-222222222222',
+    'INSTRUCTOR',
+    'Ana Souza',
+    'ana.instructor@gym.com',
+    'ana.instructor',
+    'hashed_password',
+    '81999990002',
+    NOW(),
+    NULL,
+    'Rua B', '200', 'Gracas', '51000-001', 'Recife', 'PE',
+    NULL,
+    'CREF12345',
+    'Funcional',
+    NULL,
+    NULL
+),
+
+(
+    '33333333-3333-3333-3333-333333333333',
+    'INSTRUCTOR',
+    'João Lima',
+    'joao.instructor@gym.com',
+    'joao.instructor',
+    'hashed_password',
+    '81999990003',
+    NOW(),
+    NULL,
+    'Rua C', '300', 'Pina', '52000-000', 'Recife', 'PE',
+    NULL,
+    'CREF67890',
+    'Crossfit',
+    NULL,
+    NULL
+),
+
+-- STUDENTS (ACTIVE)
+(
+    '44444444-4444-4444-4444-444444444444',
+    'STUDENT',
+    'Maria Oliveira',
+    'maria.student@gym.com',
+    'maria.student',
+    'hashed_password',
+    '81999990004',
+    NOW(),
+    NULL,
+    'Rua D', '400', 'Madalena', '50710-000', 'Recife', 'PE',
+    NULL,
+    NULL, NULL,
+    '2000-05-10',
+    TRUE
+),
+
+(
+    '55555555-5555-5555-5555-555555555555',
+    'STUDENT',
+    'Joao Santos',
+    'joao.student@gym.com',
+    'joao.student',
+    'hashed_password',
+    '81999990005',
+    NOW(),
+    NULL,
+    'Rua E', '500', 'Espinheiro', '52020-000', 'Recife', 'PE',
+    NULL,
+    NULL, NULL,
+    '1998-08-20',
+    TRUE
+),
+
+-- STUDENT (INACTIVE)
+(
+    '66666666-6666-6666-6666-666666666666',
+    'STUDENT',
+    'Laura Costa',
+    'laura.student@gym.com',
+    'laura.student',
+    'hashed_password',
+    '81999990006',
+    NOW(),
+    NULL,
+    'Rua F', '600', 'Graças', '52011-000', 'Recife', 'PE',
+    NULL,
+    NULL, NULL,
+    '1995-03-15',
+    FALSE
+);
