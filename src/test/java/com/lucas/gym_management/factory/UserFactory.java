@@ -8,6 +8,9 @@ import com.lucas.gym_management.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.application.dto.AddressDTO;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRestDTO;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -155,5 +158,45 @@ public class UserFactory {
                 LocalDateTime.now(),
                 LocalDate.now().minusYears(19),
                 false);
+    }
+
+    public static CreateUserRequest createUserRequest() {
+        return new CreateUserRequest("STUDENT",
+                "any-student-name",
+                "student@email.com",
+                "any-login-student",
+        "any-password",
+                "any-phone-num",
+                buildAddressRestDTO(),
+                null,
+                null,
+                null,
+                LocalDate.now().minusYears(18));
+    }
+
+    private static AddressRestDTO buildAddressRestDTO() {
+        return new AddressRestDTO("any-street-name",
+                "any-number",
+                "any-neighborhood",
+                "any-zip-code",
+                "any-city",
+                "any-state");
+    }
+
+    public static UpdateUserRequest buildUpdateStudentRequest() {
+        return new UpdateUserRequest("Update-student-name",
+                "update@email.com",
+                "update-phone-num",
+                new AddressRestDTO("update-street-name",
+                        "update-number",
+                        "update-neighborhood",
+                        "update-zip-code",
+                        "update-city",
+                        "update-state"),
+        null,
+                null,
+                null,
+                LocalDate.of(2001, 02, 02),
+                true);
     }
 }
