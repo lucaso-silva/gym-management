@@ -4,7 +4,6 @@ import com.lucas.gym_management.application.domain.command.CreateUserData;
 import com.lucas.gym_management.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.application.domain.model.valueObjects.Address;
-import lombok.AccessLevel;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -14,7 +13,7 @@ import java.util.UUID;
 
 @Getter
 public abstract class User {
-    private UUID id;
+    private final UUID id;
     private String name;
     private String email;
     private String login;
@@ -22,7 +21,7 @@ public abstract class User {
     private String password;
     private String phone;
     private Address address;
-    private LocalDateTime createdAt;
+    private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     protected User(String name, String email, String login, String password, String phone, Address address) {

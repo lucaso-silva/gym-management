@@ -7,7 +7,7 @@ import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutpu
 import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
 import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
-import com.lucas.gym_management.application.ports.inbound.update.UpdatedUserOutput;
+import com.lucas.gym_management.application.ports.inbound.update.UpdateUserOutput;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRestDTO;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
@@ -16,6 +16,7 @@ import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.respon
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
 
 public class UserMapper {
+    private UserMapper() {}
 
     public static CreateUserInput requestToDTO(CreateUserRequest input) {
         var userType = toAppUserType(input);
@@ -72,7 +73,7 @@ public class UserMapper {
                 request.activeMembership());
     }
 
-    public static UserResponse toUserResponse(UpdatedUserOutput output) {
+    public static UserResponse toUserResponse(UpdateUserOutput output) {
         var address = toAddressDTO(output);
 
         return new UserResponse(output.id(),
@@ -118,7 +119,7 @@ public class UserMapper {
                 output.address().state());
     }
 
-    private static AddressRestDTO toAddressDTO(UpdatedUserOutput output) {
+    private static AddressRestDTO toAddressDTO(UpdateUserOutput output) {
         return new AddressRestDTO(output.address().street(),
                 output.address().number(),
                 output.address().neighborhood(),

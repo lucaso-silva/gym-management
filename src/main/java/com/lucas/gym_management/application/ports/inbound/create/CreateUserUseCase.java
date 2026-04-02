@@ -1,5 +1,5 @@
 package com.lucas.gym_management.application.ports.inbound.create;
 
-public interface ForCreatingUser {
+public interface CreateUserUseCase {
     CreateUserOutput createUser(CreateUserInput userInput);
 }
