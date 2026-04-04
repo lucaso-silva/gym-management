@@ -2,7 +2,7 @@
 
 A backend API that simulates a real-world gym management system, built to demonstrate Clean Architecture, DDD principles, and strong domain modeling.
 
-## Highlights
+## 1. Highlights
 This project demonstrates:
 - Clean Architecture (Ports & Adapters / Hexagonal)
 - Domain-driven design concepts
@@ -10,10 +10,20 @@ This project demonstrates:
 - Proper separation of concerns
 - Persistence abstraction
 - Non-anemic domain models
+- Use of Flyway for database versioning and Docker for environment consistency
 
 The focus is on behavior and business rules, not database-driven development.
 
-## Domain Overview
+## 2. Project Status
+This project is actively evolving and currently includes:
+- Core user management features
+- Clean Architecture implementation
+- Automated database migrations (Flyway)
+- Unit and controller tests (MockMvc)
+- Dockerized environment
+
+
+## 3. Domain Overview
 The system currently models three user roles:
 - Student – gym member
 - Instructor – training professional
@@ -21,7 +31,7 @@ The system currently models three user roles:
 
 All roles extend a base User aggregate root and enforce their own invariants.
 
-### **Business Rules**
+### Business Rules
 - Email and login must be unique
 - Email format validation
 - Student must be at least 16 years old
@@ -37,12 +47,12 @@ All roles extend a base User aggregate root and enforce their own invariants.
 - Domain exceptions
 - Behavioral update methods (no public setters)
 
-## Architecture
+## 4. Architecture
 This project follows:
 
     Clean Architecture (Ports & Adapters / Hexagonal)
 
-### **Layered Structure**
+### Layered Structure
 ```
 application
  ├── domain
@@ -61,7 +71,7 @@ infrastructure
 - Persistence can be replaced without affecting business logic
 - Clear separation between domain and JPA entities
 
-## Implemented Features
+## 5. Implemented Features
 **User Management**
 - Create user (Student, Instructor, Manager)
 - List users (optional name filter)
@@ -70,14 +80,31 @@ infrastructure
 - Partial update (PATCH)
 - Delete user (with business validation)
 
-## Persistence
+## 6. Persistence
 
 - PostgreSQL
 - Spring Data JPA
+- Flyway for database versioning
 - Single table strategy with user type discriminator
-- Explicit mapping between domain model and JPA entities
+- Explicit mapping between the domain model and JPA entities
 
-## API Routes
+## 7. Database & Migrations
+This project uses Flyway for database version control.
+
+### Migration Files
+**Located at:**
+```
+src/main/resources/db/migration
+```
+
+### How it works
+- Migrations run automatically on application startup
+- Database schema is versioned and tracked
+- Prevents inconsistencies between environments
+
+> The project does not rely on `ddl-auto=create`. All schema changes are managed explicitly via migrations.
+
+## 8. API Routes
 
 `/users`
 
@@ -89,15 +116,76 @@ infrastructure
 | PATCH | `/users/{id}` | Partial update |
 | DELETE | `/users/{id}` | Delete user |
 
-## Tech Stack
+## 9. Tech Stack
 - Java 21
 - Spring Boot
 - Spring Data JPA
 - PostgreSQL
+- Flyway
+- Docker and Docker Compose
+- H2 (tests)
+- JUnit and MockMvc
 - Lombok
 - Jakarta Validation
 
-## Next Steps
+## 10. Testing
+The project includes automated tests to ensure the correctness of business logic and API behavior.
+
+### Test Types
+- Unit tests for Use Cases (business logic)
+- Controller tests using MockMvc
+
+### Technologies
+- JUnit
+- MockMvc
+- H2 in-memory database
+
+### Running tests
+
+```bash
+mvn test
+```
+## 11. Docker
+The application is fully containerized using Docker.
+
+### Setup includes:
+- Dockerfile for the Spring Boot application
+- Docker Compose for orchestrating:
+  - Application container
+  - PostgreSQL database
+
+### Benefits
+- Consistent environment across machines
+- Easy setup for new developers
+- Closer to production environment
+
+## 12. Running the Application
+**Prerequisites**
+- Docker
+- Docker Compose
+
+### Start the application
+```bash
+docker-compose up --build
+```
+
+**What happens**
+- PostgreSQL container starts
+- Application container starts
+- Flyway runs migrations automatically
+- Application connects to the database
+
+**API available at:**
+```
+http://localhost:8080
+```
+
+### Stop containers
+```bash
+docker-compose down
+```
+
+## 13. Next Steps
 **Domain Expansion**
 - Add Gym aggregate
 - Add GymClass aggregate
@@ -106,15 +194,14 @@ infrastructure
 - Membership lifecycle management
 
 **Improvements**
-- Unit tests for domain layer
-- Integration tests
 - Password hashing
+- Implement authentication and authorization
 - Soft delete
 - Audit fields
-- OpenAPI documentation
-- Docker support
+- API documentation (OpenAPI / Swagger)
+- Add Testcontainers for real database integration tests
 
-## Key Takeaway
+## 14. Key Takeaway
 This project demonstrates the ability to:
 - Design maintainable backend systems
 - Model business rules correctly
