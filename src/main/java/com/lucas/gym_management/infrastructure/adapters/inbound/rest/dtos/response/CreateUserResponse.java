@@ -5,5 +5,6 @@ import java.util.UUID;
 public record CreateUserResponse(UUID id,
                                  String name,
                                  String login,
-                                 String email) {
+                                 String email,
+                                 String userType) {
 }

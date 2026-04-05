@@ -39,13 +39,15 @@ public class UserMapper {
         return new CreateUserResponse(output.id(),
                 output.name(),
                 output.login(),
-                output.email());
+                output.email(),
+                output.userType().name());
     }
 
     public static ListUserResponse toUserListResponse(ListUserOutput output) {
         return new ListUserResponse(output.id(),
                 output.name(),
-                output.email());
+                output.email(),
+                output.userType().name());
     }
 
     public static UserResponse toUserResponse(GetUserOutput output) {

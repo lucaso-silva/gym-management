@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
@@ -218,7 +217,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail").value("Cannot delete a student with active membership, id %s".formatted(userId.toString())));
+                .andExpect(jsonPath("$.detail").value("Cannot delete a student with active membership, id %s".formatted(userId)));
     }
 
 }
