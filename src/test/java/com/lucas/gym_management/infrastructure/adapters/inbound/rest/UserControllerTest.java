@@ -2,7 +2,7 @@ package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.factory.UserFactory;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,8 +48,8 @@ class UserControllerTest {
                 .andReturn();
 
         var responseBody = result.getResponse().getContentAsString();
-        UserResponse userResponse = objectMapper.readValue(responseBody, UserResponse.class);
-        UUID userId = userResponse.id();
+        CreateUserResponse output = objectMapper.readValue(responseBody, CreateUserResponse.class);
+        UUID userId = output.id();
 
         mockMvc.perform(get("/users/{id}", userId))
                 .andExpect(status().isOk())

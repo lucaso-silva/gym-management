@@ -1,11 +1,11 @@
 package com.lucas.gym_management.application.service;
 
 import com.lucas.gym_management.application.domain.model.Student;
+import com.lucas.gym_management.application.dto.user.UserOutput;
 import com.lucas.gym_management.application.exceptions.ConflictException;
 import com.lucas.gym_management.application.exceptions.NotAuthorizedException;
 import com.lucas.gym_management.application.exceptions.NotFoundException;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
-import com.lucas.gym_management.application.ports.inbound.update.UpdateUserOutput;
 import com.lucas.gym_management.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.factory.UserFactory;
 import org.junit.jupiter.api.Test;
@@ -217,17 +217,17 @@ class UpdateUserUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(student.getId(), output.id()),
-                ()-> assertEquals(input.name(), output.name()),
-                ()-> assertEquals(student.getLogin(), output.login()),
-                ()-> assertEquals(student.getEmail(), output.email()),
-                ()-> assertEquals(student.getPhone(), output.phone()),
-                ()-> assertEquals(student.getAddress().getStreet(), output.address().street()),
-                ()-> assertEquals(student.getAddress().getNumber(), output.address().number()),
-                ()-> assertEquals(student.getAddress().getNeighborhood(), output.address().neighborhood()),
-                ()-> assertEquals(student.getAddress().getZipCode(), output.address().zipCode()),
-                ()-> assertEquals(student.getAddress().getCity(), output.address().city()),
-                ()-> assertEquals(student.getAddress().getState(), output.address().state())
+                ()-> assertEquals(student.getId(), output.getId()),
+                ()-> assertEquals(input.name(), output.getName()),
+                ()-> assertEquals(student.getLogin(), output.getLogin()),
+                ()-> assertEquals(student.getEmail(), output.getEmail()),
+                ()-> assertEquals(student.getPhone(), output.getPhone()),
+                ()-> assertEquals(student.getAddress().getStreet(), output.getAddress().street()),
+                ()-> assertEquals(student.getAddress().getNumber(), output.getAddress().number()),
+                ()-> assertEquals(student.getAddress().getNeighborhood(), output.getAddress().neighborhood()),
+                ()-> assertEquals(student.getAddress().getZipCode(), output.getAddress().zipCode()),
+                ()-> assertEquals(student.getAddress().getCity(), output.getAddress().city()),
+                ()-> assertEquals(student.getAddress().getState(), output.getAddress().state())
         );
 
         verify(userRepository).findById(userId);
@@ -236,19 +236,19 @@ class UpdateUserUseCaseTest {
         verifyNoMoreInteractions(userRepository);
     }
 
-    private void assertStudentOutputMatches(Student expectedOutput, UpdateUserOutput output){
+    private void assertStudentOutputMatches(Student expectedOutput, UserOutput output){
         assertAll(
-                ()-> assertEquals(expectedOutput.getId(), output.id()),
-                ()-> assertEquals(expectedOutput.getName(), output.name()),
-                ()-> assertEquals(expectedOutput.getLogin(), output.login()),
-                ()-> assertEquals(expectedOutput.getEmail(), output.email()),
-                ()-> assertEquals(expectedOutput.getPhone(), output.phone()),
-                ()-> assertEquals(expectedOutput.getAddress().getStreet(), output.address().street()),
-                ()-> assertEquals(expectedOutput.getAddress().getNumber(), output.address().number()),
-                ()-> assertEquals(expectedOutput.getAddress().getNeighborhood(), output.address().neighborhood()),
-                ()-> assertEquals(expectedOutput.getAddress().getZipCode(), output.address().zipCode()),
-                ()-> assertEquals(expectedOutput.getAddress().getCity(), output.address().city()),
-                ()-> assertEquals(expectedOutput.getAddress().getState(), output.address().state())
+                ()-> assertEquals(expectedOutput.getId(), output.getId()),
+                ()-> assertEquals(expectedOutput.getName(), output.getName()),
+                ()-> assertEquals(expectedOutput.getLogin(), output.getLogin()),
+                ()-> assertEquals(expectedOutput.getEmail(), output.getEmail()),
+                ()-> assertEquals(expectedOutput.getPhone(), output.getPhone()),
+                ()-> assertEquals(expectedOutput.getAddress().getStreet(), output.getAddress().street()),
+                ()-> assertEquals(expectedOutput.getAddress().getNumber(), output.getAddress().number()),
+                ()-> assertEquals(expectedOutput.getAddress().getNeighborhood(), output.getAddress().neighborhood()),
+                ()-> assertEquals(expectedOutput.getAddress().getZipCode(), output.getAddress().zipCode()),
+                ()-> assertEquals(expectedOutput.getAddress().getCity(), output.getAddress().city()),
+                ()-> assertEquals(expectedOutput.getAddress().getState(), output.getAddress().state())
         );
     }
 

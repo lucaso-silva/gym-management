@@ -35,16 +35,16 @@ class GetUserUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(userId, output.id()),
-                ()-> assertEquals(student.getName(), output.name()),
-                ()-> assertEquals(student.getEmail(), output.email()),
-                ()-> assertEquals(student.getLogin(), output.login()),
-                ()-> assertEquals(student.getPhone(), output.phone()),
-                ()-> assertEquals(student.getAddress().getStreet(), output.address().street()),
-                ()-> assertEquals(student.getAddress().getNumber(), output.address().number()),
-                ()-> assertEquals(student.getAddress().getNeighborhood(), output.address().neighborhood()),
-                ()-> assertEquals(student.getAddress().getCity(), output.address().city()),
-                ()-> assertEquals(student.getAddress().getState(), output.address().state())
+                ()-> assertEquals(userId, output.getId()),
+                ()-> assertEquals(student.getName(), output.getName()),
+                ()-> assertEquals(student.getEmail(), output.getEmail()),
+                ()-> assertEquals(student.getLogin(), output.getLogin()),
+                ()-> assertEquals(student.getPhone(), output.getPhone()),
+                ()-> assertEquals(student.getAddress().getStreet(), output.getAddress().street()),
+                ()-> assertEquals(student.getAddress().getNumber(), output.getAddress().number()),
+                ()-> assertEquals(student.getAddress().getNeighborhood(), output.getAddress().neighborhood()),
+                ()-> assertEquals(student.getAddress().getCity(), output.getAddress().city()),
+                ()-> assertEquals(student.getAddress().getState(), output.getAddress().state())
         );
 
         verify(userRepository, times(1)).findById(userId);
@@ -82,16 +82,16 @@ class GetUserUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(userId, output.id()),
-                ()-> assertEquals(student.getName(), output.name()),
-                ()-> assertEquals(student.getEmail(), output.email()),
-                ()-> assertEquals(student.getLogin(), output.login()),
-                ()-> assertEquals(student.getPhone(), output.phone()),
-                ()-> assertEquals(student.getAddress().getStreet(), output.address().street()),
-                ()-> assertEquals(student.getAddress().getNumber(), output.address().number()),
-                ()-> assertEquals(student.getAddress().getNeighborhood(), output.address().neighborhood()),
-                ()-> assertEquals(student.getAddress().getCity(), output.address().city()),
-                ()-> assertEquals(student.getAddress().getState(), output.address().state())
+                ()-> assertEquals(userId, output.getId()),
+                ()-> assertEquals(student.getName(), output.getName()),
+                ()-> assertEquals(student.getEmail(), output.getEmail()),
+                ()-> assertEquals(student.getLogin(), output.getLogin()),
+                ()-> assertEquals(student.getPhone(), output.getPhone()),
+                ()-> assertEquals(student.getAddress().getStreet(), output.getAddress().street()),
+                ()-> assertEquals(student.getAddress().getNumber(), output.getAddress().number()),
+                ()-> assertEquals(student.getAddress().getNeighborhood(), output.getAddress().neighborhood()),
+                ()-> assertEquals(student.getAddress().getCity(), output.getAddress().city()),
+                ()-> assertEquals(student.getAddress().getState(), output.getAddress().state())
         );
 
         verify(userRepository, times(1)).findByLogin(login);

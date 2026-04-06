@@ -1,5 +1,6 @@
 package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
+import com.lucas.gym_management.application.dto.user.UserOutput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserUseCase;
 import com.lucas.gym_management.application.ports.inbound.delete.DeleteUserUseCase;
 import com.lucas.gym_management.application.ports.inbound.get.GetUserByIdUseCase;
@@ -9,7 +10,6 @@ import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.reques
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.ListUserResponse;
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.mapper.UserMapper;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -42,10 +42,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> findUserById(@PathVariable UUID id){
+    public ResponseEntity<UserOutput> findUserById(@PathVariable UUID id){
         var userById = getUserByIdUseCase.getUserById(id);
 
-        return ResponseEntity.ok(UserMapper.toUserResponse(userById));
+        return ResponseEntity.ok(userById);
     }
 
     @PostMapping
@@ -59,12 +59,12 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@RequestHeader("x-user-id") UUID  loggedInUserId,
+    public ResponseEntity<UserOutput> updateUser(@RequestHeader("x-user-id") UUID  loggedInUserId,
                                                    @PathVariable("id") UUID userId,
                                                    @RequestBody UpdateUserRequest input){
         var updatedUser = updateUserUseCase.updateUser(loggedInUserId, userId, UserMapper.toUpdateUserInput(input));
 
-        return ResponseEntity.ok(UserMapper.toUserResponse(updatedUser));
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
