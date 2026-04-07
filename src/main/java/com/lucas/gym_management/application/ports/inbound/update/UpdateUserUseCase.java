@@ -1,7 +1,9 @@
 package com.lucas.gym_management.application.ports.inbound.update;
 
+import com.lucas.gym_management.application.dto.user.UserOutput;
+
 import java.util.UUID;
 
 public interface UpdateUserUseCase {
-    UpdateUserOutput updateUser(UUID loggedInUserId, UUID userId, UpdateUserInput userInput);
+    UserOutput updateUser(UUID loggedInUserId, UUID userId, UpdateUserInput userInput);
 }

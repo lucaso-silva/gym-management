@@ -4,16 +4,12 @@ import com.lucas.gym_management.application.domain.model.UserType;
 import com.lucas.gym_management.application.dto.AddressDTO;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.application.ports.inbound.create.CreateUserOutput;
-import com.lucas.gym_management.application.ports.inbound.get.GetUserOutput;
 import com.lucas.gym_management.application.ports.inbound.list.ListUserOutput;
 import com.lucas.gym_management.application.ports.inbound.update.UpdateUserInput;
-import com.lucas.gym_management.application.ports.inbound.update.UpdateUserOutput;
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.AddressRestDTO;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.CreateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.ListUserResponse;
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
 
 public class UserMapper {
     private UserMapper() {}
@@ -39,24 +35,15 @@ public class UserMapper {
         return new CreateUserResponse(output.id(),
                 output.name(),
                 output.login(),
-                output.email());
+                output.email(),
+                output.userType().name());
     }
 
     public static ListUserResponse toUserListResponse(ListUserOutput output) {
         return new ListUserResponse(output.id(),
                 output.name(),
-                output.email());
-    }
-
-    public static UserResponse toUserResponse(GetUserOutput output) {
-        var address = toAddressDTO(output);
-
-        return new UserResponse(output.id(),
-                output.name(),
                 output.email(),
-                output.login(),
-                output.phone(),
-                address);
+                output.userType().name());
     }
 
     public static UpdateUserInput toUpdateUserInput(UpdateUserRequest request) {
@@ -71,17 +58,6 @@ public class UserMapper {
                 request.specialty(),
                 request.birthDate(),
                 request.activeMembership());
-    }
-
-    public static UserResponse toUserResponse(UpdateUserOutput output) {
-        var address = toAddressDTO(output);
-
-        return new UserResponse(output.id(),
-                output.name(),
-                output.email(),
-                output.login(),
-                output.phone(),
-                address);
     }
 
     private static UserType toAppUserType(CreateUserRequest input) {
@@ -108,23 +84,5 @@ public class UserMapper {
                 input.address().city(),
                 input.address().state()
         );
-    }
-
-    private static AddressRestDTO toAddressDTO(GetUserOutput output) {
-        return new AddressRestDTO(output.address().street(),
-                output.address().number(),
-                output.address().neighborhood(),
-                output.address().zipCode(),
-                output.address().city(),
-                output.address().state());
-    }
-
-    private static AddressRestDTO toAddressDTO(UpdateUserOutput output) {
-        return new AddressRestDTO(output.address().street(),
-                output.address().number(),
-                output.address().neighborhood(),
-                output.address().zipCode(),
-                output.address().city(),
-                output.address().state());
     }
 }

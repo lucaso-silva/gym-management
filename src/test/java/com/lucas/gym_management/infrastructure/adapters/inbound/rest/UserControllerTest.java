@@ -2,7 +2,7 @@ package com.lucas.gym_management.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.factory.UserFactory;
 import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.request.UpdateUserRequest;
-import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.UserResponse;
+import com.lucas.gym_management.infrastructure.adapters.inbound.rest.dtos.response.CreateUserResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
@@ -49,8 +48,8 @@ class UserControllerTest {
                 .andReturn();
 
         var responseBody = result.getResponse().getContentAsString();
-        UserResponse userResponse = objectMapper.readValue(responseBody, UserResponse.class);
-        UUID userId = userResponse.id();
+        CreateUserResponse output = objectMapper.readValue(responseBody, CreateUserResponse.class);
+        UUID userId = output.id();
 
         mockMvc.perform(get("/users/{id}", userId))
                 .andExpect(status().isOk())
@@ -218,7 +217,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.detail").value("Cannot delete a student with active membership, id %s".formatted(userId.toString())));
+                .andExpect(jsonPath("$.detail").value("Cannot delete a student with active membership, id %s".formatted(userId)));
     }
 
 }

@@ -5,7 +5,6 @@ INSERT INTO users (
     gym_name, cref, specialty,
     birthday, status
 ) VALUES
-
 -- MANAGER
 (
     '11111111-1111-1111-1111-111111111111',
@@ -23,7 +22,6 @@ INSERT INTO users (
     NULL,
     NULL
 ),
-
 -- INSTRUCTORS
 (
     '22222222-2222-2222-2222-222222222222',
@@ -42,7 +40,6 @@ INSERT INTO users (
     NULL,
     NULL
 ),
-
 (
     '33333333-3333-3333-3333-333333333333',
     'INSTRUCTOR',
@@ -60,7 +57,6 @@ INSERT INTO users (
     NULL,
     NULL
 ),
-
 -- STUDENTS (ACTIVE)
 (
     '44444444-4444-4444-4444-444444444444',
@@ -78,7 +74,6 @@ INSERT INTO users (
     '2000-05-10',
     TRUE
 ),
-
 (
     '55555555-5555-5555-5555-555555555555',
     'STUDENT',
@@ -95,7 +90,6 @@ INSERT INTO users (
     '1998-08-20',
     TRUE
 ),
-
 -- STUDENT (INACTIVE)
 (
     '66666666-6666-6666-6666-666666666666',
