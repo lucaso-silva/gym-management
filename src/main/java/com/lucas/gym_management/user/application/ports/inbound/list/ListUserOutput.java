@@ -1,0 +1,21 @@
+package com.lucas.gym_management.user.application.ports.inbound.list;
+
+import com.lucas.gym_management.user.application.domain.model.User;
+import com.lucas.gym_management.user.application.domain.model.UserType;
+
+import java.util.UUID;
+
+public record ListUserOutput(
+        UUID id,
+        String name,
+        String email,
+        UserType userType
+) {
+    public static ListUserOutput from(User user) {
+
+        return new ListUserOutput(user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getUserType());
+    }
+}
