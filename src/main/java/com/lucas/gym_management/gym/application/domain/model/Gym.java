@@ -24,12 +24,15 @@ public class Gym {
     private LocalDateTime updatedAt;
 
     protected Gym(String name, String phone, GymAddress address) {
+        if(name == null || name.isBlank() || phone == null || phone.isBlank() ||  address == null) {
+            throw new DomainException("You must provide Gym name, phone and address to create a Gym");
+        }
         this.id = UUID.randomUUID();
-        renameTo(name);
-        updatePhone(phone);
+        this.name = name;
+        this.phone = phone;
         this.membersIds = new HashSet<>();
         this.gymClassesIds = new HashSet<>();
-        updateAddress(address);
+        this.address = address;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = null;
     }
@@ -82,7 +85,7 @@ public class Gym {
             throw new DomainException("Member id cannot be empty");
         }
         if(membersIds.contains(userId)){
-            throw new DomainException("Member already exists");
+            throw new DomainException("User is already a gym member");
         }
         membersIds.add(userId);
         updatedAt = LocalDateTime.now();
@@ -115,7 +118,7 @@ public class Gym {
             throw new DomainException("Gym class id cannot be empty");
         }
         if(!gymClassesIds.contains(gymClassId)){
-            throw new GymClassNotAssociatedException("Gym Class doesn't exist");
+            throw new GymClassNotAssociatedException("Gym class doesn't exist");
         }
         gymClassesIds.remove(gymClassId);
         updatedAt = LocalDateTime.now();
