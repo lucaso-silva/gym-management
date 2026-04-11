@@ -1,0 +1,34 @@
+package com.lucas.gym_management.user.application.usecase.impl;
+
+import com.lucas.gym_management.user.application.domain.model.Manager;
+import com.lucas.gym_management.user.application.domain.model.Student;
+import com.lucas.gym_management.user.application.exceptions.ConflictException;
+import com.lucas.gym_management.user.application.exceptions.NotAuthorizedException;
+import com.lucas.gym_management.user.application.exceptions.NotFoundException;
+import com.lucas.gym_management.user.application.ports.inbound.delete.DeleteUserUseCase;
+import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
+import lombok.AllArgsConstructor;
+
+import java.util.UUID;
+
+@AllArgsConstructor
+public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
+    private final UserRepository userRepository;
+
+    @Override
+    public void deleteUserById(UUID loggedInUserId, UUID id) {
+        var loggedInUser = userRepository.findById(loggedInUserId)
+                .orElseThrow(() -> new NotFoundException("User with id " + loggedInUserId + " not found"));
+
+        var user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+
+        if(!(loggedInUser instanceof Manager))
+            throw new NotAuthorizedException("User cannot perform delete");
+
+        if(user instanceof Student student && student.isActiveMembership())
+            throw new ConflictException("Cannot delete a student with active membership, id %s".formatted(id));
+
+        userRepository.deleteById(id);
+    }
+}
