@@ -5,13 +5,13 @@ import com.lucas.gym_management.user.application.ports.outbound.repository.UserR
 import com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.mapper.UserJPAMapper;
 import com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.repository.UserJPARepository;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Repository
 @AllArgsConstructor
 public class UserRepositoryAdapter implements UserRepository {
     private final UserJPARepository userJPARepository;

@@ -1,4 +1,4 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.user.application.domain.model.Manager;
@@ -11,19 +11,15 @@ import com.lucas.gym_management.user.application.ports.inbound.update.UpdateUser
 import com.lucas.gym_management.user.application.ports.inbound.update.UpdateUserUseCase;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@Service
 @AllArgsConstructor
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
     public UserOutput updateUser(UUID loggedInUserId, UUID userId, UpdateUserInput input) {
 
         if(!loggedInUserId.equals(userId)) {

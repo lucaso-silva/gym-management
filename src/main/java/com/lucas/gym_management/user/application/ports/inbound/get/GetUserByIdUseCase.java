@@ -7,3 +7,4 @@ import java.util.UUID;
 public interface GetUserByIdUseCase {
     UserOutput getUserById(UUID id);
 }
+

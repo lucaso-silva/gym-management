@@ -1,4 +1,4 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.command.CreateUserData;
 import com.lucas.gym_management.user.application.domain.model.User;
@@ -8,17 +8,13 @@ import com.lucas.gym_management.user.application.ports.inbound.create.CreateUser
 import com.lucas.gym_management.user.application.ports.inbound.create.CreateUserUseCase;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @AllArgsConstructor
 public class CreateUserUseCaseImpl implements CreateUserUseCase {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
-    @Transactional
-    public CreateUserOutput createUser(final CreateUserInput userInput) {
+    public CreateUserOutput create(final CreateUserInput userInput) {
 
         if(userRepository.existsByEmail(userInput.email())){
             throw new ConflictException("Email %s already used.".formatted(userInput.email()));

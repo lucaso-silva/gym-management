@@ -1,8 +1,8 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.user.factory.UserFactory;
-import com.lucas.gym_management.user.application.service.ListUsersUseCaseImpl;
+import com.lucas.gym_management.user.application.usecase.impl.ListUsersUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.model.Instructor;
 import com.lucas.gym_management.user.application.domain.model.Manager;
@@ -9,6 +9,7 @@ import com.lucas.gym_management.user.application.exceptions.ConflictException;
 import com.lucas.gym_management.user.application.ports.inbound.create.CreateUserInput;
 import com.lucas.gym_management.user.application.ports.inbound.create.CreateUserOutput;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
+import com.lucas.gym_management.user.application.usecase.impl.CreateUserUseCaseImpl;
 import com.lucas.gym_management.user.factory.UserFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +43,7 @@ class CreateUserUseCaseTest {
         when(userRepository.save(any(Student.class)))
                 .thenReturn(student);
 
-        CreateUserOutput output = createUserUseCase.createUser(studentInput);
+        CreateUserOutput output = createUserUseCase.create(studentInput);
 
         assertNotNull(output);
         assertAll(
@@ -81,7 +82,7 @@ class CreateUserUseCaseTest {
 
         DomainException exception = assertThrows(
                 DomainException.class,
-                () -> createUserUseCase.createUser(invalidStudentInput)
+                () -> createUserUseCase.create(invalidStudentInput)
         );
 
         assertEquals("Student must be at least 16 years old", exception.getMessage());
@@ -116,7 +117,7 @@ class CreateUserUseCaseTest {
 
         DomainException exception =  assertThrows(
                 DomainException.class,
-                () -> createUserUseCase.createUser(studentInput)
+                () -> createUserUseCase.create(studentInput)
         );
 
         assertEquals("Birth date cannot be in the future", exception.getMessage());
@@ -139,7 +140,7 @@ class CreateUserUseCaseTest {
         when(userRepository.save(any(Manager.class)))
                 .thenReturn(manager);
 
-        CreateUserOutput output = createUserUseCase.createUser(managerInput);
+        CreateUserOutput output = createUserUseCase.create(managerInput);
 
         assertNotNull(output);
         assertAll(
@@ -167,7 +168,7 @@ class CreateUserUseCaseTest {
         when(userRepository.save(any(Instructor.class)))
                 .thenReturn(instructor);
 
-        var output = createUserUseCase.createUser(instructorInput);
+        var output = createUserUseCase.create(instructorInput);
 
         assertNotNull(output);
         assertAll(
@@ -192,7 +193,7 @@ class CreateUserUseCaseTest {
 
         ConflictException exception = assertThrows(
                 ConflictException.class,
-                () -> createUserUseCase.createUser(instructorInput)
+                () -> createUserUseCase.create(instructorInput)
         );
 
         assertEquals("Email " + instructorInput.email() +" already used.", exception.getMessage());
@@ -214,7 +215,7 @@ class CreateUserUseCaseTest {
 
         ConflictException exception = assertThrows(
                 ConflictException.class,
-                () -> createUserUseCase.createUser(instructorInput)
+                () -> createUserUseCase.create(instructorInput)
         );
 
         assertEquals("Login " + instructorInput.login() +" already used.", exception.getMessage());

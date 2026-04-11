@@ -1,4 +1,4 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.model.Student;
 import com.lucas.gym_management.user.application.exceptions.ConflictException;
@@ -6,7 +6,7 @@ import com.lucas.gym_management.user.application.exceptions.NotAuthorizedExcepti
 import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.user.factory.UserFactory;
-import com.lucas.gym_management.user.application.service.DeleteUserUseCaseImpl;
+import com.lucas.gym_management.user.application.usecase.impl.DeleteUserUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

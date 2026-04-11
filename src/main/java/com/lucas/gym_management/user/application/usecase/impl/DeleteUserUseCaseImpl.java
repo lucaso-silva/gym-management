@@ -1,4 +1,4 @@
-package com.lucas.gym_management.user.application.service;
+package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.model.Manager;
 import com.lucas.gym_management.user.application.domain.model.Student;
@@ -8,18 +8,14 @@ import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.inbound.delete.DeleteUserUseCase;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-@Service
 @AllArgsConstructor
 public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
-    @Transactional
     public void deleteUserById(UUID loggedInUserId, UUID id) {
         var loggedInUser = userRepository.findById(loggedInUserId)
                 .orElseThrow(() -> new NotFoundException("User with id " + loggedInUserId + " not found"));
