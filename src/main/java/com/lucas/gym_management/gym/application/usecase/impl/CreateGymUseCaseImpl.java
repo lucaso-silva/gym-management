@@ -1,4 +1,4 @@
-package com.lucas.gym_management.gym.application.service;
+package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
 import com.lucas.gym_management.gym.application.domain.model.valueObjects.GymAddress;
@@ -6,18 +6,14 @@ import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymIn
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @AllArgsConstructor
 public class CreateGymUseCaseImpl implements CreateGymUseCase {
 
     private GymRepository gymRepository;
 
     @Override
-    @Transactional
     public CreateGymOutput createGym(CreateGymInput input) {
         var gymAddress = GymAddress.newAddress(input.address().street(),
                         input.address().number(),
