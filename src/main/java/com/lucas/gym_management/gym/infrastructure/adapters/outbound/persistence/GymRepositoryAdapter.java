@@ -7,6 +7,10 @@ import com.lucas.gym_management.gym.infrastructure.adapters.outbound.persistence
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 @Repository
 @AllArgsConstructor
 public class GymRepositoryAdapter implements GymRepository {
@@ -17,5 +21,18 @@ public class GymRepositoryAdapter implements GymRepository {
         var entity = gymJPARepository.save(GymJPAMapper.toEntity(gym));
 
         return GymJPAMapper.toDomain(entity);
+    }
+
+    @Override
+    public Optional<Gym> findById(UUID id) {
+        return gymJPARepository.findById(id)
+                .map(GymJPAMapper::toDomain);
+    }
+
+    @Override
+    public List<Gym> findAll() {
+        return gymJPARepository.findAll().stream()
+                .map(GymJPAMapper::toDomain)
+                .toList();
     }
 }
