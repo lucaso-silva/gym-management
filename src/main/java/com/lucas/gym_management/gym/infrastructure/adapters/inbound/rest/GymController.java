@@ -42,4 +42,11 @@ public class GymController {
 
         return ResponseEntity.ok(output);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGym(@PathVariable UUID id) {
+        gymApplicationService.deleteGymById(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }

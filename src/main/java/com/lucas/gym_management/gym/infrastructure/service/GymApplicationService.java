@@ -4,6 +4,7 @@ import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymUseCase;
+import com.lucas.gym_management.gym.application.ports.inbound.delete.DeleteGymUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.get.GetGymByIdUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymsUseCase;
@@ -20,6 +21,7 @@ public class GymApplicationService {
     private final CreateGymUseCase createGymUseCase;
     private final GetGymByIdUseCase getGymByIdUseCase;
     private final ListGymsUseCase listGymsUseCase;
+    private final DeleteGymUseCase deleteGymUseCase;
 
     @Transactional
     public CreateGymOutput createGym(CreateGymInput input) {
@@ -31,7 +33,13 @@ public class GymApplicationService {
         return getGymByIdUseCase.getGymById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<ListGymOutput> listGyms() {
         return listGymsUseCase.listGyms();
+    }
+
+    @Transactional
+    public void deleteGymById(UUID id) {
+        deleteGymUseCase.deleteGymById(id);
     }
 }

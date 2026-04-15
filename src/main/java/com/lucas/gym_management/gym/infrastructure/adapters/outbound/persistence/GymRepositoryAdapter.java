@@ -35,4 +35,9 @@ public class GymRepositoryAdapter implements GymRepository {
                 .map(GymJPAMapper::toDomain)
                 .toList();
     }
+
+    @Override
+    public void deleteById(UUID id) {
+        gymJPARepository.deleteById(id);
+    }
 }

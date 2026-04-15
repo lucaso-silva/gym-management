@@ -19,5 +19,4 @@ public class GetUserByIdUseCaseImpl implements GetUserByIdUseCase {
         return userById.map(UserOutput::from)
                 .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(id)));
     }
-
 }
