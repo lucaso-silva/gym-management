@@ -1,7 +1,6 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
-import com.lucas.gym_management.gym.application.domain.model.valueObjects.GymAddress;
 import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
@@ -38,12 +37,11 @@ public class UpdateGymUseCaseImpl implements UpdateGymUseCase {
         }
 
         if(input.address() != null) {
-
-            gym.updateAddress(GymAddress.newAddress(input.address().street(),
+            gym.updateAddress(input.address().street(),
                     input.address().number(),
                     input.address().neighborhood(),
                     input.address().city(),
-                    input.address().state()));
+                    input.address().state());
         }
     }
 }
