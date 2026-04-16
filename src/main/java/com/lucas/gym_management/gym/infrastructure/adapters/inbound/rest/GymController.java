@@ -4,6 +4,7 @@ import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
+import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.infrastructure.service.GymApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,15 @@ public class GymController {
     @GetMapping
     public ResponseEntity<List<ListGymOutput>> getAllGyms() {
         var output = gymApplicationService.listGyms();
+
+        return ResponseEntity.ok(output);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<GymOutput> update(@RequestHeader("x-user-id") UUID userId,
+                                            @PathVariable UUID id,
+                                            @Valid @RequestBody UpdateGymInput input) {
+        var output = gymApplicationService.updateGym(userId, id, input);
 
         return ResponseEntity.ok(output);
     }

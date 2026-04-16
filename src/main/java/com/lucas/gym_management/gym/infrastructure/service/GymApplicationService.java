@@ -8,6 +8,8 @@ import com.lucas.gym_management.gym.application.ports.inbound.delete.DeleteGymUs
 import com.lucas.gym_management.gym.application.ports.inbound.get.GetGymByIdUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymsUseCase;
+import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
+import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class GymApplicationService {
     private final CreateGymUseCase createGymUseCase;
     private final GetGymByIdUseCase getGymByIdUseCase;
     private final ListGymsUseCase listGymsUseCase;
+    private final UpdateGymUseCase updateGymUseCase;
     private final DeleteGymUseCase deleteGymUseCase;
 
     @Transactional
@@ -36,6 +39,11 @@ public class GymApplicationService {
     @Transactional(readOnly = true)
     public List<ListGymOutput> listGyms() {
         return listGymsUseCase.listGyms();
+    }
+
+    @Transactional
+    public GymOutput updateGym(UUID userId, UUID gymId, UpdateGymInput input ) {
+        return updateGymUseCase.updateGym(userId, gymId, input);
     }
 
     @Transactional
