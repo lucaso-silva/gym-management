@@ -5,6 +5,7 @@ import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymIn
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
 import com.lucas.gym_management.gym.infrastructure.service.GymApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -30,9 +31,9 @@ public class GymController {
         return ResponseEntity.created(uri).body(output);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GymOutput> getGymById(@PathVariable UUID id) {
-        var gymById = gymApplicationService.getGymById(id);
+    @GetMapping("/{gymId}")
+    public ResponseEntity<GymOutput> getGymById(@PathVariable UUID gymId) {
+        var gymById = gymApplicationService.getGymById(gymId);
 
         return ResponseEntity.ok(gymById);
     }
@@ -44,19 +45,35 @@ public class GymController {
         return ResponseEntity.ok(output);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{gymId}")
     public ResponseEntity<GymOutput> update(@RequestHeader("x-user-id") UUID userId,
-                                            @PathVariable UUID id,
+                                            @PathVariable UUID gymId,
                                             @Valid @RequestBody UpdateGymInput input) {
-        var output = gymApplicationService.updateGym(userId, id, input);
+        var output = gymApplicationService.updateGym(userId, gymId, input);
 
         return ResponseEntity.ok(output);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGym(@PathVariable UUID id) {
-        gymApplicationService.deleteGymById(id);
+    @DeleteMapping("/{gymId}")
+    public ResponseEntity<Void> deleteGym(@PathVariable UUID gymId) {
+        gymApplicationService.deleteGymById(gymId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{gymId}/members")
+    public ResponseEntity<GymOutput> addMember(@RequestHeader("x-user-id") UUID loggedInUserId,
+                                             @PathVariable UUID gymId,
+                                             @Valid @RequestBody AddMemberInput memberId) {
+
+        return ResponseEntity.ok(gymApplicationService.addMember(loggedInUserId, gymId, memberId));
+    }
+
+    @DeleteMapping("/{gymId}/members/{memberId}")
+    public ResponseEntity<GymOutput> removeMember(@RequestHeader("x-user-id") UUID loggedInUserId,
+                                                @PathVariable UUID gymId,
+                                                @PathVariable UUID memberId) {
+
+        return ResponseEntity.ok(gymApplicationService.removeMember(loggedInUserId, gymId, memberId));
     }
 }

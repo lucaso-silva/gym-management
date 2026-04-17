@@ -123,6 +123,8 @@ public class Gym {
         if(!membersIds.contains(userId)){
             throw new UserNotMemberException("User is not a gym member");
         }
+        //TODO: implement rules: is user student (active membership?), instructor (is registered for any active class?), manager (is manager for any gym?)
+
         membersIds.remove(userId);
         updateInfo();
     }

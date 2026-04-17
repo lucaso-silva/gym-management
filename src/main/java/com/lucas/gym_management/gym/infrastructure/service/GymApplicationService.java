@@ -8,6 +8,9 @@ import com.lucas.gym_management.gym.application.ports.inbound.delete.DeleteGymUs
 import com.lucas.gym_management.gym.application.ports.inbound.get.GetGymByIdUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymsUseCase;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberUseCase;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.RemoveMemberUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUseCase;
 import lombok.AllArgsConstructor;
@@ -25,6 +28,8 @@ public class GymApplicationService {
     private final ListGymsUseCase listGymsUseCase;
     private final UpdateGymUseCase updateGymUseCase;
     private final DeleteGymUseCase deleteGymUseCase;
+    private final AddMemberUseCase addMemberUseCase;
+    private final RemoveMemberUseCase removeMemberUseCase;
 
     @Transactional
     public CreateGymOutput createGym(CreateGymInput input) {
@@ -49,5 +54,15 @@ public class GymApplicationService {
     @Transactional
     public void deleteGymById(UUID id) {
         deleteGymUseCase.deleteGymById(id);
+    }
+
+    @Transactional
+    public GymOutput addMember(UUID userId, UUID gymId, AddMemberInput memberId) {
+        return addMemberUseCase.addMember(userId, gymId, memberId);
+    }
+
+    @Transactional
+    public GymOutput removeMember(UUID userId, UUID gymId, UUID memberId) {
+        return removeMemberUseCase.removeMember(userId, gymId, memberId);
     }
 }
