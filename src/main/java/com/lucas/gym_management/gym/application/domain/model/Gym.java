@@ -105,27 +105,27 @@ public class Gym {
         }
     }
 
-    public void addMember(UUID userId) {
-        if(userId == null){
+    public void addMember(UUID memberId) {
+        if(memberId == null){
             throw new DomainException("Member id cannot be empty");
         }
-        if(membersIds.contains(userId)){
+        if(membersIds.contains(memberId)){
             throw new DomainException("User is already a gym member");
         }
-        membersIds.add(userId);
+        membersIds.add(memberId);
         updateInfo();
     }
 
-    public void removeMember(UUID userId) {
-        if(userId == null){
+    public void removeMember(UUID memberId) {
+        if(memberId == null){
             throw new DomainException("Member id cannot be empty");
         }
-        if(!membersIds.contains(userId)){
+        if(!membersIds.contains(memberId)){
             throw new UserNotMemberException("User is not a gym member");
         }
         //TODO: implement rules: is user student (active membership?), instructor (is registered for any active class?), manager (is manager for any gym?)
 
-        membersIds.remove(userId);
+        membersIds.remove(memberId);
         updateInfo();
     }
 

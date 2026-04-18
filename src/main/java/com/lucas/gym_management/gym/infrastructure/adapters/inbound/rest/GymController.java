@@ -4,6 +4,7 @@ import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymOutput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_gym_classes.AddGymClassInput;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
 import com.lucas.gym_management.gym.infrastructure.service.GymApplicationService;
@@ -75,5 +76,21 @@ public class GymController {
                                                 @PathVariable UUID memberId) {
 
         return ResponseEntity.ok(gymApplicationService.removeMember(loggedInUserId, gymId, memberId));
+    }
+
+    @PostMapping("/{gymId}/gym-classes")
+    public ResponseEntity<GymOutput> addGymClass(@RequestHeader("x-user-id") UUID loggedInUserId,
+                                                 @PathVariable UUID gymId,
+                                                 @Valid @RequestBody AddGymClassInput input){
+
+        return ResponseEntity.ok(gymApplicationService.addGymClass(loggedInUserId, gymId, input));
+    }
+
+    @DeleteMapping("/{gymId}/gym-classes/{gymClassId}")
+    public ResponseEntity<GymOutput> removeGymClass(@RequestHeader("x-user-id") UUID loggedInUserId,
+                                                    @PathVariable UUID gymId,
+                                                    @PathVariable UUID gymClassId) {
+
+        return ResponseEntity.ok(gymApplicationService.removeGymClass(loggedInUserId, gymId, gymClassId));
     }
 }
