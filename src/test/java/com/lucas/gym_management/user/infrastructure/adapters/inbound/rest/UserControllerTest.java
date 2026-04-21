@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
 class UserControllerTest {
+    private static final String BASE_URL = "/api/users";
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -36,7 +38,7 @@ class UserControllerTest {
     void shouldCreateUser_whenDataIsValid() throws Exception {
         var createUserRequest = UserFactory.createUserRequest();
 
-        var result = mockMvc.perform(post("/users")
+        var result = mockMvc.perform(post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createUserRequest)))
                 .andDo(print())
@@ -51,7 +53,7 @@ class UserControllerTest {
         CreateUserResponse output = objectMapper.readValue(responseBody, CreateUserResponse.class);
         UUID userId = output.id();
 
-        mockMvc.perform(get("/users/{id}", userId))
+        mockMvc.perform(get(BASE_URL+"/{id}", userId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(createUserRequest.name()))
                 .andExpect(jsonPath("$.login").value(createUserRequest.login()));
@@ -61,7 +63,7 @@ class UserControllerTest {
     @Sql(scripts = "/sql/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnAListOfUsers_whenThereAreUsers() throws Exception {
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get(BASE_URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -72,7 +74,7 @@ class UserControllerTest {
     @Sql(scripts = "/sql/clear-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnEmptyList_whenThereAreNoUsers() throws Exception {
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get(BASE_URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -85,7 +87,7 @@ class UserControllerTest {
     void shouldReturnAUser_whenUserIdIsValid() throws Exception {
         var userId = "11111111-1111-1111-1111-111111111111";
 
-        mockMvc.perform(get("/users/{id}", userId))
+        mockMvc.perform(get(BASE_URL+"/{id}", userId))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Any-manager-name"))
@@ -106,7 +108,7 @@ class UserControllerTest {
     void shouldThrowNotFoundException_whenUserIdIsNotValid() throws Exception {
         UUID userId = UUID.randomUUID();
 
-        mockMvc.perform(get("/users/{id}", userId))
+        mockMvc.perform(get(BASE_URL+"/{id}", userId))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.detail").value("User with id %s not found".formatted(userId.toString())));
@@ -120,7 +122,7 @@ class UserControllerTest {
         var managerId = "11111111-1111-1111-1111-111111111111";
         var input = UserFactory.buildUpdateStudentRequest();
 
-        mockMvc.perform(patch("/users/{id}", userId)
+        mockMvc.perform(patch(BASE_URL+"/{id}", userId)
                         .header("x-user-id", managerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
@@ -148,7 +150,7 @@ class UserControllerTest {
                 "f.student@test.com",
                 null, null, null, null, null, null, null);
 
-        mockMvc.perform(patch("/users/{id}", userId)
+        mockMvc.perform(patch(BASE_URL+"/{id}", userId)
                         .header("x-user-id", managerId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(input)))
@@ -164,13 +166,13 @@ class UserControllerTest {
         var userId = "33333333-3333-3333-3333-333333333333";
         var managerId = "11111111-1111-1111-1111-111111111111";
 
-        mockMvc.perform(delete("/users/{id}", userId)
+        mockMvc.perform(delete(BASE_URL+"/{id}", userId)
                         .header("x-user-id", managerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/users/{id}", "33333333-3333-3333-3333-333333333333"))
+        mockMvc.perform(get(BASE_URL+"/{id}", "33333333-3333-3333-3333-333333333333"))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }
@@ -182,7 +184,7 @@ class UserControllerTest {
         var userId = "33333333-3333-3333-3333-333333333333";
         var instructorId = "22222222-2222-2222-2222-222222222222";
 
-        mockMvc.perform(delete("/users/{id}", userId)
+        mockMvc.perform(delete(BASE_URL+"/{id}", userId)
                         .header("x-user-id", instructorId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -197,7 +199,7 @@ class UserControllerTest {
         var userId = UUID.randomUUID();
         var managerId = "11111111-1111-1111-1111-111111111111";
 
-        mockMvc.perform(delete("/users/{id}", userId)
+        mockMvc.perform(delete(BASE_URL+"/{id}", userId)
                         .header("x-user-id", managerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -212,7 +214,7 @@ class UserControllerTest {
         var userId = "44444444-4444-4444-4444-444444444444";
         var managerId = "11111111-1111-1111-1111-111111111111";
 
-        mockMvc.perform(delete("/users/{id}", userId)
+        mockMvc.perform(delete(BASE_URL+"/{id}", userId)
                         .header("x-user-id", managerId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
