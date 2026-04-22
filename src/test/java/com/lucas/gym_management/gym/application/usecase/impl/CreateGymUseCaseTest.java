@@ -1,7 +1,6 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
-import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.factory.GymFactory;

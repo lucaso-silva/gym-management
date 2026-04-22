@@ -12,13 +12,14 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+@ControllerAdvice(basePackages = "com.lucas.gym_management.user")
+public class UserExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { ConflictException.class })
     protected ResponseEntity<ProblemDetail> handleBusinessException(final ConflictException ex, final WebRequest request) {
@@ -64,7 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
     }
 
-    @ExceptionHandler(value = { Exception.class })
+    @ExceptionHandler(value = { RuntimeException.class })
     protected ResponseEntity<Object> handleGeneralException(final RuntimeException ex, final WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
                 "An unexpected error occurred");
@@ -97,6 +98,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setTitle("Validation Error");
         problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
         problemDetail.setProperty("invalid-params: ",  invalidParams);
+        problemDetail.setProperty("timestamp", Instant.now().toString());
 
         return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
     }
