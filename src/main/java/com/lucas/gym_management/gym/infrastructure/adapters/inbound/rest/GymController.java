@@ -56,8 +56,9 @@ public class GymController {
     }
 
     @DeleteMapping("/{gymId}")
-    public ResponseEntity<Void> deleteGym(@PathVariable UUID gymId) {
-        gymApplicationService.deleteGymById(gymId);
+    public ResponseEntity<Void> deleteGym(@RequestHeader("x-user-id")  UUID userId,
+            @PathVariable UUID gymId) {
+        gymApplicationService.deleteGymById(userId, gymId);
 
         return ResponseEntity.noContent().build();
     }

@@ -57,8 +57,8 @@ public class GymApplicationService {
     }
 
     @Transactional
-    public void deleteGymById(UUID id) {
-        deleteGymUseCase.deleteGymById(id);
+    public void deleteGymById(UUID userId, UUID id) {
+        deleteGymUseCase.deleteGymById(userId, id);
     }
 
     @Transactional
