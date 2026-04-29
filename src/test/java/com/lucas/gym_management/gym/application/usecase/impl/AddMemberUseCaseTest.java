@@ -33,7 +33,8 @@ class AddMemberUseCaseTest {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
         var loggedInUserId = UUID.randomUUID();
-        var addMemberInput = new AddMemberInput(UUID.randomUUID());
+        var memberId = UUID.randomUUID();
+        var addMemberInput = new AddMemberInput(memberId);
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
@@ -49,8 +50,8 @@ class AddMemberUseCaseTest {
                 ()-> assertEquals(gym.getId(), output.uuid()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
-                ()-> assertEquals(gym.getMembersIds().size(), output.members()),
                 ()-> assertEquals(1, output.members()),
+                () -> assertTrue(gym.getMembersIds().contains(memberId)),
                 ()-> assertEquals(gym.getGymClassesIds().size(), output.activeClasses()),
                 ()-> assertEquals(0, output.activeClasses())
         );
@@ -76,7 +77,7 @@ class AddMemberUseCaseTest {
 
         assertEquals("Gym not found with id: %s".formatted(gymId),  exception.getMessage());
 
-        verify(gymRepository).findById(any(UUID.class));
+        verify(gymRepository).findById(gymId);
         verify(gymRepository, never()).save(any(Gym.class));
         verifyNoMoreInteractions(gymRepository);
     }

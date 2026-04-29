@@ -1,7 +1,7 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
-import com.lucas.gym_management.gym.application.domain.model.exceptions.UserNotMemberException;
+import com.lucas.gym_management.gym.application.domain.model.exceptions.GymClassNotAssociatedException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.factory.GymFactory;
@@ -19,89 +19,91 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RemoveMemberUseCaseTest {
+class RemoveGymClassUseCaseTest {
 
     @Mock
     private GymRepository gymRepository;
 
     @InjectMocks
-    private RemoveMemberUseCaseImpl removeMemberUseCase;
+    private RemoveGymClassUseCaseImpl removeGymClassUseCase;
 
     @Test
-    void shouldRemoveAMember_whenMemberExists(){
+    void shouldRemoveAGymClass_whenGymClassIdIsValid() {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
-        var memberId = UUID.randomUUID();
         var userId = UUID.randomUUID();
+        var gymClassId = UUID.randomUUID();
 
-        gym.addMember(memberId);
+        gym.addGymClass(gymClassId);
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
-        when(gymRepository.save(any(Gym.class)))
+        when(gymRepository.save(gym))
                 .thenReturn(gym);
 
-        assertEquals(1, gym.getMembersIds().size());
-        assertTrue(gym.getMembersIds().contains(memberId));
+        assertEquals(1, gym.getGymClassesIds().size());
+        assertTrue(gym.getGymClassesIds().contains(gymClassId));
 
-        var output = removeMemberUseCase.removeMember(userId,gymId,memberId);
+        var output = removeGymClassUseCase.removeGymClass(userId,gymId,gymClassId);
 
         assertNotNull(output);
         assertAll(
                 ()-> assertEquals(gym.getId(), output.uuid()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
-                ()-> assertEquals(0, output.members()),
-                ()-> assertEquals(gym.getGymClassesIds().size(), output.activeClasses())
+                ()-> assertEquals(gym.getMembersIds().size(), output.members()),
+                ()-> assertTrue(gym.getMembersIds().isEmpty()),
+                ()-> assertEquals(gym.getGymClassesIds().size(), output.activeClasses()),
+                ()-> assertTrue(gym.getGymClassesIds().isEmpty())
         );
 
         verify(gymRepository).findById(gymId);
-        verify(gymRepository).save(any(Gym.class));
+        verify(gymRepository).save(gym);
         verifyNoMoreInteractions(gymRepository);
     }
 
     @Test
-    void shouldThrowGymNotFoundException_whenGymIdIsNotValid(){
+    void shouldThrowGymNotFoundException_whenGymIdIsNotValid() {
         var gymId = UUID.randomUUID();
-        var memberId = UUID.randomUUID();
         var userId = UUID.randomUUID();
+        var gymClassId = UUID.randomUUID();
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.empty());
 
         GymNotFoundException exception = assertThrows(
                 GymNotFoundException.class,
-                () -> removeMemberUseCase.removeMember(userId,gymId,memberId)
+                ()-> removeGymClassUseCase.removeGymClass(userId,gymId,gymClassId)
         );
 
-        assertEquals("Gym not found with id: %s".formatted(gymId),exception.getMessage());
+        assertEquals("Gym not found with id: %s".formatted(gymId), exception.getMessage());
 
-        verify(gymRepository).findById(any(UUID.class));
+        verify(gymRepository).findById(gymId);
         verify(gymRepository, never()).save(any(Gym.class));
         verifyNoMoreInteractions(gymRepository);
     }
 
     @Test
-    void shouldThrowDomainException_whenMemberDoesNotExist(){
+    void shouldThrowGymClassNotAssociatedException_whenGymClassIdDoesNotExist() {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
-        var memberId = UUID.randomUUID();
-        var anotherMemberId = UUID.randomUUID();
         var userId = UUID.randomUUID();
+        var gymClassId = UUID.randomUUID();
+        var anotherGymClassId = UUID.randomUUID();
 
-        gym.addMember(memberId);
+        gym.addGymClass(gymClassId);
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
 
-        UserNotMemberException exception = assertThrows(
-                UserNotMemberException.class,
-                () -> removeMemberUseCase.removeMember(userId,gymId,anotherMemberId)
+        GymClassNotAssociatedException exception = assertThrows(
+                GymClassNotAssociatedException.class,
+                ()-> removeGymClassUseCase.removeGymClass(userId,gymId,anotherGymClassId)
         );
 
-        assertEquals("User is not a gym member", exception.getMessage());
+        assertEquals("Gym class doesn't exist", exception.getMessage());
 
-        verify(gymRepository).findById(any(UUID.class));
+        verify(gymRepository).findById(gymId);
         verify(gymRepository, never()).save(any(Gym.class));
         verifyNoMoreInteractions(gymRepository);
     }
