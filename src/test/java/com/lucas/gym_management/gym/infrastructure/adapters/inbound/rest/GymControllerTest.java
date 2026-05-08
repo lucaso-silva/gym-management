@@ -1,6 +1,8 @@
 package com.lucas.gym_management.gym.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.gym.application.ports.inbound.create.CreateGymOutput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_gym_classes.AddGymClassInput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
 import com.lucas.gym_management.gym.factory.GymFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +17,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,7 +53,7 @@ class GymControllerTest {
         CreateGymOutput output = objectMapper.readValue(responseBody, CreateGymOutput.class);
         var gymId = output.id();
 
-        mockMvc.perform(get(BASE_URL + "/" + gymId))
+        mockMvc.perform(get(BASE_URL +"/"+ gymId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(createGymInput.name()))
                 .andExpect(jsonPath("$.phone").value(createGymInput.phone()));
@@ -60,11 +61,11 @@ class GymControllerTest {
 
     @Test
     @Sql(scripts = "/sql/gym/gyms-setup.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnAGym_whenGymIdIsValid() throws Exception {
         var gymId = "11111111-1111-1111-1111-111111111111";
 
-        mockMvc.perform(get(BASE_URL + "/" + gymId))
+        mockMvc.perform(get(BASE_URL +"/"+ gymId))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.uuid").value(gymId))
@@ -81,7 +82,7 @@ class GymControllerTest {
 
     @Test
     @Sql(scripts = "/sql/gym/gyms-setup.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnAListOfGyms_whenThereAreGyms() throws Exception {
         mockMvc.perform(get(BASE_URL))
                 .andDo(print())
@@ -92,7 +93,7 @@ class GymControllerTest {
 
     @Test
     @Sql(scripts = "/sql/clear-setup.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnEmptyList_whenThereAreNoGyms() throws Exception {
         mockMvc.perform(get(BASE_URL))
                 .andDo(print())
@@ -103,11 +104,31 @@ class GymControllerTest {
 
     @Test
     @Sql(scripts = "/sql/gym/gyms-setup.sql",
-            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnNotFound_whenGymIdIsInvalid() throws Exception {
-        mockMvc.perform(get(BASE_URL + "/" + UUID.randomUUID()))
+        mockMvc.perform(get(BASE_URL +"/"+ UUID.randomUUID()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
 
+    }
+
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldDeleteAGym_whenGymIdIsValid() throws Exception {
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var userId = "11111111-1111-1111-1111-111111111111";
+
+        mockMvc.perform(get(BASE_URL +"/"+ gymId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("First-gym-name"));
+
+        mockMvc.perform(delete(BASE_URL+"/"+gymId)
+                        .header("x-user-id", userId))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(BASE_URL +"/"+ gymId))
+                .andExpect(status().isNotFound());
     }
 }
