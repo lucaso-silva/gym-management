@@ -187,4 +187,128 @@ class GymControllerTest {
 
     }
 
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldRemoveAMemberFromGym_whenMemberIsIncluded() throws Exception {
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var userId = "11111111-1111-1111-1111-111111111111";
+        var memberId = "22222222-2222-2222-2222-222222222222";
+
+        mockMvc.perform(post(BASE_URL+"/"+gymId+"/members")
+                .header("x-user-id", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new AddMemberInput(UUID.fromString(memberId)))));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(1))
+                .andExpect(jsonPath("$.activeClasses").value(0));
+
+        mockMvc.perform(delete(BASE_URL +"/"+ gymId+"/members/"+memberId)
+                        .header("x-user-id", userId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(0))
+                .andExpect(jsonPath("$.activeClasses").value(0));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldThrowUserNotMemberException_whenUserIsNotAGymMember() throws Exception {
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var userId = "11111111-1111-1111-1111-111111111111";
+        var memberId = "22222222-2222-2222-2222-222222222222";
+        var invalidMember = "99999999-9999-9999-9999-999999999999";
+
+        mockMvc.perform(post(BASE_URL+"/"+gymId+"/members")
+                .header("x-user-id", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new AddMemberInput(UUID.fromString(memberId)))));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(1))
+                .andExpect(jsonPath("$.activeClasses").value(0));
+
+        mockMvc.perform(delete(BASE_URL +"/"+ gymId+"/members/"+invalidMember)
+                        .header("x-user-id", userId))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value("User is not a gym member"));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(1))
+                .andExpect(jsonPath("$.activeClasses").value(0));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldRemoveAGymClassFromGym_whenGymClassIsIncluded() throws Exception {
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var userId = "11111111-1111-1111-1111-111111111111";
+        var gymClassId = "22222222-2222-2222-2222-222222222222";
+
+        mockMvc.perform(post(BASE_URL+"/"+gymId+"/gym-classes")
+                .header("x-user-id", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new AddGymClassInput(UUID.fromString(gymClassId)))));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(0))
+                .andExpect(jsonPath("$.activeClasses").value(1));
+
+        mockMvc.perform(delete(BASE_URL +"/"+ gymId+"/gym-classes/"+gymClassId)
+                        .header("x-user-id", userId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(0))
+                .andExpect(jsonPath("$.activeClasses").value(0));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldThrowGymClassNotAssociatedException_whenGymClassIsNotRegistered() throws Exception {
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var userId = "11111111-1111-1111-1111-111111111111";
+        var gymClassId = "22222222-2222-2222-2222-222222222222";
+        var invalidGymClassId = "99999999-9999-9999-9999-999999999999";
+
+        mockMvc.perform(post(BASE_URL+"/"+gymId+"/gym-classes")
+                .header("x-user-id", userId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(new AddGymClassInput(UUID.fromString(gymClassId)))));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(0))
+                .andExpect(jsonPath("$.activeClasses").value(1));
+
+        mockMvc.perform(delete(BASE_URL +"/"+ gymId+"/gym-classes/"+invalidGymClassId)
+                        .header("x-user-id", userId))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.detail").value("Gym class doesn't exist"));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymId))
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value("First-gym-name"))
+                .andExpect(jsonPath("$.members").value(0))
+                .andExpect(jsonPath("$.activeClasses").value(1));
+    }
+
 }

@@ -23,14 +23,14 @@ public class GymExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = { GymClassNotAssociatedException.class })
     protected ResponseEntity<ProblemDetail> handleSystemBaseException(GymClassNotAssociatedException ex, WebRequest request) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.PRECONDITION_FAILED, ex.getMessage());
+                HttpStatus.CONFLICT, ex.getMessage());
         problemDetail.setType(URI.create("https://api.example.com/conflict/"));
         problemDetail.setTitle("Conflict Exception");
         problemDetail.setInstance(URI.create(
                 request.getDescription(false).replace("uri=","")));
         problemDetail.setProperty("timestamp", Instant.now().toString());
 
-        return ResponseEntity.status(HttpStatus.PRECONDITION_FAILED).body(problemDetail);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail);
     }
 
     @ExceptionHandler(value = { GymNotFoundException.class })
