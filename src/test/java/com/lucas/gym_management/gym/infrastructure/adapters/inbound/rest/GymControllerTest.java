@@ -311,4 +311,27 @@ class GymControllerTest {
                 .andExpect(jsonPath("$.activeClasses").value(1));
     }
 
+    @Test
+    @Sql(scripts = "/sql/gym/gyms-setup.sql",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldUpdateAGym_whenDataIsValid() throws Exception{
+        var userId = "11111111-1111-1111-1111-111111111111";
+        var gymId = "11111111-1111-1111-1111-111111111111";
+        var input = GymFactory.buildUpdateGymInput();
+
+        mockMvc.perform(patch(BASE_URL+"/"+gymId)
+                        .header("x-user-id", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(input)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.name").value(input.name()))
+                .andExpect(jsonPath("$.phone").value(input.phone()))
+                .andExpect(jsonPath("$.address.street").value(input.address().street()))
+                .andExpect(jsonPath("$.address.number").value(input.address().number()))
+                .andExpect(jsonPath("$.address.neighborhood").value(input.address().neighborhood()))
+                .andExpect(jsonPath("$.address.city").value(input.address().city()))
+                .andExpect(jsonPath("$.address.state").value(input.address().state()));
+    }
 }
