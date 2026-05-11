@@ -60,7 +60,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnAListOfUsers_whenThereAreUsers() throws Exception {
         mockMvc.perform(get(BASE_URL))
@@ -82,7 +82,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldReturnAUser_whenUserIdIsValid() throws Exception {
         var userId = "11111111-1111-1111-1111-111111111111";
@@ -103,7 +103,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowNotFoundException_whenUserIdIsNotValid() throws Exception {
         UUID userId = UUID.randomUUID();
@@ -115,7 +115,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldUpdateUser_whenDataIsValid() throws Exception {
         var userId = "44444444-4444-4444-4444-444444444444";
@@ -141,7 +141,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowConflictException_whenEmailIsAlreadyRegistered() throws Exception {
         var userId = "44444444-4444-4444-4444-444444444444";
@@ -160,7 +160,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase =  Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldDeleteUser_whenUserIdIsValid() throws Exception {
         var userId = "33333333-3333-3333-3333-333333333333";
@@ -178,7 +178,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowNotAuthorizedException_whenLoggedInUserIsNotManager() throws Exception{
         var userId = "33333333-3333-3333-3333-333333333333";
@@ -193,7 +193,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowNotFoundException_whenUserToDeleteIsNotValid() throws Exception {
         var userId = UUID.randomUUID();
@@ -208,7 +208,7 @@ class UserControllerTest {
     }
 
     @Test
-    @Sql(scripts = "/sql/users-setup.sql",
+    @Sql(scripts = "/sql/user/users-setup.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldThrowConflictException_whenUserToDeleteHasActiveMembership() throws Exception {
         var userId = "44444444-4444-4444-4444-444444444444";

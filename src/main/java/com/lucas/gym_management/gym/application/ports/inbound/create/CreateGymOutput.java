@@ -8,6 +8,7 @@ public record CreateGymOutput(UUID id,
                               String name,
                               String phone) {
     public static CreateGymOutput from(Gym gym) {
+
         return new CreateGymOutput(gym.getId(),
                 gym.getName(),
                 gym.getPhone());

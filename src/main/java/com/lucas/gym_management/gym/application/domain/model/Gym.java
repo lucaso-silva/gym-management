@@ -57,49 +57,76 @@ public class Gym {
     }
 
     public void renameTo(String newName){
-        if(newName == null || newName.isEmpty()){
+        if(newName == null || newName.isBlank()){
             throw new DomainException("Name cannot be empty");
         }
         this.name = newName;
-        updatedAt = LocalDateTime.now();
+        updateInfo();
     }
 
     public void updatePhone(String newPhone) {
-        if(newPhone == null || newPhone.isEmpty()){
+        if(newPhone == null || newPhone.isBlank()){
             throw new DomainException("Phone cannot be empty");
         }
         this.phone = newPhone;
-        updatedAt = LocalDateTime.now();
+        updateInfo();
     }
 
-    public void updateAddress(GymAddress newAddress){
-        if(newAddress == null){
-            throw new DomainException("Address cannot be empty");
+    public void updateAddress(String street, String number, String neighborhood, String city, String state) {
+        boolean updated = false;
+
+        if(street != null) {
+            this.address.updateStreet(street);
+            updated = true;
         }
-        this.address = newAddress;
-        updatedAt = LocalDateTime.now();
+
+        if(number != null) {
+            this.address.updateNumber(number);
+            updated = true;
+        }
+
+        if(neighborhood != null) {
+            this.address.updateNeighborhood(neighborhood);
+            updated = true;
+        }
+
+        if(city != null) {
+            this.address.updateCity(city);
+            updated = true;
+        }
+
+        if(state != null) {
+            this.address.updateState(state);
+            updated = true;
+        }
+
+        if(updated) {
+            updateInfo();
+        }
     }
 
-    public void addMember(UUID userId) {
-        if(userId == null){
+    public void addMember(UUID memberId) {
+        if(memberId == null){
             throw new DomainException("Member id cannot be empty");
         }
-        if(membersIds.contains(userId)){
+        if(membersIds.contains(memberId)){
             throw new DomainException("User is already a gym member");
         }
-        membersIds.add(userId);
-        updatedAt = LocalDateTime.now();
+        membersIds.add(memberId);
+        updateInfo();
     }
 
-    public void removeMember(UUID userId) {
-        if(userId == null){
+    public void removeMember(UUID memberId) {
+        if(memberId == null){
             throw new DomainException("Member id cannot be empty");
         }
-        if(!membersIds.contains(userId)){
+        if(!membersIds.contains(memberId)){
             throw new UserNotMemberException("User is not a gym member");
         }
-        membersIds.remove(userId);
-        updatedAt = LocalDateTime.now();
+        //TODO: implement rules: is user student (active membership?), instructor (is registered for any active class?), manager (is manager for any gym?)
+
+        membersIds.remove(memberId);
+        updateInfo();
     }
 
     public void addGymClass(UUID gymClassId) {
@@ -110,7 +137,7 @@ public class Gym {
             throw new DomainException("Gym class already exists");
         }
         gymClassesIds.add(gymClassId);
-        updatedAt = LocalDateTime.now();
+        updateInfo();
     }
 
     public void removeGymClass(UUID gymClassId) {
@@ -121,6 +148,10 @@ public class Gym {
             throw new GymClassNotAssociatedException("Gym class doesn't exist");
         }
         gymClassesIds.remove(gymClassId);
-        updatedAt = LocalDateTime.now();
+        updateInfo();
+    }
+
+    private void updateInfo(){
+        this.updatedAt = LocalDateTime.now();
     }
 }

@@ -20,7 +20,7 @@ public class GymJPAMapper {
                 .createdAt(gym.getCreatedAt())
                 .updatedAt(gym.getUpdatedAt())
                 .build();
-    };
+    }
 
     public static Gym toDomain(GymJPAEntity entity){
         return Gym.restoreGym(entity.getId(),
@@ -31,7 +31,7 @@ public class GymJPAMapper {
                 toGymAddressDomain(entity.getAddress()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
-    };
+    }
 
     private static GymAddressJPA toGymAddressEntity(GymAddress address){
         if(address == null) return null;
