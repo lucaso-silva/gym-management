@@ -41,7 +41,6 @@ public class GymClass {
         if(instructorId == null){
             throw new DomainException("Instructor ID cannot be null");
         }
-        //TODO: check if instructor id is valid
         this.instructorId = instructorId;
     }
 
@@ -56,6 +55,9 @@ public class GymClass {
     }
 
     public void enrollStudent(UUID studentId){
+        if(studentId == null){
+            throw new DomainException("Student ID cannot be null");
+        }
         //TODO: validate student id (is student? activeMembership?)
         if(this.enrolledStudents.contains(studentId)){
             throw new DomainException("Student is already enrolled in this class");
@@ -67,6 +69,9 @@ public class GymClass {
     }
 
     public void unenrollStudent(UUID studentId){
+        if(studentId == null){
+            throw new DomainException("Student ID cannot be null");
+        }
         if(!this.enrolledStudents.contains(studentId)){
             throw new DomainException("Student is not enrolled in this class");
         }
