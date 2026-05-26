@@ -1,20 +1,21 @@
-package com.lucas.gym_management.gymclass.application.ports.inbound.create;
+package com.lucas.gym_management.gymclass.application.ports.inbound.get;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
 
 import java.util.UUID;
 
-public record CreateGymClassOutput(UUID id,
-                                   String name,
-                                   UUID instructorId,
-                                   Integer capacity,
-                                   ScheduleDTO schedule) {
-    public static CreateGymClassOutput from(GymClass gymClass) {
-        return new CreateGymClassOutput(gymClass.getId(),
+public record GymClassOutput(UUID id,
+                             String name,
+                             Integer capacity,
+                             Integer numEnrolledStudents,
+                             ScheduleDTO schedule) {
+    public static GymClassOutput from(GymClass gymClass) {
+        return new GymClassOutput(
+                gymClass.getId(),
                 gymClass.getName(),
-                gymClass.getInstructorId(),
                 gymClass.getCapacity(),
+                gymClass.getEnrolledStudents().size(),
                 new ScheduleDTO(gymClass.getSchedule().dayOfWeek(),
                         gymClass.getSchedule().room(),
                         gymClass.getSchedule().startTime(),

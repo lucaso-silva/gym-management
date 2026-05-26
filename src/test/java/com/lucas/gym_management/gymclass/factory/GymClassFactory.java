@@ -3,7 +3,7 @@ package com.lucas.gym_management.gymclass.factory;
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.Schedule;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassInput;
-import com.lucas.gym_management.gymclass.application.ports.inbound.create.ScheduleDTO;
+import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

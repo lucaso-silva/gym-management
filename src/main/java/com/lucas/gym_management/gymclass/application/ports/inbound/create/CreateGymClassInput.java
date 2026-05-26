@@ -1,5 +1,6 @@
 package com.lucas.gym_management.gymclass.application.ports.inbound.create;
 
+import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

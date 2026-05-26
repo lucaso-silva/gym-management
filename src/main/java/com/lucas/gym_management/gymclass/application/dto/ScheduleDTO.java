@@ -1,4 +1,4 @@
-package com.lucas.gym_management.gymclass.application.ports.inbound.create;
+package com.lucas.gym_management.gymclass.application.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
