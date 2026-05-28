@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -43,6 +45,20 @@ class ListGymClassesUseCaseTest {
                 ()-> assertEquals(gymClassesList.getLast().getSchedule().startTime(), output.getLast().schedule().startTime()),
                 ()-> assertEquals(gymClassesList.getLast().getSchedule().endTime(), output.getLast().schedule().endTime())
         );
+
+        verify(gymClassRepository).findAll();
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+
+    @Test
+    void shouldReturnAnEmptyList_whenThereAreNoGymClasses(){
+
+        when(gymClassRepository.findAll()).thenReturn(Collections.emptyList());
+
+        var output = listGymClassesUseCase.listGymClasses();
+
+        assertNotNull(output);
+        assertTrue(output.isEmpty());
 
         verify(gymClassRepository).findAll();
         verifyNoMoreInteractions(gymClassRepository);

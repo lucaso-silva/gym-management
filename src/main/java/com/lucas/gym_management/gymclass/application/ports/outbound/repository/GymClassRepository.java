@@ -12,4 +12,6 @@ public interface GymClassRepository {
     Optional<GymClass> findById(UUID id);
 
     List<GymClass> findAll();
+
+    void deleteById(UUID gymClassId);
 }
