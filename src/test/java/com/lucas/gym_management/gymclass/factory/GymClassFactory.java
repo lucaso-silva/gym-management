@@ -7,6 +7,7 @@ import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 public class GymClassFactory {
@@ -41,6 +42,26 @@ public class GymClassFactory {
                         scheduleDTO.room(),
                         scheduleDTO.startTime(),
                         scheduleDTO.endTime()));
+    }
+
+    public static List<GymClass> buildListOfGymClasses() {
+        var gymClass1 = GymClass.newGymClass("First-gym-class-name",
+                instructorId,
+                10,
+                new Schedule(DayOfWeek.MONDAY,
+                        "First-gym-class-room",
+                        LocalTime.of(10, 0),
+                        LocalTime.of(10,30)));
+
+        var gymClass2 = GymClass.newGymClass("Second-gym-class-name",
+                instructorId,
+                20,
+                new Schedule(DayOfWeek.TUESDAY,
+                        "Second-gym-class-room",
+                        LocalTime.of(11, 0),
+                        LocalTime.of(11,30)));
+
+        return List.of(gymClass1, gymClass2);
     }
 }
 
