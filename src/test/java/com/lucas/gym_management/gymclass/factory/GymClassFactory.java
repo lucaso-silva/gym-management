@@ -4,6 +4,7 @@ import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.Schedule;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassInput;
 import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
+import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -62,6 +63,16 @@ public class GymClassFactory {
                         LocalTime.of(11,30)));
 
         return List.of(gymClass1, gymClass2);
+    }
+
+    public static UpdateGymClassInput buildUpdateGymClassInput(UUID newInstructorId) {
+        return new UpdateGymClassInput("Updated-gym-class-name",
+                newInstructorId,
+                10,
+                new ScheduleDTO(DayOfWeek.TUESDAY,
+                        "Updated-gym-class-room",
+                        LocalTime.of(12, 0),
+                        LocalTime.of(12,30)));
     }
 }
 

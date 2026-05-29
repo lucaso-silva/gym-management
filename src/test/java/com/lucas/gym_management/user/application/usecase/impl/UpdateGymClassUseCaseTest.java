@@ -1,0 +1,113 @@
+package com.lucas.gym_management.user.application.usecase.impl;
+
+import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
+import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
+import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.application.usecase.impl.UpdateGymClassUseCaseImpl;
+import com.lucas.gym_management.gymclass.factory.GymClassFactory;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class UpdateGymClassUseCaseTest {
+    @Mock
+    private GymClassRepository gymClassRepository;
+
+    @Mock
+    private GymGateway gymGateway;
+
+    @InjectMocks
+    private UpdateGymClassUseCaseImpl updateGymClassUseCase;
+
+    @Test
+    void shouldUpdateGymClass_whenDataIsValid(){
+        var gymClass = GymClassFactory.buildGymClass();
+        var newInstructorId = UUID.randomUUID();
+        var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(newInstructorId);
+        var gymClassId = gymClass.getId();
+
+        when(gymClassRepository.findById(gymClassId))
+                .thenReturn(Optional.of(gymClass));
+        when(gymGateway.isValidInstructor(newInstructorId))
+                .thenReturn(true);
+        when(gymClassRepository.save(any(GymClass.class)))
+                .thenReturn(gymClass);
+
+        var output = updateGymClassUseCase.updateGymClass(gymClassId, updateGymClassInput);
+
+        assertNotNull(output);
+        assertAll(
+                ()-> assertEquals(gymClass.getId(), output.id()),
+                ()-> assertEquals(updateGymClassInput.name(), output.name()),
+                ()-> assertEquals(updateGymClassInput.capacity(), output.capacity()),
+                ()-> assertEquals(updateGymClassInput.schedule().dayOfWeek(), output.schedule().dayOfWeek()),
+                ()-> assertEquals(updateGymClassInput.schedule().room(), output.schedule().room()),
+                ()-> assertEquals(updateGymClassInput.schedule().startTime(), output.schedule().startTime()),
+                ()-> assertEquals(updateGymClassInput.schedule().endTime(), output.schedule().endTime())
+        );
+
+        verify(gymClassRepository).findById(gymClassId);
+        verify(gymGateway).isValidInstructor(newInstructorId);
+        verify(gymClassRepository).save(gymClass);
+        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+
+    @Test
+    void shouldThrowNotFoundException_whenGymClassIdIsNotValid(){
+        var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(UUID.randomUUID());
+        var gymClasId = UUID.randomUUID();
+
+        when(gymClassRepository.findById(gymClasId))
+                .thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                ()-> updateGymClassUseCase.updateGymClass(gymClasId, updateGymClassInput)
+        );
+
+        assertEquals("There is no gym class with the id %s".formatted(gymClasId), exception.getMessage());
+
+        verify(gymClassRepository).findById(gymClasId);
+        verify(gymGateway, never()).isValidInstructor(any(UUID.class));
+        verify(gymClassRepository, never()).save(any(GymClass.class));
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+
+    @Test
+    void shouldThrowBusinessException_whenInstructorIdIsNotValid(){
+        var gymClass = GymClassFactory.buildGymClass();
+        var instructorId = UUID.randomUUID();
+        var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(instructorId);
+        var gymClassId = gymClass.getId();
+
+        when(gymClassRepository.findById(gymClassId))
+                .thenReturn(Optional.of(gymClass));
+        when(gymGateway.isValidInstructor(instructorId))
+                .thenReturn(false);
+
+        BusinessException exception = assertThrows(
+                BusinessException.class,
+                ()-> updateGymClassUseCase.updateGymClass(gymClassId, updateGymClassInput)
+        );
+
+        assertEquals("%s is not a valid instructor id".formatted(instructorId), exception.getMessage());
+
+        verify(gymClassRepository).findById(gymClassId);
+        verify(gymGateway).isValidInstructor(instructorId);
+        verify(gymClassRepository, never()).save(any(GymClass.class));
+        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+}

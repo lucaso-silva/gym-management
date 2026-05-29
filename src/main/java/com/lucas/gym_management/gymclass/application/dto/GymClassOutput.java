@@ -1,7 +1,6 @@
-package com.lucas.gym_management.gymclass.application.ports.inbound.get;
+package com.lucas.gym_management.gymclass.application.dto;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
-import com.lucas.gym_management.gymclass.application.dto.ScheduleDTO;
 
 import java.util.UUID;
 
