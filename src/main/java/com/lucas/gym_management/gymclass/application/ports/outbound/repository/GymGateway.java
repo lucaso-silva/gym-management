@@ -4,4 +4,6 @@ import java.util.UUID;
 
 public interface GymGateway {
     boolean isValidInstructor(UUID id);
+
+    boolean isValidStudent(UUID id);
 }

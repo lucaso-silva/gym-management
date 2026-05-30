@@ -1,0 +1,110 @@
+package com.lucas.gym_management.gymclass.application.usecase.impl;
+
+import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
+import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
+import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.factory.GymClassFactory;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class EnrollStudentUseCaseTest {
+    @Mock
+    private GymClassRepository gymClassRepository;
+
+    @Mock
+    private GymGateway gymGateway;
+
+    @InjectMocks
+    private EnrollStudentUseCaseImpl enrollStudentUseCase;
+
+    @Test
+    void shouldEnrollStudent_whenIdsAreValid(){
+        var gymClass = GymClassFactory.buildGymClass();
+        var gymClassId = gymClass.getId();
+        var studentId = UUID.randomUUID();
+
+        when(gymClassRepository.findById(gymClassId))
+                .thenReturn(Optional.of(gymClass));
+        when(gymGateway.isValidStudent(studentId))
+                .thenReturn(true);
+        when(gymClassRepository.save(gymClass))
+                .thenReturn(gymClass);
+
+        assertEquals(0, gymClass.getEnrolledStudents().size());
+
+        var output = enrollStudentUseCase.enrollStudent(gymClassId, studentId);
+
+        assertNotNull(output);
+        assertAll(
+                ()-> assertEquals(gymClass.getId(), output.id()),
+                ()-> assertEquals(gymClass.getName(), output.name()),
+                ()-> assertEquals(gymClass.getCapacity(), output.capacity()),
+                ()-> assertEquals(gymClass.getEnrolledStudents().size(), output.numEnrolledStudents())
+        );
+
+        verify(gymClassRepository).findById(gymClassId);
+        verify(gymGateway).isValidStudent(studentId);
+        verify(gymClassRepository).save(gymClass);
+        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymClassRepository);
+
+    }
+
+    @Test
+    void shouldThrowNotFoundException_whenGymClassIdIsInvalid(){
+        var gymClassId = UUID.randomUUID();
+        var studentId = UUID.randomUUID();
+
+        when(gymClassRepository.findById(gymClassId))
+                .thenReturn(Optional.empty());
+
+        NotFoundException exception = assertThrows(
+                NotFoundException.class,
+                ()-> enrollStudentUseCase.enrollStudent(gymClassId,studentId)
+        );
+
+        assertEquals("There is no gym class with id %s".formatted(gymClassId), exception.getMessage());
+
+        verify(gymClassRepository).findById(gymClassId);
+        verify(gymGateway, never()).isValidStudent(any(UUID.class));
+        verify(gymClassRepository, never()).save(any(GymClass.class));
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+
+    @Test
+    void shouldThrowBusinessException_whenStudentIdIsInvalid(){
+        var gymClass = GymClassFactory.buildGymClass();
+        var gymClassId = gymClass.getId();
+        var studentId = UUID.randomUUID();
+
+        when(gymClassRepository.findById(gymClassId))
+                .thenReturn(Optional.of(gymClass));
+        when(gymGateway.isValidStudent(studentId))
+                .thenReturn(false);
+
+        BusinessException exception = assertThrows(
+                BusinessException.class,
+                ()-> enrollStudentUseCase.enrollStudent(gymClassId, studentId)
+        );
+
+        assertEquals("%s is not a valid student id".formatted(studentId), exception.getMessage());
+
+        verify(gymClassRepository).findById(gymClassId);
+        verify(gymGateway).isValidStudent(studentId);
+        verify(gymClassRepository, never()).save(any(GymClass.class));
+        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymClassRepository);
+    }
+}
