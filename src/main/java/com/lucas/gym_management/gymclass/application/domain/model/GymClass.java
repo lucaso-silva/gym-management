@@ -12,22 +12,28 @@ import java.util.UUID;
 public class GymClass {
     private final UUID id;
     private String name;
+    private final UUID gymId;
     private UUID instructorId;
     private Integer capacity;
     private final Set<UUID> enrolledStudents;
     private Schedule schedule;
 
-    protected GymClass(String name, UUID instructorId, Integer capacity, Schedule schedule) {
+    protected GymClass(String name, UUID gymId, UUID instructorId, Integer capacity, Schedule schedule) {
+        if(gymId == null) {
+            throw new DomainException("Gym id cannot be null");
+        }
+
         this.id = UUID.randomUUID();
         rename(name);
+        this.gymId = gymId;
         assignInstructor(instructorId);
         defineCapacity(capacity);
         this.enrolledStudents = new HashSet<>();
         defineSchedule(schedule);
     }
 
-    public static GymClass newGymClass(String name, UUID instructorId, Integer capacity, Schedule schedule) {
-        return new GymClass(name,instructorId,capacity,schedule);
+    public static GymClass newGymClass(String name, UUID gymId, UUID instructorId, Integer capacity, Schedule schedule) {
+        return new GymClass(name,gymId, instructorId,capacity,schedule);
     }
 
     public void rename(String newName){
@@ -58,7 +64,6 @@ public class GymClass {
         if(studentId == null){
             throw new DomainException("Student ID cannot be null");
         }
-        //TODO: validate student id (is student? activeMembership?)
         if(this.enrolledStudents.contains(studentId)){
             throw new DomainException("Student is already enrolled in this class");
         }

@@ -65,8 +65,7 @@ public abstract class User {
                         userInput.login(),
                         userInput.password(),
                         userInput.phone(),
-                        userInput.address(),
-                        userInput.gymName());
+                        userInput.address());
             case INSTRUCTOR -> Instructor.newInstructor(
                         userInput.name(),
                         userInput.email(),
@@ -114,9 +113,7 @@ public abstract class User {
                     phone,
                     address,
                     createdAt,
-                    updatedAt,
-                    (String) extraFields.get("gymName"));
-
+                    updatedAt);
         };
     }
 
