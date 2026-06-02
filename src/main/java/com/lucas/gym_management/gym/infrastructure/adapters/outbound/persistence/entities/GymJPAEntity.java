@@ -25,15 +25,13 @@ public class GymJPAEntity {
     @Column(nullable = false)
     private String phone;
 
+    @Column(name = "manager_id", nullable = true)
+    private UUID managerId;
+
     @ElementCollection(targetClass = UUID.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "gym_members", joinColumns = @JoinColumn(name = "gym_id"))
     @Column(name = "member_id", nullable = false)
     private Set<UUID> membersIds = new HashSet<>();
-
-    @ElementCollection(targetClass = UUID.class, fetch = FetchType.LAZY)
-    @CollectionTable(name = "gym_classes", joinColumns = @JoinColumn(name = "gym_id"))
-    @Column(name = "class_id", nullable = false)
-    private Set<UUID> gymClassesIds = new HashSet<>();
 
     @Embedded
     private GymAddressJPA address;

@@ -7,7 +7,7 @@ import com.lucas.gym_management.gymclass.application.exceptions.NotFoundExceptio
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
-import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
     private final GymClassRepository gymClassRepository;
-    private final GymGateway gymGateway;
+    private final GymMemberValidator gymMemberValidator;
 
     @Override
     public GymClassOutput updateGymClass(UUID gymClassId, UpdateGymClassInput input) {
@@ -25,7 +25,7 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
                 .orElseThrow(()-> new NotFoundException("There is no gym class with the id %s".formatted(gymClassId)));
 
         if(input.instructorId() != null){
-            if(!gymGateway.isValidInstructor(input.instructorId())){
+            if(!gymMemberValidator.isInstructorFromGym(gymClass.getGymId(), input.instructorId())){
                 throw new BusinessException("%s is not a valid instructor id".formatted(input.instructorId()));
             }
             gymClass.assignInstructor(input.instructorId());
@@ -48,4 +48,5 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
 
         return GymClassOutput.from(gymClassRepository.save(gymClass));
     }
+
 }

@@ -8,6 +8,9 @@ import com.lucas.gym_management.gym.infrastructure.adapters.outbound.persistence
 import java.util.HashSet;
 
 public class GymJPAMapper {
+    private GymJPAMapper() {
+        /* This utility class should not be instantiated */
+    }
 
     public static GymJPAEntity toEntity(Gym gym){
         return GymJPAEntity.builder()
@@ -15,7 +18,6 @@ public class GymJPAMapper {
                 .name(gym.getName())
                 .phone(gym.getPhone())
                 .membersIds(new HashSet<>(gym.getMembersIds()))
-                .gymClassesIds(new HashSet<>(gym.getGymClassesIds()))
                 .address(toGymAddressEntity(gym.getAddress()))
                 .createdAt(gym.getCreatedAt())
                 .updatedAt(gym.getUpdatedAt())
@@ -27,7 +29,7 @@ public class GymJPAMapper {
                 entity.getName(),
                 entity.getPhone(),
                 entity.getMembersIds(),
-                entity.getGymClassesIds(),
+                entity.getManagerId(),
                 toGymAddressDomain(entity.getAddress()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt());
