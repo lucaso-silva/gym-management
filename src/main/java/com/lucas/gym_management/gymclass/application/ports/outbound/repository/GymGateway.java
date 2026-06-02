@@ -3,7 +3,7 @@ package com.lucas.gym_management.gymclass.application.ports.outbound.repository;
 import java.util.UUID;
 
 public interface GymGateway {
-    boolean isValidInstructor(UUID id);
+    boolean gymExists(UUID gymId);
 
-    boolean isValidStudent(UUID id);
+    boolean isMember(UUID gymId, UUID memberId);
 }
