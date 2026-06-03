@@ -16,8 +16,6 @@ CREATE TABLE users (
     zip_code VARCHAR (15) NOT NULL,
     city VARCHAR(50) NOT NULL,
     state VARCHAR(50) NOT NULL,
---     manager
-    gym_name VARCHAR(255),
 --     instructor
     cref VARCHAR(15),
     specialty VARCHAR(255),

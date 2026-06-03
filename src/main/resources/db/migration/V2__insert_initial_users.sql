@@ -2,8 +2,8 @@ INSERT INTO users (
     id, user_type, name, email, login, password, phone,
     created_at, updated_at,
     street, number, neighborhood, zip_code, city, state,
-    gym_name, cref, specialty,
-    birthday, status
+                   cref, specialty,
+                   birthday, status
 ) VALUES
 -- MANAGER
 (
@@ -17,7 +17,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua A', '100', 'Espinheiro', '51000-000', 'Recife', 'PE',
-    'Gym Pro Espinheiro',
     NULL, NULL,
     NULL,
     NULL
@@ -34,7 +33,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua B', '200', 'Gracas', '51000-001', 'Recife', 'PE',
-    NULL,
     'CREF12345',
     'Funcional',
     NULL,
@@ -51,7 +49,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua C', '300', 'Pina', '52000-000', 'Recife', 'PE',
-    NULL,
     'CREF67890',
     'Crossfit',
     NULL,
@@ -69,7 +66,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua D', '400', 'Madalena', '50710-000', 'Recife', 'PE',
-    NULL,
     NULL, NULL,
     '2000-05-10',
     TRUE
@@ -85,7 +81,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua E', '500', 'Espinheiro', '52020-000', 'Recife', 'PE',
-    NULL,
     NULL, NULL,
     '1998-08-20',
     TRUE
@@ -102,7 +97,6 @@ INSERT INTO users (
     NOW(),
     NULL,
     'Rua F', '600', 'Graças', '52011-000', 'Recife', 'PE',
-    NULL,
     NULL, NULL,
     '1995-03-15',
     FALSE
