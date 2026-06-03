@@ -28,6 +28,7 @@ public class GymJPAEntity {
     @Column(name = "manager_id", nullable = true)
     private UUID managerId;
 
+    @Builder.Default
     @ElementCollection(targetClass = UUID.class, fetch = FetchType.LAZY)
     @CollectionTable(name = "gym_members", joinColumns = @JoinColumn(name = "gym_id"))
     @Column(name = "member_id", nullable = false)

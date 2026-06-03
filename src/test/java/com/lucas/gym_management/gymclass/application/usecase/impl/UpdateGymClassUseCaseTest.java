@@ -1,11 +1,10 @@
-package com.lucas.gym_management.user.application.usecase.impl;
+package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
-import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
-import com.lucas.gym_management.gymclass.application.usecase.impl.UpdateGymClassUseCaseImpl;
+import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +24,7 @@ class UpdateGymClassUseCaseTest {
     private GymClassRepository gymClassRepository;
 
     @Mock
-    private GymGateway gymGateway;
+    private GymMemberValidator gymMemberValidator;
 
     @InjectMocks
     private UpdateGymClassUseCaseImpl updateGymClassUseCase;
@@ -36,10 +35,11 @@ class UpdateGymClassUseCaseTest {
         var newInstructorId = UUID.randomUUID();
         var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(newInstructorId);
         var gymClassId = gymClass.getId();
+        var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
-        when(gymGateway.isValidInstructor(newInstructorId))
+        when(gymMemberValidator.isInstructorFromGym(gymId, newInstructorId))
                 .thenReturn(true);
         when(gymClassRepository.save(any(GymClass.class)))
                 .thenReturn(gymClass);
@@ -58,9 +58,9 @@ class UpdateGymClassUseCaseTest {
         );
 
         verify(gymClassRepository).findById(gymClassId);
-        verify(gymGateway).isValidInstructor(newInstructorId);
+        verify(gymMemberValidator).isInstructorFromGym(gymId, newInstructorId);
         verify(gymClassRepository).save(gymClass);
-        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymMemberValidator);
         verifyNoMoreInteractions(gymClassRepository);
     }
 
@@ -80,7 +80,7 @@ class UpdateGymClassUseCaseTest {
         assertEquals("There is no gym class with the id %s".formatted(gymClasId), exception.getMessage());
 
         verify(gymClassRepository).findById(gymClasId);
-        verify(gymGateway, never()).isValidInstructor(any(UUID.class));
+        verify(gymMemberValidator, never()).isInstructorFromGym(any(UUID.class), any(UUID.class));
         verify(gymClassRepository, never()).save(any(GymClass.class));
         verifyNoMoreInteractions(gymClassRepository);
     }
@@ -91,10 +91,11 @@ class UpdateGymClassUseCaseTest {
         var instructorId = UUID.randomUUID();
         var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(instructorId);
         var gymClassId = gymClass.getId();
+        var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
-        when(gymGateway.isValidInstructor(instructorId))
+        when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(false);
 
         BusinessException exception = assertThrows(
@@ -105,9 +106,9 @@ class UpdateGymClassUseCaseTest {
         assertEquals("%s is not a valid instructor id".formatted(instructorId), exception.getMessage());
 
         verify(gymClassRepository).findById(gymClassId);
-        verify(gymGateway).isValidInstructor(instructorId);
+        verify(gymMemberValidator).isInstructorFromGym(gymId, instructorId);
         verify(gymClassRepository, never()).save(any(GymClass.class));
-        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymMemberValidator);
         verifyNoMoreInteractions(gymClassRepository);
     }
 }

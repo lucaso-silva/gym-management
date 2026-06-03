@@ -57,7 +57,4 @@ public class UserJPAEntity {
     @Column(nullable = true)
     private String specialty;
 
-    @Column(nullable = true)
-    private String gymName;
-
 }

@@ -24,10 +24,6 @@ public class DeleteGymUseCaseImpl implements DeleteGymUseCase {
             throw new ApplicationException("You cannot delete a gym with active members");
         }
 
-        if(!gym.getGymClassesIds().isEmpty()) {
-            throw new ApplicationException("You cannot delete a gym with active classes");
-        }
-
         gymRepository.deleteById(id);
     }
 }

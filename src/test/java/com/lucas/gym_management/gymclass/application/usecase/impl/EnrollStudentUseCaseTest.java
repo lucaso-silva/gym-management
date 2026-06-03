@@ -4,7 +4,7 @@ import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
-import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ class EnrollStudentUseCaseTest {
     private GymClassRepository gymClassRepository;
 
     @Mock
-    private GymGateway gymGateway;
+    private GymMemberValidator gymMemberValidator;
 
     @InjectMocks
     private EnrollStudentUseCaseImpl enrollStudentUseCase;
@@ -34,10 +34,11 @@ class EnrollStudentUseCaseTest {
         var gymClass = GymClassFactory.buildGymClass();
         var gymClassId = gymClass.getId();
         var studentId = UUID.randomUUID();
+        var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
-        when(gymGateway.isValidStudent(studentId))
+        when(gymMemberValidator.isActiveStudentFromGym(gymId, studentId))
                 .thenReturn(true);
         when(gymClassRepository.save(gymClass))
                 .thenReturn(gymClass);
@@ -55,9 +56,9 @@ class EnrollStudentUseCaseTest {
         );
 
         verify(gymClassRepository).findById(gymClassId);
-        verify(gymGateway).isValidStudent(studentId);
+        verify(gymMemberValidator).isActiveStudentFromGym(gymId, studentId);
         verify(gymClassRepository).save(gymClass);
-        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymMemberValidator);
         verifyNoMoreInteractions(gymClassRepository);
 
     }
@@ -78,7 +79,7 @@ class EnrollStudentUseCaseTest {
         assertEquals("There is no gym class with id %s".formatted(gymClassId), exception.getMessage());
 
         verify(gymClassRepository).findById(gymClassId);
-        verify(gymGateway, never()).isValidStudent(any(UUID.class));
+        verify(gymMemberValidator, never()).isActiveStudentFromGym(any(UUID.class), any(UUID.class));
         verify(gymClassRepository, never()).save(any(GymClass.class));
         verifyNoMoreInteractions(gymClassRepository);
     }
@@ -88,10 +89,11 @@ class EnrollStudentUseCaseTest {
         var gymClass = GymClassFactory.buildGymClass();
         var gymClassId = gymClass.getId();
         var studentId = UUID.randomUUID();
+        var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
-        when(gymGateway.isValidStudent(studentId))
+        when(gymMemberValidator.isActiveStudentFromGym(gymId, studentId))
                 .thenReturn(false);
 
         BusinessException exception = assertThrows(
@@ -99,12 +101,12 @@ class EnrollStudentUseCaseTest {
                 ()-> enrollStudentUseCase.enrollStudent(gymClassId, studentId)
         );
 
-        assertEquals("%s is not a valid student id".formatted(studentId), exception.getMessage());
+        assertEquals("Only active students can be enrolled in a class", exception.getMessage());
 
         verify(gymClassRepository).findById(gymClassId);
-        verify(gymGateway).isValidStudent(studentId);
+        verify(gymMemberValidator).isActiveStudentFromGym(gymId, studentId);
         verify(gymClassRepository, never()).save(any(GymClass.class));
-        verifyNoMoreInteractions(gymGateway);
+        verifyNoMoreInteractions(gymMemberValidator);
         verifyNoMoreInteractions(gymClassRepository);
     }
 }

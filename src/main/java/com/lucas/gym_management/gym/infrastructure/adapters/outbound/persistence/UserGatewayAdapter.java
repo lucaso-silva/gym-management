@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
+@Component("gymUserGatewayAdapter")
 @AllArgsConstructor
 public class UserGatewayAdapter implements UserGateway {
     private final UserJPARepository userRepository;
@@ -28,6 +28,6 @@ public class UserGatewayAdapter implements UserGateway {
     public boolean canUserBeRemoved(UUID userID) {
         //TODO: implement business validations
 
-        return false;
+        return true;
     }
 }

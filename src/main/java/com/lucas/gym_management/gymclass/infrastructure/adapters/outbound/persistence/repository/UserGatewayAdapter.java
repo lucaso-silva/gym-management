@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Component
+@Component("gymClassUserGatewayAdapter")
 @AllArgsConstructor
 public class UserGatewayAdapter implements UserGateway {
     private final UserJPARepository userJPARepository;

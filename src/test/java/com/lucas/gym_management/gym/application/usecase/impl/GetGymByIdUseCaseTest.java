@@ -39,7 +39,6 @@ class GetGymByIdUseCaseTest {
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
                 ()-> assertEquals(gym.getMembersIds().size(), output.members()),
-                ()-> assertEquals(gym.getGymClassesIds().size(), output.activeClasses()),
                 ()-> assertEquals(gym.getAddress().getStreet(), output.address().street()),
                 ()-> assertEquals(gym.getAddress().getNumber(), output.address().number()),
                 ()-> assertEquals(gym.getAddress().getNeighborhood(), output.address().neighborhood()),

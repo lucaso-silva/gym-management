@@ -57,6 +57,7 @@ public class GymFactory {
     public static UpdateGymInput buildUpdateGymInput() {
         return new UpdateGymInput("Updated-gym-name",
                 "updated-phone",
+                UUID.fromString("11111111-1111-1111-1111-111111111111"),
                 new GymAddressDTO("updated-street-name",
                         "updated-number",
                         "updated-neighborhood",
@@ -69,7 +70,7 @@ public class GymFactory {
                 "Updated-gym-name",
                 "updated-phone",
                 new HashSet<>(),
-                new HashSet<>(),
+                null,
                 GymAddress.newAddress("updated-street-name",
                         "updated-number",
                         "updated-neighborhood",

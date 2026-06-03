@@ -1,10 +1,11 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
-import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.exceptions.InvalidInstructorIdException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
+import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,9 @@ class CreateGymClassUseCaseTest {
     @Mock
     private GymGateway gymGateway;
 
+    @Mock
+    private GymMemberValidator gymMemberValidator;
+
     @InjectMocks
     private CreateGymClassUseCaseImpl createGymClassUseCase;
 
@@ -31,8 +35,11 @@ class CreateGymClassUseCaseTest {
         var gymClassInput = GymClassFactory.buildCreateGymClassInput();
         var gymClass = GymClassFactory.buildGymClass();
         var instructorId = gymClassInput.instructorId();
+        var gymId = gymClassInput.gymId(); //FIXME: gymId = gymClassId -> corrigir build factory
 
-        when(gymGateway.isValidInstructor(instructorId))
+        when(gymGateway.gymExists(gymId))
+                .thenReturn(true);
+        when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(true);
         when(gymClassRepository.save(any(GymClass.class)))
                 .thenReturn(gymClass);
@@ -51,17 +58,23 @@ class CreateGymClassUseCaseTest {
                 () -> assertEquals(gymClass.getSchedule().endTime(), output.schedule().endTime())
         );
 
-        verify(gymGateway).isValidInstructor(instructorId);
+        verify(gymGateway).gymExists(gymId);
+        verify(gymMemberValidator).isInstructorFromGym(gymId, instructorId);
         verify(gymClassRepository).save(any(GymClass.class));
-        verifyNoMoreInteractions(gymGateway, gymClassRepository);
+        verifyNoMoreInteractions(gymGateway, gymMemberValidator, gymClassRepository);
     }
+
+    //TODO: @Test void shouldThrowNotFoundException_whenGymIdIsInvalid()
 
     @Test
     void shouldThrowInvalidInstructorIdException_whenInstructorIdIsInvalid(){
         var gymClassInput = GymClassFactory.buildCreateGymClassInput();
-        var  instructorId = gymClassInput.instructorId();
+        var instructorId = gymClassInput.instructorId();
+        var gymId = gymClassInput.gymId();
 
-        when(gymGateway.isValidInstructor(instructorId))
+        when(gymGateway.gymExists(gymId))
+                .thenReturn(true);
+        when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(false);
 
         InvalidInstructorIdException exception = assertThrows(
@@ -71,7 +84,8 @@ class CreateGymClassUseCaseTest {
 
         assertEquals("Please provide a valid instructor id", exception.getMessage());
 
-        verify(gymGateway).isValidInstructor(instructorId);
+        verify(gymGateway).gymExists(gymId);
+        verify(gymMemberValidator).isInstructorFromGym(gymId, instructorId);
         verify(gymClassRepository, never()).save(any(GymClass.class));
         verifyNoMoreInteractions(gymGateway, gymClassRepository);
     }

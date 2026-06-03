@@ -3,9 +3,11 @@ package com.lucas.gym_management.gymclass.application.usecase.validator;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.UserGateway;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Component
 @AllArgsConstructor
 public class GymMemberValidator {
     private final GymGateway gymGateway;

@@ -13,11 +13,13 @@ import java.util.UUID;
 
 public class GymClassFactory {
         private static final UUID instructorId = UUID.randomUUID();
+        private static final UUID gymId = UUID.randomUUID();
 
     public static CreateGymClassInput buildCreateGymClassInput(){
 
         return new CreateGymClassInput(
                 "Any-class-name",
+                gymId,
                 instructorId,
                 5,
                 buildScheduleDTO()
@@ -38,6 +40,7 @@ public class GymClassFactory {
 
         return GymClass.newGymClass("Any-class-name",
                 instructorId,
+                gymId,
                 5,
                 new Schedule(scheduleDTO.dayOfWeek(),
                         scheduleDTO.room(),
@@ -48,6 +51,7 @@ public class GymClassFactory {
     public static List<GymClass> buildListOfGymClasses() {
         var gymClass1 = GymClass.newGymClass("First-gym-class-name",
                 instructorId,
+                gymId,
                 10,
                 new Schedule(DayOfWeek.MONDAY,
                         "First-gym-class-room",
@@ -56,6 +60,7 @@ public class GymClassFactory {
 
         var gymClass2 = GymClass.newGymClass("Second-gym-class-name",
                 instructorId,
+                gymId,
                 20,
                 new Schedule(DayOfWeek.TUESDAY,
                         "Second-gym-class-room",
