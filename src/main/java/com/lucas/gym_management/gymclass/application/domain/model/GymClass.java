@@ -32,8 +32,22 @@ public class GymClass {
         defineSchedule(schedule);
     }
 
+    protected GymClass(UUID id, String name, UUID gymId, UUID instructorId, Integer capacity, Set<UUID> enrolledStudents, Schedule schedule){
+        this.id = id;
+        this.name = name;
+        this.gymId = gymId;
+        this.instructorId = instructorId;
+        this.capacity = capacity;
+        this.enrolledStudents = new HashSet<>(enrolledStudents);
+        this.schedule = schedule;
+    };
+
     public static GymClass newGymClass(String name, UUID gymId, UUID instructorId, Integer capacity, Schedule schedule) {
-        return new GymClass(name,gymId, instructorId,capacity,schedule);
+        return new GymClass(name,gymId,instructorId,capacity,schedule);
+    }
+
+    public static GymClass restore(UUID id, String name, UUID gymId, UUID instructorId, Integer capacity, Set<UUID> enrolledStudents, Schedule schedule){
+        return new GymClass(id, name, gymId, instructorId, capacity, enrolledStudents, schedule);
     }
 
     public void rename(String newName){

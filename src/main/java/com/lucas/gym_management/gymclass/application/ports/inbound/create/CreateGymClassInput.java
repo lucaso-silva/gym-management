@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record CreateGymClassInput(@NotBlank(message = "GymClass name cannot be empty")
                                   String name,
-                                  @NotNull(message = "Gym class id cannot be null")
+                                  @NotNull(message = "Gym id cannot be null")
                                   UUID gymId,
                                   @NotNull(message = "Instructor ID cannot be null")
                                   UUID instructorId,

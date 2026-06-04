@@ -1,4 +1,4 @@
-package com.lucas.gym_management.gymclass.infrastructure.adapters.outbound.persistence.repository;
+package com.lucas.gym_management.gymclass.infrastructure.adapters.outbound.persistence;
 
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.entities.UserTypeJPA;
