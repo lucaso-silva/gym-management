@@ -39,8 +39,8 @@ public class GymClassFactory {
         var scheduleDTO = buildScheduleDTO();
 
         return GymClass.newGymClass("Any-class-name",
-                instructorId,
                 gymId,
+                instructorId,
                 5,
                 new Schedule(scheduleDTO.dayOfWeek(),
                         scheduleDTO.room(),
@@ -50,8 +50,8 @@ public class GymClassFactory {
 
     public static List<GymClass> buildListOfGymClasses() {
         var gymClass1 = GymClass.newGymClass("First-gym-class-name",
-                instructorId,
                 gymId,
+                instructorId,
                 10,
                 new Schedule(DayOfWeek.MONDAY,
                         "First-gym-class-room",
@@ -59,8 +59,8 @@ public class GymClassFactory {
                         LocalTime.of(10,30)));
 
         var gymClass2 = GymClass.newGymClass("Second-gym-class-name",
-                instructorId,
                 gymId,
+                instructorId,
                 20,
                 new Schedule(DayOfWeek.TUESDAY,
                         "Second-gym-class-room",

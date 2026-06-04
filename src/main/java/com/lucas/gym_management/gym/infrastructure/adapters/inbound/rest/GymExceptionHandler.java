@@ -1,6 +1,5 @@
 package com.lucas.gym_management.gym.infrastructure.adapters.inbound.rest;
 
-import com.lucas.gym_management.gym.application.domain.model.exceptions.GymClassNotAssociatedException;
 import com.lucas.gym_management.gym.application.domain.model.exceptions.UserNotMemberException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import org.springframework.http.*;
@@ -19,19 +18,6 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice(basePackages = "com.lucas.gym_management.gym")
 public class GymExceptionHandler extends ResponseEntityExceptionHandler {
-
-    @ExceptionHandler(value = { GymClassNotAssociatedException.class })
-    protected ResponseEntity<ProblemDetail> handleSystemBaseException(GymClassNotAssociatedException ex, WebRequest request) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                HttpStatus.CONFLICT, ex.getMessage());
-        problemDetail.setType(URI.create("https://api.example.com/conflict/"));
-        problemDetail.setTitle("Conflict Exception");
-        problemDetail.setInstance(URI.create(
-                request.getDescription(false).replace("uri=","")));
-        problemDetail.setProperty("timestamp", Instant.now().toString());
-
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(problemDetail);
-    }
 
     @ExceptionHandler(value = { GymNotFoundException.class })
     protected ResponseEntity<ProblemDetail> handleSystemBaseException(GymNotFoundException ex, WebRequest request) {
