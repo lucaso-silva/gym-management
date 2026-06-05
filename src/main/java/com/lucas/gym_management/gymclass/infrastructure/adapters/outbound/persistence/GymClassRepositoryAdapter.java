@@ -25,12 +25,15 @@ public class GymClassRepositoryAdapter implements GymClassRepository {
 
     @Override
     public Optional<GymClass> findById(UUID id) {
-        return Optional.empty();
+        return gymClassJPARepository.findById(id)
+                .map(GymClassJPAMapper::toDomain);
     }
 
     @Override
     public List<GymClass> findAll() {
-        return List.of();
+        return gymClassJPARepository.findAll().stream()
+                .map(GymClassJPAMapper::toDomain)
+                .toList();
     }
 
     @Override

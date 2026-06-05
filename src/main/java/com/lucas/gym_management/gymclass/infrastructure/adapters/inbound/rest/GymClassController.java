@@ -1,7 +1,9 @@
 package com.lucas.gym_management.gymclass.infrastructure.adapters.inbound.rest;
 
+import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassOutput;
+import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassOutput;
 import com.lucas.gym_management.gymclass.infrastructure.service.GymClassApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -23,5 +27,15 @@ public class GymClassController {
         URI uri = URI.create("/api/gym-classes/%s".formatted(output.id()));
 
         return ResponseEntity.created(uri).body(output);
+    }
+
+    @GetMapping("/{gymClassId}")
+    public ResponseEntity<GymClassOutput> getGymClassById(@PathVariable UUID gymClassId){
+        return ResponseEntity.ok(gymClassApplicationService.getGymClassById(gymClassId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ListGymClassOutput>> getAllGymClasses(){
+        return ResponseEntity.ok(gymClassApplicationService.listGymClasses());
     }
 }
