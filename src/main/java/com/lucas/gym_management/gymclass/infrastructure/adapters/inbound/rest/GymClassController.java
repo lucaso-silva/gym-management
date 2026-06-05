@@ -38,4 +38,12 @@ public class GymClassController {
     public ResponseEntity<List<ListGymClassOutput>> getAllGymClasses(){
         return ResponseEntity.ok(gymClassApplicationService.listGymClasses());
     }
+
+    @DeleteMapping("/{gymClassId}")
+    public ResponseEntity<Void> deleteGymClass(@PathVariable UUID gymClassId){
+        gymClassApplicationService.deleteGymClassById(gymClassId);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

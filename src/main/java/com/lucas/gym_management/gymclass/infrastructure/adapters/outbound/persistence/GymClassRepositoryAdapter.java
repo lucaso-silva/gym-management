@@ -38,6 +38,6 @@ public class GymClassRepositoryAdapter implements GymClassRepository {
 
     @Override
     public void deleteById(UUID gymClassId) {
-
+        gymClassJPARepository.deleteById(gymClassId);
     }
 }
