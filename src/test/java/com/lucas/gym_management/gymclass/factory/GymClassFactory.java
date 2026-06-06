@@ -12,13 +12,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class GymClassFactory {
-        private static final UUID instructorId = UUID.randomUUID();
-        private static final UUID gymId = UUID.randomUUID();
+        private static final UUID instructorId = UUID.fromString("22222222-2222-2222-2222-222222222222");
+        private static final UUID gymId = UUID.fromString("11111111-1111-1111-1111-111111111111");
 
     public static CreateGymClassInput buildCreateGymClassInput(){
 
         return new CreateGymClassInput(
-                "Any-class-name",
+                "Any-gym-class-name",
                 gymId,
                 instructorId,
                 5,
