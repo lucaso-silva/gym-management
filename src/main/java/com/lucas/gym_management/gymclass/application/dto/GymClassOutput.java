@@ -21,4 +21,6 @@ public record GymClassOutput(UUID id,
                         gymClass.getSchedule().endTime())
         );
     }
+
+    //TODO: add instructor's name to output
 }

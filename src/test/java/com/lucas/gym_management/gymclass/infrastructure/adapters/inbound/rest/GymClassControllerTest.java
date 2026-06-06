@@ -9,24 +9,20 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MockMvc;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED)
-@Sql(scripts = "/sql/clear-setup.sql",
-executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class GymClassControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -37,15 +33,14 @@ class GymClassControllerTest {
     private final String BASE_URL = "/api/gym-classes";
 
     @Test
-    @Sql(scripts = "/sql/gymclass/gymclass-setup.sql",
-    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = {"/sql/clear-setup.sql", "/sql/gymclass/gymclass-setup.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldCreateAGymClass_whenDataIsValid() throws Exception {
         var createGymClassInput = GymClassFactory.buildCreateGymClassInput();
 
         var result = mockMvc.perform(post(BASE_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createGymClassInput)))
-                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isString())
                 .andExpect(jsonPath("$.name").value(createGymClassInput.name()))
@@ -68,6 +63,64 @@ class GymClassControllerTest {
                 .andExpect(jsonPath("$.schedule.room").value(createGymClassInput.schedule().room()));
     }
 
-    //TODO: implement error scenarios tests
+    @Test
+    @Sql(scripts = {"/sql/clear-setup.sql", "/sql/gymclass/gymclass-setup.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldReturnAGymClass_whenIdIsValid() throws Exception {
+        var gymClassId = "33333333-3333-3333-3333-333333333333";
+
+        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(gymClassId))
+                .andExpect(jsonPath("$.name").value("Yoga Class"))
+                .andExpect(jsonPath("$.capacity").value(15))
+                .andExpect(jsonPath("$.schedule.dayOfWeek").value("MONDAY"))
+                .andExpect(jsonPath("$.schedule.room").value("Room A"))
+                .andExpect(jsonPath("$.schedule.startTime").value("07:00:00"))
+                .andExpect(jsonPath("$.schedule.endTime").value("07:45:00"));
+    }
+
+    //TODO: implement GlobalExceptionHandler
+//    @Test
+//    @Sql(scripts = {"/sql/clear-setup.sql", "/sql/gymclass/gymclass-setup.sql"},
+//            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+//    void shouldThrowNotFoundException_whenGymClassIdIsInvalid() throws Exception{
+//        mockMvc.perform(get(BASE_URL+"/"+ UUID.randomUUID()))
+//                .andExpect(status().isNotFound());
+//    }
+
+    @Test
+    @Sql(scripts = {"/sql/clear-setup.sql", "/sql/gymclass/gymclass-setup.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldReturnAListOfGymClasses_whenThereAreGymClasses() throws Exception {
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isNotEmpty())
+                .andExpect(jsonPath("$.[0].name").value("Yoga Class"))
+                .andExpect(jsonPath("$.[0].schedule.dayOfWeek").value("MONDAY"))
+                .andExpect(jsonPath("$.[0].schedule.room").value("Room A"))
+                .andExpect(jsonPath("$.[0].schedule.startTime").value("07:00:00"))
+                .andExpect(jsonPath("$.[0].schedule.endTime").value("07:45:00"))
+                .andExpect(jsonPath("$.[1].name").value("Crossfit Class"))
+                .andExpect(jsonPath("$.[1].schedule.dayOfWeek").value("TUESDAY"))
+                .andExpect(jsonPath("$.[1].schedule.room").value("Room C"))
+                .andExpect(jsonPath("$.[1].schedule.startTime").value("08:00:00"))
+                .andExpect(jsonPath("$.[1].schedule.endTime").value("08:45:00"));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/clear-setup.sql",
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldReturnAnEmptyList_whenThereAreNoGymClasses() throws Exception {
+        mockMvc.perform(get(BASE_URL))
+//                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$").isEmpty());
+    }
+
+
+    //TODO: implement error scenarios tests for all endpoints
 
 }

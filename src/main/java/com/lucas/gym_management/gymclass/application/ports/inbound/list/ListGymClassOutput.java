@@ -13,4 +13,6 @@ public record ListGymClassOutput(UUID id,
                 gymClass.getName(),
                 ScheduleDTO.from(gymClass.getSchedule()));
     }
+
+    //TODO: display remaining capacity
 }
