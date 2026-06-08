@@ -4,12 +4,11 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.create.Create
 import com.lucas.gym_management.gymclass.application.ports.inbound.delete.DeleteGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.get.GetGymClassByIdUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassesUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.UnenrollStudentUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
-import com.lucas.gym_management.gymclass.application.usecase.impl.CreateGymClassUseCaseImpl;
-import com.lucas.gym_management.gymclass.application.usecase.impl.DeleteGymClassUseCaseImpl;
-import com.lucas.gym_management.gymclass.application.usecase.impl.GetGymClassByIdUseCaseImpl;
-import com.lucas.gym_management.gymclass.application.usecase.impl.ListGymClassesUseCaseImpl;
+import com.lucas.gym_management.gymclass.application.usecase.impl.*;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +33,16 @@ public class GymClassUseCasesConfig {
     @Bean
     public DeleteGymClassUseCase deleteGymClassUseCase(GymClassRepository gymClassRepository){
         return new DeleteGymClassUseCaseImpl(gymClassRepository);
+    }
+
+    @Bean
+    public EnrollStudentUseCase enrollStudentUseCase(GymClassRepository gymClassRepository, GymMemberValidator gymMemberValidator){
+        return new EnrollStudentUseCaseImpl(gymClassRepository, gymMemberValidator);
+    }
+
+    @Bean
+    public UnenrollStudentUseCase unenrollStudentUseCase(GymClassRepository gymClassRepository){
+        return new UnenrollStudentUseCaseImpl(gymClassRepository);
     }
 
 }

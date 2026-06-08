@@ -8,6 +8,9 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.delete.Delete
 import com.lucas.gym_management.gymclass.application.ports.inbound.get.GetGymClassByIdUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassesUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.UnenrollStudentUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +25,8 @@ public class GymClassApplicationService {
     private final GetGymClassByIdUseCase getGymClassByIdUseCase;
     private final ListGymClassesUseCase listGymClassesUseCase;
     private final DeleteGymClassUseCase deleteGymClassUseCase;
+    private final EnrollStudentUseCase enrollStudentUseCase;
+    private final UnenrollStudentUseCase unenrollStudentUseCase;
 
     @Transactional
     public CreateGymClassOutput createGymClass(CreateGymClassInput input){
@@ -41,5 +46,15 @@ public class GymClassApplicationService {
     @Transactional
     public void deleteGymClassById(UUID id){
         deleteGymClassUseCase.deleteGymClassById(id);
+    }
+
+    @Transactional
+    public GymClassOutput enrollStudent(UUID gymClassId, EnrollStudentInput input){
+        return enrollStudentUseCase.enrollStudent(gymClassId, input);
+    }
+
+    @Transactional
+    public GymClassOutput unenrollStudent(UUID gymClassId, UUID studentId){
+        return unenrollStudentUseCase.unenrollStudent(gymClassId, studentId);
     }
 }
