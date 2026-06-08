@@ -15,8 +15,8 @@ import tools.jackson.databind.ObjectMapper;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -118,6 +118,32 @@ class GymClassControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    @Sql(scripts = {"/sql/clear-setup.sql",
+            "/sql/gymclass/gymclass-setup.sql"},
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldDeleteGymClass_whenIdIsValid() throws Exception {
+        var gymClassId = "33333333-3333-3333-3333-333333333333";
+
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Yoga Class"));
+
+        mockMvc.perform(delete(BASE_URL+"/"+gymClassId))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(BASE_URL))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+//        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+//                .andExpect(status().isNotFound());
     }
 
 
