@@ -39,7 +39,49 @@ VALUES ('11111111-1111-1111-1111-111111111111',
         'any-cref-number',
         'any-specialty',
         NULL,
-        NULL);
+        NULL),
+       (
+           '33333333-3333-3333-3333-333333333333',
+           'STUDENT',
+           'First-student-name',
+           'f.student@test.com',
+           'student.login.1',
+           '123456',
+           '81999990003',
+           NOW(),
+           NULL,
+           'Any-street-name',
+           'any-number',
+           'any-neighborhood',
+           'any-zip-code',
+           'any-city',
+           'any-state',
+           NULL,
+           NULL,
+           '2000-01-01',
+           TRUE
+       ),
+       (
+           '44444444-4444-4444-4444-444444444444',
+           'STUDENT',
+           'Second-student-name',
+           's.student@test.com',
+           'student.login.2',
+           '123456',
+           '81999990003',
+           NOW(),
+           NULL,
+           'Any-street-name',
+           'any-number',
+           'any-neighborhood',
+           'any-zip-code',
+           'any-city',
+           'any-state',
+           NULL,
+           NULL,
+           '2000-01-01',
+           FALSE
+       );
 
 INSERT INTO gyms (id, name, phone, manager_id,
                   street, number, neighborhood, city, state,
@@ -59,7 +101,11 @@ VALUES ('11111111-1111-1111-1111-111111111111',
 INSERT INTO gym_members (gym_id, member_id)
 VALUES('11111111-1111-1111-1111-111111111111','11111111-1111-1111-1111-111111111111'),
       ('11111111-1111-1111-1111-111111111111',
-       '22222222-2222-2222-2222-222222222222');
+       '22222222-2222-2222-2222-222222222222'),
+      ('11111111-1111-1111-1111-111111111111',
+       '33333333-3333-3333-3333-333333333333'),
+      ('11111111-1111-1111-1111-111111111111',
+       '44444444-4444-4444-4444-444444444444');
 
 INSERT INTO gym_classes (id, name, gym_id, instructor_id, capacity, day_of_week, room, start_time, end_time)
 VALUES (

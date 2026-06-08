@@ -1,6 +1,7 @@
 package com.lucas.gym_management.gymclass.infrastructure.adapters.inbound.rest;
 
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassOutput;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +57,7 @@ class GymClassControllerTest {
         CreateGymClassOutput output = objectMapper.readValue(responseBody, CreateGymClassOutput.class);
         var gymClassId = output.id();
 
-        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+        mockMvc.perform(get(BASE_URL + "/" + gymClassId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(createGymClassInput.name()))
                 .andExpect(jsonPath("$.schedule.dayOfWeek").value(createGymClassInput.schedule().dayOfWeek().toString()))
@@ -69,7 +70,7 @@ class GymClassControllerTest {
     void shouldReturnAGymClass_whenIdIsValid() throws Exception {
         var gymClassId = "33333333-3333-3333-3333-333333333333";
 
-        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+        mockMvc.perform(get(BASE_URL + "/" + gymClassId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(gymClassId))
                 .andExpect(jsonPath("$.name").value("Yoga Class"))
@@ -123,7 +124,7 @@ class GymClassControllerTest {
     @Test
     @Sql(scripts = {"/sql/clear-setup.sql",
             "/sql/gymclass/gymclass-setup.sql"},
-    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void shouldDeleteGymClass_whenIdIsValid() throws Exception {
         var gymClassId = "33333333-3333-3333-3333-333333333333";
 
@@ -131,11 +132,11 @@ class GymClassControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(2)));
 
-        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+        mockMvc.perform(get(BASE_URL + "/" + gymClassId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Yoga Class"));
 
-        mockMvc.perform(delete(BASE_URL+"/"+gymClassId))
+        mockMvc.perform(delete(BASE_URL + "/" + gymClassId))
                 .andExpect(status().isNoContent());
 
         mockMvc.perform(get(BASE_URL))
@@ -146,6 +147,49 @@ class GymClassControllerTest {
 //                .andExpect(status().isNotFound());
     }
 
+    @Test
+    @Sql(scripts = {"/sql/clear-setup.sql",
+            "/sql/gymclass/gymclass-setup.sql"},
+            executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void shouldEnrollAStudentToAGymClass_whenIdsAreValid() throws Exception {
+        var gymClassId = "33333333-3333-3333-3333-333333333333";
+        var enrollStudentInput = new EnrollStudentInput(UUID.fromString("33333333-3333-3333-3333-333333333333"));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numEnrolledStudents").value(0));
+
+        mockMvc.perform(post(BASE_URL + "/" + gymClassId + "/students")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(enrollStudentInput)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numEnrolledStudents").value(1));
+    }
+
+    @Sql(scripts = {"/sql/clear-setup.sql",
+    "/sql/gymclass/gymclass-setup.sql"},
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Test
+    void shouldUnenrollAStudentFromAGymClass_whenIdsAreValid() throws Exception {
+        var gymClassId = "33333333-3333-3333-3333-333333333333";
+        var enrollStudentInput = new EnrollStudentInput(UUID.fromString("33333333-3333-3333-3333-333333333333"));
+        var studentId = enrollStudentInput.studentId();
+
+        mockMvc.perform(post(BASE_URL+"/"+gymClassId+"/students")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(enrollStudentInput)))
+                .andExpect(jsonPath("$.numEnrolledStudents").value(1));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+                .andExpect(jsonPath("$.numEnrolledStudents").value(1));
+
+        mockMvc.perform(delete(BASE_URL+"/"+gymClassId+"/students/"+studentId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.numEnrolledStudents").value(0));
+
+        mockMvc.perform(get(BASE_URL+"/"+gymClassId))
+                .andExpect(jsonPath("$.numEnrolledStudents").value(0));
+    }
 
     //TODO: implement error scenarios tests for all endpoints
 

@@ -3,6 +3,7 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
@@ -33,7 +34,8 @@ class EnrollStudentUseCaseTest {
     void shouldEnrollStudent_whenIdsAreValid(){
         var gymClass = GymClassFactory.buildGymClass();
         var gymClassId = gymClass.getId();
-        var studentId = UUID.randomUUID();
+        var input = new EnrollStudentInput(UUID.randomUUID());
+        var studentId = input.studentId();
         var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
@@ -45,7 +47,7 @@ class EnrollStudentUseCaseTest {
 
         assertEquals(0, gymClass.getEnrolledStudents().size());
 
-        var output = enrollStudentUseCase.enrollStudent(gymClassId, studentId);
+        var output = enrollStudentUseCase.enrollStudent(gymClassId, input);
 
         assertNotNull(output);
         assertAll(
@@ -66,14 +68,14 @@ class EnrollStudentUseCaseTest {
     @Test
     void shouldThrowNotFoundException_whenGymClassIdIsInvalid(){
         var gymClassId = UUID.randomUUID();
-        var studentId = UUID.randomUUID();
+        var input = new EnrollStudentInput(UUID.randomUUID());
 
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.empty());
 
         NotFoundException exception = assertThrows(
                 NotFoundException.class,
-                ()-> enrollStudentUseCase.enrollStudent(gymClassId,studentId)
+                ()-> enrollStudentUseCase.enrollStudent(gymClassId,input)
         );
 
         assertEquals("There is no gym class with id %s".formatted(gymClassId), exception.getMessage());
@@ -88,7 +90,8 @@ class EnrollStudentUseCaseTest {
     void shouldThrowBusinessException_whenStudentIdIsInvalid(){
         var gymClass = GymClassFactory.buildGymClass();
         var gymClassId = gymClass.getId();
-        var studentId = UUID.randomUUID();
+        var input = new EnrollStudentInput(UUID.randomUUID());
+        var studentId = input.studentId();
         var gymId = gymClass.getGymId();
 
         when(gymClassRepository.findById(gymClassId))
@@ -98,7 +101,7 @@ class EnrollStudentUseCaseTest {
 
         BusinessException exception = assertThrows(
                 BusinessException.class,
-                ()-> enrollStudentUseCase.enrollStudent(gymClassId, studentId)
+                ()-> enrollStudentUseCase.enrollStudent(gymClassId, input)
         );
 
         assertEquals("Only active students can be enrolled in a class", exception.getMessage());
