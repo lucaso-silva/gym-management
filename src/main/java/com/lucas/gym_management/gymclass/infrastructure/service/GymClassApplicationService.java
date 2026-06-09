@@ -11,6 +11,8 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymC
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.UnenrollStudentUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
+import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +26,10 @@ public class GymClassApplicationService {
     private final CreateGymClassUseCase createGymClassUseCase;
     private final GetGymClassByIdUseCase getGymClassByIdUseCase;
     private final ListGymClassesUseCase listGymClassesUseCase;
-    private final DeleteGymClassUseCase deleteGymClassUseCase;
     private final EnrollStudentUseCase enrollStudentUseCase;
     private final UnenrollStudentUseCase unenrollStudentUseCase;
+    private final UpdateGymClassUseCase updateGymClassUseCase;
+    private final DeleteGymClassUseCase deleteGymClassUseCase;
 
     @Transactional
     public CreateGymClassOutput createGymClass(CreateGymClassInput input){
@@ -44,11 +47,6 @@ public class GymClassApplicationService {
     }
 
     @Transactional
-    public void deleteGymClassById(UUID id){
-        deleteGymClassUseCase.deleteGymClassById(id);
-    }
-
-    @Transactional
     public GymClassOutput enrollStudent(UUID gymClassId, EnrollStudentInput input){
         return enrollStudentUseCase.enrollStudent(gymClassId, input);
     }
@@ -56,5 +54,15 @@ public class GymClassApplicationService {
     @Transactional
     public GymClassOutput unenrollStudent(UUID gymClassId, UUID studentId){
         return unenrollStudentUseCase.unenrollStudent(gymClassId, studentId);
+    }
+
+    @Transactional
+    public GymClassOutput updateGymClass(UUID id, UpdateGymClassInput input){
+        return updateGymClassUseCase.updateGymClass(id, input);
+    }
+
+    @Transactional
+    public void deleteGymClassById(UUID id){
+        deleteGymClassUseCase.deleteGymClassById(id);
     }
 }

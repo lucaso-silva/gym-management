@@ -5,6 +5,7 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.create.Create
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
+import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 import com.lucas.gym_management.gymclass.infrastructure.service.GymClassApplicationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -56,6 +57,15 @@ public class GymClassController {
 
     //TODO: add endpoint for getting enrolled students
 //    @PostMapping("/{gymClassId}/students")
+
+    @PatchMapping("/{gymClassId}")
+    public ResponseEntity<GymClassOutput> updateGymClass(@PathVariable
+                                                         UUID gymClassId,
+                                                         @Valid
+                                                         @RequestBody UpdateGymClassInput input){
+
+        return ResponseEntity.ok(gymClassApplicationService.updateGymClass(gymClassId, input));
+    }
 
     @DeleteMapping("/{gymClassId}/students/{studentId}")
     public ResponseEntity<GymClassOutput> unenrollStudent(@PathVariable UUID gymClassId,

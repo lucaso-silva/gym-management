@@ -6,6 +6,7 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.get.GetGymCla
 import com.lucas.gym_management.gymclass.application.ports.inbound.list.ListGymClassesUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.UnenrollStudentUseCase;
+import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
 import com.lucas.gym_management.gymclass.application.usecase.impl.*;
@@ -31,11 +32,6 @@ public class GymClassUseCasesConfig {
     }
 
     @Bean
-    public DeleteGymClassUseCase deleteGymClassUseCase(GymClassRepository gymClassRepository){
-        return new DeleteGymClassUseCaseImpl(gymClassRepository);
-    }
-
-    @Bean
     public EnrollStudentUseCase enrollStudentUseCase(GymClassRepository gymClassRepository, GymMemberValidator gymMemberValidator){
         return new EnrollStudentUseCaseImpl(gymClassRepository, gymMemberValidator);
     }
@@ -43,6 +39,16 @@ public class GymClassUseCasesConfig {
     @Bean
     public UnenrollStudentUseCase unenrollStudentUseCase(GymClassRepository gymClassRepository){
         return new UnenrollStudentUseCaseImpl(gymClassRepository);
+    }
+
+    @Bean
+    public UpdateGymClassUseCase updateGymClassUseCase(GymClassRepository gymClassRepository, GymMemberValidator gymMemberValidator){
+        return new UpdateGymClassUseCaseImpl(gymClassRepository, gymMemberValidator);
+    }
+
+    @Bean
+    public DeleteGymClassUseCase deleteGymClassUseCase(GymClassRepository gymClassRepository){
+        return new DeleteGymClassUseCaseImpl(gymClassRepository);
     }
 
 }
