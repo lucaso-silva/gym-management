@@ -56,7 +56,7 @@ public class GymClassController {
     }
 
     //TODO: add endpoint for getting enrolled students
-//    @PostMapping("/{gymClassId}/students")
+//    @GetMapping("/{gymClassId}/students")
 
     @PatchMapping("/{gymClassId}")
     public ResponseEntity<GymClassOutput> updateGymClass(@PathVariable
