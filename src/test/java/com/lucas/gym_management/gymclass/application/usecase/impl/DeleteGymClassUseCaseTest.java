@@ -1,6 +1,6 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
-import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.ActionNotAllowedException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
@@ -60,7 +60,7 @@ class DeleteGymClassUseCaseTest {
     }
 
     @Test
-    void shouldThrowBusinessException_whenGymClassHasEnrolledStudents(){
+    void shouldThrowActionNotAllowedException_whenGymClassHasEnrolledStudents(){
         var gymClass = GymClassFactory.buildGymClass();
         var gymClassId = gymClass.getId();
         var studentId = UUID.randomUUID();
@@ -70,8 +70,8 @@ class DeleteGymClassUseCaseTest {
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
 
-        BusinessException exception = assertThrows(
-                BusinessException.class,
+        ActionNotAllowedException exception = assertThrows(
+                ActionNotAllowedException.class,
                 ()-> deleteGymClassUseCase.deleteGymClassById(gymClassId)
         );
 

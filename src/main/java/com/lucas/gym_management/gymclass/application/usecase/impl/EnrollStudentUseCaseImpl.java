@@ -2,6 +2,7 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
@@ -22,7 +23,7 @@ public class EnrollStudentUseCaseImpl implements EnrollStudentUseCase {
                 .orElseThrow(()-> new NotFoundException("There is no gym class with id %s".formatted(gymClassId)));
 
         if(!gymMemberValidator.isActiveStudentFromGym(gymClass.getGymId(), input.studentId())){
-            throw new BusinessException("Only active students can be enrolled in a class");
+            throw new InvalidMemberIdException("Only active students can be enrolled in a class");
         }
 
         gymClass.enrollStudent(input.studentId());

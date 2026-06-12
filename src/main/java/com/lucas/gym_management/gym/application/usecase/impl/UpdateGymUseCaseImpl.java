@@ -8,6 +8,7 @@ import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUs
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class UpdateGymUseCaseImpl implements UpdateGymUseCase {
 
         if(input.managerId() != null){
             if(!userGateway.managerExists(input.managerId())) {
-                throw new BusinessException("Manager with id %s does not exist".formatted(input.managerId()));
+                throw new InvalidMemberIdException("Manager with id %s does not exist".formatted(input.managerId()));
             }
             gym.assignManagerId(input.managerId());
         }

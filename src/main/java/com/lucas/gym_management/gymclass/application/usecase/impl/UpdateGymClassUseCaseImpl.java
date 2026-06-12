@@ -3,6 +3,7 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.Schedule;
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
@@ -26,7 +27,7 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
 
         if(input.instructorId() != null){
             if(!gymMemberValidator.isInstructorFromGym(gymClass.getGymId(), input.instructorId())){
-                throw new BusinessException("%s is not a valid instructor id".formatted(input.instructorId()));
+                throw new InvalidMemberIdException("%s is not a valid instructor id".formatted(input.instructorId()));
             }
             gymClass.assignInstructor(input.instructorId());
         }

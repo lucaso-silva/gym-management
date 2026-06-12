@@ -1,5 +1,6 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
+import com.lucas.gym_management.gymclass.application.exceptions.ActionNotAllowedException;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.delete.DeleteGymClassUseCase;
@@ -19,7 +20,7 @@ public class DeleteGymClassUseCaseImpl implements DeleteGymClassUseCase {
                 .orElseThrow(() -> new NotFoundException("There is no gym class with id %s".formatted(id)));
 
         if(!gymClass.getEnrolledStudents().isEmpty()){
-            throw new BusinessException("You cannot delete a gym class with enrolled students");
+            throw new ActionNotAllowedException("You cannot delete a gym class with enrolled students");
         }
 
         gymClassRepository.deleteById(gymClass.getId());

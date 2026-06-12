@@ -2,6 +2,7 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
 import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
@@ -86,7 +87,7 @@ class UpdateGymClassUseCaseTest {
     }
 
     @Test
-    void shouldThrowBusinessException_whenInstructorIdIsNotValid(){
+    void shouldThrowInvalidMemberIdException_whenInstructorIdIsNotValid(){
         var gymClass = GymClassFactory.buildGymClass();
         var instructorId = UUID.randomUUID();
         var updateGymClassInput = GymClassFactory.buildUpdateGymClassInput(instructorId);
@@ -98,8 +99,8 @@ class UpdateGymClassUseCaseTest {
         when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(false);
 
-        BusinessException exception = assertThrows(
-                BusinessException.class,
+        InvalidMemberIdException exception = assertThrows(
+                InvalidMemberIdException.class,
                 ()-> updateGymClassUseCase.updateGymClass(gymClassId, updateGymClassInput)
         );
 
