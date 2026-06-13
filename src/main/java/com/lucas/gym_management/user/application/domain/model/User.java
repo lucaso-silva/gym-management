@@ -2,7 +2,8 @@ package com.lucas.gym_management.user.application.domain.model;
 
 import com.lucas.gym_management.user.application.domain.command.CreateUserData;
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
-import com.lucas.gym_management.user.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.user.application.domain.model.exceptions.InvalidDataException;
+import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
@@ -121,45 +122,45 @@ public abstract class User {
 
     private void renameTo(String newName){
         if(newName == null || newName.isBlank()) {
-            throw new DomainException("Name cannot be empty");
+            throw new RequiredFieldException("Name cannot be empty");
         }
         this.name = newName;
     }
 
     private void changeEmail(String newEmail){
         if(newEmail == null || newEmail.isBlank()) {
-            throw new DomainException("Email cannot be empty");
+            throw new RequiredFieldException("Email cannot be empty");
         }
         if(!newEmail.matches("^(.+)@(\\S+)$")) {
-            throw new DomainException("Invalid email address");
+            throw new InvalidDataException("Provide a valid email address");
         }
         this.email = newEmail;
     }
 
     private void changeLogin(String newLogin){
         if(newLogin == null || newLogin.isBlank()) {
-            throw new DomainException("Login cannot be empty");
+            throw new RequiredFieldException("Login cannot be empty");
         }
         this.login = newLogin;
     }
 
     private void changePassword(String newPassword){
         if(newPassword == null || newPassword.isBlank()) {
-            throw new DomainException("Password cannot be empty");
+            throw new RequiredFieldException("Password cannot be empty");
         }
         this.password = newPassword;
     }
 
     private void updatePhone(String newPhone){
         if(newPhone == null || newPhone.isBlank()) {
-            throw new DomainException("Phone cannot be empty");
+            throw new RequiredFieldException("Phone cannot be empty");
         }
         this.phone = newPhone;
     }
 
     private void updateAddress(Address newAddress){
         if(newAddress == null) {
-            throw new DomainException("Address cannot be empty");
+            throw new RequiredFieldException("Address cannot be empty");
         }
         this.address = newAddress;
     }

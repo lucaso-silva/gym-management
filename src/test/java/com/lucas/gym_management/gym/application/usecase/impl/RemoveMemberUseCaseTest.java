@@ -54,7 +54,7 @@ class RemoveMemberUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(gym.getId(), output.uuid()),
+                ()-> assertEquals(gym.getId(), output.gymId()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
                 ()-> assertEquals(0, output.members())

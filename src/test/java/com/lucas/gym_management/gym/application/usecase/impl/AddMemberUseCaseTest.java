@@ -53,7 +53,7 @@ class AddMemberUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(gym.getId(), output.uuid()),
+                ()-> assertEquals(gym.getId(), output.gymId()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
                 ()-> assertEquals(1, output.members()),

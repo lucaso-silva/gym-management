@@ -69,7 +69,7 @@ class GymControllerTest {
         mockMvc.perform(get(BASE_URL +"/"+ gymId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.phone").value("first-gym-phone-num"))
                 .andExpect(jsonPath("$.members").value(0))
@@ -142,7 +142,7 @@ class GymControllerTest {
         var addMemberInput = new AddMemberInput(UUID.fromString(memberId));
 
         mockMvc.perform(get(BASE_URL +"/"+ gymId))
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(0));
 
@@ -152,7 +152,7 @@ class GymControllerTest {
                         .content(objectMapper.writeValueAsString(addMemberInput)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(1));
     }
@@ -171,7 +171,7 @@ class GymControllerTest {
                 .content(objectMapper.writeValueAsString(new AddMemberInput(UUID.fromString(memberId)))));
 
         mockMvc.perform(get(BASE_URL+"/"+gymId))
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(1));
 
@@ -179,7 +179,7 @@ class GymControllerTest {
                         .header("x-user-id", userId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(0));
     }
@@ -199,7 +199,7 @@ class GymControllerTest {
                 .content(objectMapper.writeValueAsString(new AddMemberInput(UUID.fromString(memberId)))));
 
         mockMvc.perform(get(BASE_URL+"/"+gymId))
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(1));
 
@@ -210,7 +210,7 @@ class GymControllerTest {
                 .andExpect(jsonPath("$.detail").value("User is not a gym member"));
 
         mockMvc.perform(get(BASE_URL+"/"+gymId))
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value("First-gym-name"))
                 .andExpect(jsonPath("$.members").value(1));
     }
@@ -229,7 +229,7 @@ class GymControllerTest {
                         .content(objectMapper.writeValueAsString(input)))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.uuid").value(gymId))
+                .andExpect(jsonPath("$.gymId").value(gymId))
                 .andExpect(jsonPath("$.name").value(input.name()))
                 .andExpect(jsonPath("$.phone").value(input.phone()))
                 .andExpect(jsonPath("$.address.street").value(input.address().street()))

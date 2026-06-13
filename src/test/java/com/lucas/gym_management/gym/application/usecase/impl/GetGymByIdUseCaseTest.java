@@ -35,7 +35,7 @@ class GetGymByIdUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(gymId, output.uuid()),
+                ()-> assertEquals(gymId, output.gymId()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
                 ()-> assertEquals(gym.getMembersIds().size(), output.members()),

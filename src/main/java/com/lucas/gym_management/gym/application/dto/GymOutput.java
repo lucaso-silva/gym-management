@@ -4,7 +4,7 @@ import com.lucas.gym_management.gym.application.domain.model.Gym;
 
 import java.util.UUID;
 
-public record GymOutput(UUID uuid,
+public record GymOutput(UUID gymId,
                         String name,
                         String phone,
                         Integer members,

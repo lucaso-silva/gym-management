@@ -163,7 +163,7 @@ class UpdateGymUseCaseTest {
 
     private void assertGymOutputMatches(Gym expectedOutput, GymOutput output){
         assertAll(
-                ()-> assertEquals(expectedOutput.getId(), output.uuid()),
+                ()-> assertEquals(expectedOutput.getId(), output.gymId()),
                 ()-> assertEquals(expectedOutput.getName(), output.name()),
                 ()-> assertEquals(expectedOutput.getPhone(), output.phone()),
                 ()-> assertEquals(expectedOutput.getAddress().getStreet(), output.address().street()),

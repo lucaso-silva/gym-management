@@ -2,6 +2,8 @@ package com.lucas.gym_management.user.application.domain.model;
 
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.user.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.user.application.domain.model.exceptions.InvalidDataException;
+import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
@@ -68,17 +70,17 @@ public class Student extends User {
 
     private void fixBirthDate(LocalDate birthDate) {
         if(birthDate == null){
-            throw new DomainException("Birth date cannot be empty");
+            throw new RequiredFieldException("Birth date cannot be empty");
         }
 
         var today = LocalDate.now();
         if(birthDate.isAfter(today)){
-            throw new DomainException("Birth date cannot be in the future");
+            throw new InvalidDataException("Birth date cannot be in the future");
         }
 
         var age = Period.between(birthDate, today).getYears();
         if(age < 16){
-            throw new DomainException("Student must be at least 16 years old");
+            throw new InvalidDataException("Student must be at least 16 years old");
         }
 
         this.birthDate = birthDate;
