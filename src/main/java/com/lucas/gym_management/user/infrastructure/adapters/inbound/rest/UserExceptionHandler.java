@@ -65,16 +65,16 @@ public class UserExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
     }
 
-    @ExceptionHandler(value = { RuntimeException.class })
-    protected ResponseEntity<Object> handleGeneralException(final RuntimeException ex, final WebRequest request) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                "An unexpected error occurred");
-        problemDetail.setType(URI.create("https://example.com/internal-server-error"));
-        problemDetail.setTitle("Internal Server Error");
-        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
-    }
+//    @ExceptionHandler(value = { RuntimeException.class })
+//    protected ResponseEntity<Object> handleGeneralException(final RuntimeException ex, final WebRequest request) {
+//        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+//                "An unexpected error occurred");
+//        problemDetail.setType(URI.create("https://example.com/internal-server-error"));
+//        problemDetail.setTitle("Internal Server Error");
+//        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
+//
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(problemDetail);
+//    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

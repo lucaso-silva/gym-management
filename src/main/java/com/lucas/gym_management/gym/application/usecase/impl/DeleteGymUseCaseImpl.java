@@ -1,5 +1,6 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
+import com.lucas.gym_management.gym.application.exceptions.ActiveGymException;
 import com.lucas.gym_management.gym.application.exceptions.ApplicationException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.delete.DeleteGymUseCase;
@@ -21,7 +22,7 @@ public class DeleteGymUseCaseImpl implements DeleteGymUseCase {
                 .orElseThrow(() -> new GymNotFoundException("Gym not found with id %s".formatted(id)));
 
         if(!gym.getMembersIds().isEmpty()) {
-            throw new ApplicationException("You cannot delete a gym with active members");
+            throw new ActiveGymException("You cannot delete a gym with active members");
         }
 
         gymRepository.deleteById(id);

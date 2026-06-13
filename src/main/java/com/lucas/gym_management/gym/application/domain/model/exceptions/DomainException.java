@@ -1,7 +1,9 @@
 package com.lucas.gym_management.gym.application.domain.model.exceptions;
 
-public class DomainException extends RuntimeException {
-    public DomainException(String message) {
-        super(message);
+import com.lucas.gym_management.starter.exception.BaseException;
+
+public class DomainException extends BaseException {
+    public DomainException(String code, String message, Integer httpStatus) {
+        super(code, message, httpStatus);
     }
 }

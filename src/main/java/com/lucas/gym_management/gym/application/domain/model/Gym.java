@@ -1,6 +1,8 @@
 package com.lucas.gym_management.gym.application.domain.model;
 
 import com.lucas.gym_management.gym.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.gym.application.domain.model.exceptions.MemberAlreadyExistsException;
+import com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.gym.application.domain.model.exceptions.UserNotMemberException;
 import com.lucas.gym_management.gym.application.domain.model.valueObjects.GymAddress;
 import lombok.Getter;
@@ -23,7 +25,7 @@ public class Gym {
 
     protected Gym(String name, String phone, GymAddress address) {
         if(name == null || name.isBlank() || phone == null || phone.isBlank() ||  address == null) {
-            throw new DomainException("You must provide Gym name, phone and address to create a Gym");
+            throw new RequiredFieldException("You must provide Gym name, phone and address to create a Gym");
         }
         this.id = UUID.randomUUID();
         this.name = name;
@@ -56,7 +58,7 @@ public class Gym {
 
     public void renameTo(String newName){
         if(newName == null || newName.isBlank()){
-            throw new DomainException("Name cannot be empty");
+            throw new RequiredFieldException("Name cannot be empty");
         }
         this.name = newName;
         updateInfo();
@@ -64,7 +66,7 @@ public class Gym {
 
     public void updatePhone(String newPhone) {
         if(newPhone == null || newPhone.isBlank()){
-            throw new DomainException("Phone cannot be empty");
+            throw new RequiredFieldException("Phone cannot be empty");
         }
         this.phone = newPhone;
         updateInfo();
@@ -72,7 +74,7 @@ public class Gym {
 
     public void assignManagerId(UUID managerId) {
         if(managerId == null){
-            throw new DomainException("Manager Id cannot be empty");
+            throw new RequiredFieldException("Manager Id cannot be empty");
         }
         this.managerId = managerId;
         updateInfo();
@@ -113,10 +115,10 @@ public class Gym {
 
     public void addMember(UUID memberId) {
         if(memberId == null){
-            throw new DomainException("Member id cannot be empty");
+            throw new RequiredFieldException("Member id cannot be empty");
         }
         if(membersIds.contains(memberId)){
-            throw new DomainException("User is already a gym member");
+            throw new MemberAlreadyExistsException("User is already a gym member");
         }
         membersIds.add(memberId);
         updateInfo();
@@ -124,7 +126,7 @@ public class Gym {
 
     public void removeMember(UUID memberId) {
         if(memberId == null){
-            throw new DomainException("Member id cannot be empty");
+            throw new RequiredFieldException("Member id cannot be empty");
         }
         if(!membersIds.contains(memberId)){
             throw new UserNotMemberException("User is not a gym member");
