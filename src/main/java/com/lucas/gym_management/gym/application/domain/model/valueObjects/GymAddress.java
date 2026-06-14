@@ -32,35 +32,35 @@ public class GymAddress {
 
     public void updateStreet(String street) {
         if(street == null || street.isBlank()) {
-            throw new com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException("Street address cannot be empty");
+            throw new RequiredFieldException("Street address cannot be empty");
         }
         this.street = street;
     }
 
     public void updateNumber(String number) {
         if(number == null || number.isBlank()) {
-            throw new com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException("Number address cannot be empty");
+            throw new RequiredFieldException("Number address cannot be empty");
         }
         this.number = number;
     }
 
     public void updateNeighborhood(String neighborhood) {
         if(neighborhood == null || neighborhood.isBlank()) {
-            throw new com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException("Neighborhood address cannot be empty");
+            throw new RequiredFieldException("Neighborhood address cannot be empty");
         }
         this.neighborhood = neighborhood;
     }
 
     public void updateCity(String city) {
         if(city == null || city.isBlank()) {
-            throw new com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException("City address cannot be empty");
+            throw new RequiredFieldException("City address cannot be empty");
         }
         this.city = city;
     }
 
     public void updateState(String state) {
         if(state == null || state.isBlank()) {
-            throw new com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException("State address cannot be empty");
+            throw new RequiredFieldException("State address cannot be empty");
         }
         this.state = state;
     }

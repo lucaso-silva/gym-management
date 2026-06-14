@@ -1,7 +1,6 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.exceptions.ActiveGymException;
-import com.lucas.gym_management.gym.application.exceptions.ApplicationException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.delete.DeleteGymUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;

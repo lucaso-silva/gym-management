@@ -1,7 +1,7 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
-import com.lucas.gym_management.gymclass.application.exceptions.ActionNotAllowedException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.ActiveEnrollmentException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
@@ -47,8 +47,8 @@ class DeleteGymClassUseCaseTest {
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(
-                NotFoundException.class,
+        GymNotFoundException exception = assertThrows(
+                GymNotFoundException.class,
                 ()-> deleteGymClassUseCase.deleteGymClassById(gymClassId)
         );
 
@@ -70,8 +70,8 @@ class DeleteGymClassUseCaseTest {
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.of(gymClass));
 
-        ActionNotAllowedException exception = assertThrows(
-                ActionNotAllowedException.class,
+        ActiveEnrollmentException exception = assertThrows(
+                ActiveEnrollmentException.class,
                 ()-> deleteGymClassUseCase.deleteGymClassById(gymClassId)
         );
 

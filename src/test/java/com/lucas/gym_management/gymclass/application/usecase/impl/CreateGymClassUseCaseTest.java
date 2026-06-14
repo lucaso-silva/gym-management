@@ -1,7 +1,7 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
@@ -77,8 +77,8 @@ class CreateGymClassUseCaseTest {
         when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(false);
 
-        InvalidMemberIdException exception = assertThrows(
-                InvalidMemberIdException.class,
+        InvalidMemberException exception = assertThrows(
+                InvalidMemberException.class,
                 () -> createGymClassUseCase.createGymClass(gymClassInput)
         );
 

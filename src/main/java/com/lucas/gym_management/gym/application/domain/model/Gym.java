@@ -1,6 +1,5 @@
 package com.lucas.gym_management.gym.application.domain.model;
 
-import com.lucas.gym_management.gym.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.gym.application.domain.model.exceptions.MemberAlreadyExistsException;
 import com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.gym.application.domain.model.exceptions.UserNotMemberException;

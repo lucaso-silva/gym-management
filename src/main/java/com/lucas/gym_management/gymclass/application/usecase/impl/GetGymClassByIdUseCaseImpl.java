@@ -1,6 +1,6 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.get.GetGymClassByIdUseCase;
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
@@ -17,6 +17,6 @@ public class GetGymClassByIdUseCaseImpl implements GetGymClassByIdUseCase {
         var gymClass = gymClassRepository.findById(id);
 
         return gymClass.map(GymClassOutput::from)
-                .orElseThrow(() -> new NotFoundException("Gym class not found with id %s".formatted(id)));
+                .orElseThrow(() -> new GymNotFoundException("Gym class not found with id %s".formatted(id)));
     }
 }

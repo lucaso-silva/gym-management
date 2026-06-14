@@ -188,7 +188,7 @@ class UserControllerTest {
                         .header("x-user-id", instructorId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.detail").value("User cannot perform delete"));
     }
 

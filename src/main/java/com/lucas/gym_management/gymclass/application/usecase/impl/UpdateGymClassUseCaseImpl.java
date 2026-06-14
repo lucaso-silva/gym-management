@@ -2,9 +2,8 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.Schedule;
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
-import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
@@ -23,11 +22,11 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
         //TODO: validate user's request authorities
 
         var gymClass = gymClassRepository.findById(gymClassId)
-                .orElseThrow(()-> new NotFoundException("There is no gym class with the id %s".formatted(gymClassId)));
+                .orElseThrow(()-> new GymNotFoundException("There is no gym class with the id %s".formatted(gymClassId)));
 
         if(input.instructorId() != null){
             if(!gymMemberValidator.isInstructorFromGym(gymClass.getGymId(), input.instructorId())){
-                throw new InvalidMemberIdException("%s is not a valid instructor id".formatted(input.instructorId()));
+                throw new InvalidMemberException("%s is not a valid instructor id".formatted(input.instructorId()));
             }
             gymClass.assignInstructor(input.instructorId());
         }

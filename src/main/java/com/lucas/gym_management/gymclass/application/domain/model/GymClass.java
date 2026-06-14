@@ -1,5 +1,6 @@
 package com.lucas.gym_management.gymclass.application.domain.model;
 
+import com.lucas.gym_management.gymclass.application.domain.model.exceptions.ClassFullException;
 import com.lucas.gym_management.gymclass.application.domain.model.exceptions.EnrollmentException;
 import com.lucas.gym_management.gymclass.application.domain.model.exceptions.InvalidCapacityException;
 import com.lucas.gym_management.gymclass.application.domain.model.exceptions.RequiredFieldException;
@@ -84,7 +85,7 @@ public class GymClass {
             throw new EnrollmentException("Student is already enrolled in this class");
         }
         if(this.enrolledStudents.size() >= this.capacity){
-            throw new InvalidCapacityException("Class is at full capacity");
+            throw new ClassFullException("Class is at full capacity");
         }
         this.enrolledStudents.add(studentId);
     }

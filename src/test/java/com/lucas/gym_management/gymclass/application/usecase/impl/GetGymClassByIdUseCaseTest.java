@@ -1,6 +1,6 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
 import org.junit.jupiter.api.Test;
@@ -55,8 +55,8 @@ class GetGymClassByIdUseCaseTest {
 
         when(gymClassRepository.findById(gymClassId)).thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(
-                NotFoundException.class,
+        GymNotFoundException exception = assertThrows(
+                GymNotFoundException.class,
                 ()-> getGymClassByIdUseCase.getGymClassById(gymClassId)
         );
 

@@ -109,7 +109,7 @@ class RemoveMemberUseCaseTest {
                 () -> removeMemberUseCase.removeMember(userId,gymId,anotherMemberId)
         );
 
-        assertEquals("Member cannot not be removed, verify if are they an active student, instructor or manage", exception.getMessage());
+        assertEquals("User cannot be removed because they are still associated with the system", exception.getMessage());
 
         verify(gymRepository).findById(any(UUID.class));
         verify(gymRepository, never()).save(any(Gym.class));

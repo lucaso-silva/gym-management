@@ -1,9 +1,8 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
-import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
@@ -20,10 +19,10 @@ public class EnrollStudentUseCaseImpl implements EnrollStudentUseCase {
     @Override
     public GymClassOutput enrollStudent(UUID gymClassId, EnrollStudentInput input) {
         var gymClass = gymClassRepository.findById(gymClassId)
-                .orElseThrow(()-> new NotFoundException("There is no gym class with id %s".formatted(gymClassId)));
+                .orElseThrow(()-> new GymNotFoundException("There is no gym class with id %s".formatted(gymClassId)));
 
         if(!gymMemberValidator.isActiveStudentFromGym(gymClass.getGymId(), input.studentId())){
-            throw new InvalidMemberIdException("Only active students can be enrolled in a class");
+            throw new InvalidMemberException("Only active students can be enrolled in a class");
         }
 
         gymClass.enrollStudent(input.studentId());

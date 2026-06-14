@@ -1,8 +1,7 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.dto.GymOutput;
-import com.lucas.gym_management.gym.application.exceptions.ActiveMemberException;
-import com.lucas.gym_management.gym.application.exceptions.ApplicationException;
+import com.lucas.gym_management.gym.application.exceptions.MemberInUseException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.RemoveMemberUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
@@ -24,7 +23,7 @@ public class RemoveMemberUseCaseImpl implements RemoveMemberUseCase {
                 .orElseThrow(() -> new GymNotFoundException("Gym not found with id: %s".formatted(gymId)));
 
         if(!userGateway.canUserBeRemoved(memberId)){
-            throw new ActiveMemberException("Member cannot not be removed, verify if are they an active student, instructor or manage");
+            throw new MemberInUseException("User cannot be removed because they are still associated with the system");
         }
 
         gym.removeMember(memberId);

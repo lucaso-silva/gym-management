@@ -2,8 +2,8 @@ package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
 import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.Schedule;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassOutput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.create.CreateGymClassUseCase;
@@ -21,12 +21,12 @@ public class CreateGymClassUseCaseImpl implements CreateGymClassUseCase {
     @Override
     public CreateGymClassOutput createGymClass(CreateGymClassInput input) {
         if(!gymGateway.gymExists((input.gymId()))){
-            throw new NotFoundException("Gym not found with id %s".formatted(input
+            throw new GymNotFoundException("Gym not found with id %s".formatted(input
                     .gymId()));
         }
 
         if(!gymMemberValidator.isInstructorFromGym(input.gymId(), input.instructorId())){
-            throw new InvalidMemberIdException("Please provide a valid instructor id");
+            throw new InvalidMemberException("Please provide a valid instructor id");
         }
 
         var schedule = new Schedule(input.schedule().dayOfWeek(),

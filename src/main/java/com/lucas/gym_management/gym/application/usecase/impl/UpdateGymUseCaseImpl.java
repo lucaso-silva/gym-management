@@ -3,7 +3,7 @@ package com.lucas.gym_management.gym.application.usecase.impl;
 import com.lucas.gym_management.gym.application.domain.model.Gym;
 import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
-import com.lucas.gym_management.gym.application.exceptions.InvalidMemberException;
+import com.lucas.gym_management.gym.application.exceptions.UserNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
@@ -41,7 +41,7 @@ public class UpdateGymUseCaseImpl implements UpdateGymUseCase {
 
         if(input.managerId() != null){
             if(!userGateway.managerExists(input.managerId())) {
-                throw new InvalidMemberException("Manager with id %s does not exist".formatted(input.managerId()));
+                throw new UserNotFoundException("Manager with id %s does not exist".formatted(input.managerId()));
             }
             gym.assignManagerId(input.managerId());
         }

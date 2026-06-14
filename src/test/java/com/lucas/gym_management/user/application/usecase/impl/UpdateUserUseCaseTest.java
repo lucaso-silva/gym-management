@@ -3,12 +3,11 @@ package com.lucas.gym_management.user.application.usecase.impl;
 import com.lucas.gym_management.user.application.domain.model.Student;
 import com.lucas.gym_management.user.application.dto.user.UserOutput;
 import com.lucas.gym_management.user.application.exceptions.ConflictException;
-import com.lucas.gym_management.user.application.exceptions.NotAuthorizedException;
+import com.lucas.gym_management.user.application.exceptions.ForbiddenOperationException;
 import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.user.factory.UserFactory;
-import com.lucas.gym_management.user.application.usecase.impl.UpdateUserUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -147,8 +146,8 @@ class UpdateUserUseCaseTest {
         when(userRepository.findById(loggedInUserId))
                 .thenReturn(Optional.of(instructor));
 
-        NotAuthorizedException exception = assertThrows(
-                NotAuthorizedException.class,
+        ForbiddenOperationException exception = assertThrows(
+                ForbiddenOperationException.class,
                 () -> updateUserUseCase.updateUser(loggedInUserId, userId, input)
         );
 

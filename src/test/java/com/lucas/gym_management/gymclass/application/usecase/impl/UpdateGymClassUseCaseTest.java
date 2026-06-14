@@ -1,9 +1,8 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
-import com.lucas.gym_management.gymclass.application.exceptions.BusinessException;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import com.lucas.gym_management.gymclass.factory.GymClassFactory;
@@ -73,8 +72,8 @@ class UpdateGymClassUseCaseTest {
         when(gymClassRepository.findById(gymClasId))
                 .thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(
-                NotFoundException.class,
+        GymNotFoundException exception = assertThrows(
+                GymNotFoundException.class,
                 ()-> updateGymClassUseCase.updateGymClass(gymClasId, updateGymClassInput)
         );
 
@@ -99,8 +98,8 @@ class UpdateGymClassUseCaseTest {
         when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(false);
 
-        InvalidMemberIdException exception = assertThrows(
-                InvalidMemberIdException.class,
+        InvalidMemberException exception = assertThrows(
+                InvalidMemberException.class,
                 ()-> updateGymClassUseCase.updateGymClass(gymClassId, updateGymClassInput)
         );
 

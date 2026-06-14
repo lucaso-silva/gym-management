@@ -1,8 +1,8 @@
 package com.lucas.gym_management.gymclass.application.usecase.impl;
 
 import com.lucas.gym_management.gymclass.application.domain.model.GymClass;
-import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberIdException;
-import com.lucas.gym_management.gymclass.application.exceptions.NotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.manage_students.EnrollStudentInput;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
@@ -73,8 +73,8 @@ class EnrollStudentUseCaseTest {
         when(gymClassRepository.findById(gymClassId))
                 .thenReturn(Optional.empty());
 
-        NotFoundException exception = assertThrows(
-                NotFoundException.class,
+        GymNotFoundException exception = assertThrows(
+                GymNotFoundException.class,
                 ()-> enrollStudentUseCase.enrollStudent(gymClassId,input)
         );
 
@@ -99,8 +99,8 @@ class EnrollStudentUseCaseTest {
         when(gymMemberValidator.isActiveStudentFromGym(gymId, studentId))
                 .thenReturn(false);
 
-        InvalidMemberIdException exception = assertThrows(
-                InvalidMemberIdException.class,
+        InvalidMemberException exception = assertThrows(
+                InvalidMemberException.class,
                 ()-> enrollStudentUseCase.enrollStudent(gymClassId, input)
         );
 

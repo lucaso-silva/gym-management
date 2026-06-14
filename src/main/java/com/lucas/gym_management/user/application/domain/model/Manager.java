@@ -33,7 +33,6 @@ public class Manager extends User {
         return UserType.MANAGER;
     }
 
-    //FIXME: does it break SOLID? -> Liskov?
     @Override
     protected boolean applySpecificUpdates(UpdateUserData data) {
         return false;

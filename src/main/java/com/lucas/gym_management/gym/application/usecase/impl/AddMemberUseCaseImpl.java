@@ -1,11 +1,10 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.dto.GymOutput;
-import com.lucas.gym_management.gym.application.exceptions.ApplicationException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
-import com.lucas.gym_management.gym.application.exceptions.InvalidMemberException;
-import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberUseCase;
+import com.lucas.gym_management.gym.application.exceptions.UserNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
+import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import lombok.AllArgsConstructor;
@@ -28,7 +27,7 @@ public class AddMemberUseCaseImpl implements AddMemberUseCase {
                 .orElseThrow(() -> new GymNotFoundException("Gym not found with id: %s".formatted(gymId)));
 
         if(!userGateway.userExists(input.memberId())){
-            throw new InvalidMemberException("%s is not a valid user id".formatted(input.memberId()));
+            throw new UserNotFoundException("%s is not a valid user id".formatted(input.memberId()));
         }
 
         gym.addMember(input.memberId());

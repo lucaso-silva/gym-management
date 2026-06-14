@@ -1,5 +1,6 @@
 package com.lucas.gym_management.gymclass.application.domain.model.valueobjects;
 
+import com.lucas.gym_management.gymclass.application.domain.model.exceptions.InvalidTimeRangeException;
 import com.lucas.gym_management.gymclass.application.domain.model.exceptions.RequiredFieldException;
 
 import java.time.DayOfWeek;
@@ -23,7 +24,7 @@ public record Schedule(DayOfWeek dayOfWeek,
         }
 
         if(!endTime.isAfter(startTime)){
-            throw new RequiredFieldException("End time must be after start time");
+            throw new InvalidTimeRangeException("End time must be after start time");
         }
     }
 }
