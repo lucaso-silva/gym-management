@@ -1,5 +1,6 @@
 package com.lucas.gym_management.user.application.domain.model.valueObjects;
 
+import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import lombok.Getter;
 
 @Getter
@@ -12,6 +13,14 @@ public class Address {
     private String state;
 
     private Address(String street, String number, String neighborhood, String zipCode, String city, String state) {
+        if (street == null || street.isBlank() ||
+                number == null || number.isBlank() ||
+                neighborhood == null || neighborhood.isBlank() ||
+                zipCode == null || zipCode.isBlank() ||
+                city == null || city.isBlank() ||
+                state == null || state.isBlank()) {
+            throw new RequiredFieldException("You must inform street, number, neighborhood, zipcode, city and state in the address.");
+        }
         this.street = street;
         this.number = number;
         this.neighborhood = neighborhood;

@@ -10,7 +10,6 @@ import java.util.UUID;
 @ToString
 @Getter
 public class ManagerOutput extends UserOutput{
-    private final String gymName;
 
     public ManagerOutput(UUID id,
                          UserType userType,
@@ -18,9 +17,7 @@ public class ManagerOutput extends UserOutput{
                          String email,
                          String login,
                          String phone,
-                         AddressDTO address,
-                         String gymName){
+                         AddressDTO address){
         super(id,userType,name,email,login,phone,address);
-        this.gymName = gymName;
     }
 }

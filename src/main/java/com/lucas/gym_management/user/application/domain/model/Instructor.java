@@ -2,6 +2,7 @@ package com.lucas.gym_management.user.application.domain.model;
 
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
 import com.lucas.gym_management.user.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
 import lombok.Getter;
 
@@ -59,14 +60,14 @@ public class Instructor extends User {
 
     private void fixCref(String cref) {
         if(cref == null || cref.isBlank()){
-            throw new DomainException("Cref cannot be empty");
+            throw new RequiredFieldException("Cref cannot be empty");
         }
         this.cref = cref;
     }
 
     private void updateSpecialty(String specialty) {
         if(specialty == null || specialty.isBlank()){
-            throw new DomainException("Specialty cannot be empty");
+            throw new RequiredFieldException("Specialty cannot be empty");
         }
         this.specialty = specialty;
     }

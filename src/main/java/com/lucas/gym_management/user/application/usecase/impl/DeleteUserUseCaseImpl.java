@@ -3,7 +3,7 @@ package com.lucas.gym_management.user.application.usecase.impl;
 import com.lucas.gym_management.user.application.domain.model.Manager;
 import com.lucas.gym_management.user.application.domain.model.Student;
 import com.lucas.gym_management.user.application.exceptions.ConflictException;
-import com.lucas.gym_management.user.application.exceptions.NotAuthorizedException;
+import com.lucas.gym_management.user.application.exceptions.ForbiddenOperationException;
 import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.inbound.delete.DeleteUserUseCase;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
@@ -24,7 +24,7 @@ public class DeleteUserUseCaseImpl implements DeleteUserUseCase {
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
         if(!(loggedInUser instanceof Manager))
-            throw new NotAuthorizedException("User cannot perform delete");
+            throw new ForbiddenOperationException("User cannot perform delete");
 
         if(user instanceof Student student && student.isActiveMembership())
             throw new ConflictException("Cannot delete a student with active membership, id %s".formatted(id));

@@ -1,0 +1,97 @@
+package com.lucas.gym_management.starter.exception;
+
+import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.net.URI;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = BaseException.class)
+    protected ResponseEntity<ProblemDetail> handleBaseException(BaseException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatusCode.valueOf(ex.getHttpStatus()), ex.getMessage());
+        problemDetail.setType(URI.create("https://api.example.com/errors/" + ex.getCode()));
+        problemDetail.setTitle(ex.getCode());
+        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
+        problemDetail.setProperty("code", ex.getCode());
+        problemDetail.setProperty("timestamp", Instant.now().toString());
+
+        return ResponseEntity.status(ex.getHttpStatus()).body(problemDetail);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected ResponseEntity<ProblemDetail> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatusCode.valueOf(HttpStatus.BAD_REQUEST.value()), ex.getMessage()
+        );
+        problemDetail.setType(URI.create("https://api.example.com/errors/invalid-request"));
+        problemDetail.setTitle(ex.getName());
+        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
+        problemDetail.setProperty("code", ex.getName());
+        problemDetail.setProperty("timestamp", Instant.now().toString());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problemDetail);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request) {
+
+        List<Map<String, String>> invalidParams = ex.getBindingResult().getFieldErrors()
+                .stream()
+                .map(err -> {
+                    Map<String, String> param = new HashMap<>();
+                    param.put("field", err.getField());
+                    param.put("message", err.getDefaultMessage());
+                    return param;
+                })
+                .collect(Collectors.toList());
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation failed");
+        problemDetail.setType(URI.create("https://api.example.com/errors/validation-error"));
+        problemDetail.setTitle("gym-management.validation-error");
+        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
+        problemDetail.setProperty("invalid-params", invalidParams);
+        problemDetail.setProperty("timestamp", Instant.now().toString());
+
+        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ){
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                "Request body contains invalid data"
+        );
+        problemDetail.setType(URI.create("https://api.example.com/errors/invalid-request"));
+        problemDetail.setTitle("gym-management.invalid-request");
+        problemDetail.setInstance(URI.create(request.getDescription(false).replace("uri=", "")));
+        problemDetail.setProperty("code", "gym-management.invalid-request");
+        problemDetail.setProperty("details", ex.getMessage());
+        problemDetail.setProperty("timestamp", Instant.now().toString());
+
+        return new ResponseEntity<>(problemDetail, HttpStatus.BAD_REQUEST);
+    }
+}
+

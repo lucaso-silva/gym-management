@@ -3,9 +3,11 @@ package com.lucas.gym_management.gym.application.usecase.impl;
 import com.lucas.gym_management.gym.application.domain.model.Gym;
 import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
+import com.lucas.gym_management.gym.application.exceptions.UserNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUseCase;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
+import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import lombok.AllArgsConstructor;
 
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
 public class UpdateGymUseCaseImpl implements UpdateGymUseCase {
 
     private final GymRepository gymRepository;
+    private final UserGateway userGateway;
 
     @Override
     public GymOutput updateGym(UUID userId, UUID gymId, UpdateGymInput input) {
@@ -34,6 +37,13 @@ public class UpdateGymUseCaseImpl implements UpdateGymUseCase {
 
         if(input.phone() != null) {
             gym.updatePhone(input.phone());
+        }
+
+        if(input.managerId() != null){
+            if(!userGateway.managerExists(input.managerId())) {
+                throw new UserNotFoundException("Manager with id %s does not exist".formatted(input.managerId()));
+            }
+            gym.assignManagerId(input.managerId());
         }
 
         if(input.address() != null) {

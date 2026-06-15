@@ -54,8 +54,7 @@ public abstract class UserOutput {
                         manager.getEmail(),
                         manager.getLogin(),
                         manager.getPhone(),
-                        buildAddressDto(manager),
-                        manager.getGymName());
+                        buildAddressDto(manager));
             }
             default -> throw new IllegalArgumentException("Unsupported user type: " + user.getClass());
         };

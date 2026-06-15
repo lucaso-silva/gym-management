@@ -1,6 +1,6 @@
 package com.lucas.gym_management.gym.application.domain.model.valueObjects;
 
-import com.lucas.gym_management.gym.application.domain.model.exceptions.DomainException;
+import com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException;
 import lombok.Getter;
 
 @Getter
@@ -17,7 +17,7 @@ public class GymAddress {
                 neighborhood == null || neighborhood.isBlank() ||
                 city == null || city.isBlank() ||
                 state == null || state.isBlank()) {
-            throw new DomainException("You must provide street, number, neighborhood, city and state");
+            throw new RequiredFieldException("You must provide street, number, neighborhood, city and state");
         }
         this.street = street;
         this.number = number;
@@ -32,35 +32,35 @@ public class GymAddress {
 
     public void updateStreet(String street) {
         if(street == null || street.isBlank()) {
-            throw new DomainException("Street address cannot be     empty");
+            throw new RequiredFieldException("Street address cannot be empty");
         }
         this.street = street;
     }
 
     public void updateNumber(String number) {
         if(number == null || number.isBlank()) {
-            throw new DomainException("Number address cannot be empty");
+            throw new RequiredFieldException("Number address cannot be empty");
         }
         this.number = number;
     }
 
     public void updateNeighborhood(String neighborhood) {
         if(neighborhood == null || neighborhood.isBlank()) {
-            throw new DomainException("Neighborhood address cannot be empty");
+            throw new RequiredFieldException("Neighborhood address cannot be empty");
         }
         this.neighborhood = neighborhood;
     }
 
     public void updateCity(String city) {
         if(city == null || city.isBlank()) {
-            throw new DomainException("City address cannot be empty");
+            throw new RequiredFieldException("City address cannot be empty");
         }
         this.city = city;
     }
 
     public void updateState(String state) {
         if(state == null || state.isBlank()) {
-            throw new DomainException("State address cannot be empty");
+            throw new RequiredFieldException("State address cannot be empty");
         }
         this.state = state;
     }

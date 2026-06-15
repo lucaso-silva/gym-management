@@ -6,6 +6,7 @@ import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymInput;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
+import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.gym.factory.GymFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ class UpdateGymUseCaseTest {
     @Mock
     private GymRepository gymRepository;
 
+    @Mock
+    private UserGateway userGateway;
+
     @InjectMocks
     private UpdateGymUseCaseImpl updateGymUseCase;
 
@@ -39,6 +43,8 @@ class UpdateGymUseCaseTest {
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
+        when(userGateway.managerExists(updateGymInput.managerId()))
+                        .thenReturn(true);
         when(gymRepository.save(any(Gym.class)))
                 .thenReturn(updatedGym);
 
@@ -48,8 +54,9 @@ class UpdateGymUseCaseTest {
         assertGymOutputMatches(updatedGym, output);
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway).managerExists(updateGymInput.managerId());
         verify(gymRepository).save(gym);
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -57,7 +64,7 @@ class UpdateGymUseCaseTest {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
         var userId = UUID.randomUUID();
-        var updateGymNameInput = new UpdateGymInput("Updated-gym-name", null,null);
+        var updateGymNameInput = new UpdateGymInput("Updated-gym-name", null,null, null);
 
         gym.renameTo("Updated-gym-name");
 
@@ -72,8 +79,9 @@ class UpdateGymUseCaseTest {
         assertGymOutputMatches(gym, output);
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway, never()).managerExists(any(UUID.class));
         verify(gymRepository).save(gym);
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -81,7 +89,7 @@ class UpdateGymUseCaseTest {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
         var userId = UUID.randomUUID();
-        var updateGymPhoneInput = new UpdateGymInput(null,"updated-phone-num",null);
+        var updateGymPhoneInput = new UpdateGymInput(null,"updated-phone-num",null, null);
 
         gym.updatePhone("updated-phone-num");
 
@@ -96,8 +104,9 @@ class UpdateGymUseCaseTest {
         assertGymOutputMatches(gym, output);
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway, never()).managerExists(any(UUID.class));
         verify(gymRepository).save(gym);
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -105,7 +114,7 @@ class UpdateGymUseCaseTest {
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
         var userId = UUID.randomUUID();
-        var updateGymAddressInput = new UpdateGymInput(null,null,
+        var updateGymAddressInput = new UpdateGymInput(null,null, null,
                 new GymAddressDTO("updated-street-name",
                 "updated-number",
                 "updated-neighborhood",
@@ -125,8 +134,9 @@ class UpdateGymUseCaseTest {
         assertGymOutputMatches(gym, output);
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway, never()).managerExists(any(UUID.class));
         verify(gymRepository).save(gym);
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -146,13 +156,14 @@ class UpdateGymUseCaseTest {
         assertEquals("Gym not found with id: %s".formatted(gymId), exception.getMessage());
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway, never()).managerExists(any(UUID.class));
         verify(gymRepository, never()).save(any(Gym.class));
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     private void assertGymOutputMatches(Gym expectedOutput, GymOutput output){
         assertAll(
-                ()-> assertEquals(expectedOutput.getId(), output.uuid()),
+                ()-> assertEquals(expectedOutput.getId(), output.gymId()),
                 ()-> assertEquals(expectedOutput.getName(), output.name()),
                 ()-> assertEquals(expectedOutput.getPhone(), output.phone()),
                 ()-> assertEquals(expectedOutput.getAddress().getStreet(), output.address().street()),
@@ -160,8 +171,7 @@ class UpdateGymUseCaseTest {
                 ()-> assertEquals(expectedOutput.getAddress().getNeighborhood(), output.address().neighborhood()),
                 ()-> assertEquals(expectedOutput.getAddress().getCity(), output.address().city()),
                 ()-> assertEquals(expectedOutput.getAddress().getState(), output.address().state()),
-                ()-> assertEquals(expectedOutput.getMembersIds().size(), output.members()),
-                ()-> assertEquals(expectedOutput.getGymClassesIds().size(), output.activeClasses())
+                ()-> assertEquals(expectedOutput.getMembersIds().size(), output.members())
         );
     }
 }

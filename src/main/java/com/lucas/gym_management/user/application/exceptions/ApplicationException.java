@@ -1,10 +1,9 @@
 package com.lucas.gym_management.user.application.exceptions;
 
-public class ApplicationException extends RuntimeException {
-    public ApplicationException(String message) {
-        super(message);
-    }
-    public ApplicationException(String message, Throwable cause) {
-        super(message, cause, true, false);
+import com.lucas.gym_management.starter.exception.BaseException;
+
+public class ApplicationException extends BaseException {
+    public ApplicationException(String code, String message, Integer httpStatus) {
+        super(code, message, httpStatus);
     }
 }

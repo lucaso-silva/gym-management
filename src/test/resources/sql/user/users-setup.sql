@@ -1,6 +1,6 @@
 DELETE from users;
 
-INSERT INTO users (id, user_type, name, email, login, password, phone, created_at, updated_at, street, number, neighborhood, zip_code, city, state, gym_name, cref, specialty, birthday, status
+INSERT INTO users (id, user_type, name, email, login, password, phone, created_at, updated_at, street, number, neighborhood, zip_code, city, state, cref, specialty, birthday, status
 ) VALUES
 
 (
@@ -19,7 +19,6 @@ INSERT INTO users (id, user_type, name, email, login, password, phone, created_a
     'any-zip-code',
     'any-city',
     'any-state',
-    'Any-Gym-Name',
     NULL,
     NULL,
     NULL,
@@ -42,7 +41,6 @@ INSERT INTO users (id, user_type, name, email, login, password, phone, created_a
     'any-zip-code',
     'any-city',
     'any-state',
-    NULL,
     'any-cref-number',
     'any-specialty',
     NULL,
@@ -67,7 +65,6 @@ INSERT INTO users (id, user_type, name, email, login, password, phone, created_a
     'any-state',
     NULL,
     NULL,
-    NULL,
     '2000-01-01',
     FALSE
 ),
@@ -88,7 +85,6 @@ INSERT INTO users (id, user_type, name, email, login, password, phone, created_a
     'any-zip-code',
     'any-city',
     'any-state',
-    NULL,
     NULL,
     NULL,
     '2000-01-01',

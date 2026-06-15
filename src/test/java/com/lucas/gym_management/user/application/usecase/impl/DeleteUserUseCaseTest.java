@@ -2,11 +2,10 @@ package com.lucas.gym_management.user.application.usecase.impl;
 
 import com.lucas.gym_management.user.application.domain.model.Student;
 import com.lucas.gym_management.user.application.exceptions.ConflictException;
-import com.lucas.gym_management.user.application.exceptions.NotAuthorizedException;
+import com.lucas.gym_management.user.application.exceptions.ForbiddenOperationException;
 import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.outbound.repository.UserRepository;
 import com.lucas.gym_management.user.factory.UserFactory;
-import com.lucas.gym_management.user.application.usecase.impl.DeleteUserUseCaseImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -114,8 +113,8 @@ class DeleteUserUseCaseTest {
         when(userRepository.findById(userId))
                 .thenReturn(Optional.of(student));
 
-        NotAuthorizedException exception = assertThrows(
-                NotAuthorizedException.class,
+        ForbiddenOperationException exception = assertThrows(
+                ForbiddenOperationException.class,
                 () -> deleteUserUseCase.deleteUserById(loggedInUserId, userId)
         );
 

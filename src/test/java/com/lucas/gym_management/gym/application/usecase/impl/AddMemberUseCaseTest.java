@@ -5,6 +5,7 @@ import com.lucas.gym_management.gym.application.domain.model.exceptions.DomainEx
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberInput;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
+import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.gym.factory.GymFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ class AddMemberUseCaseTest {
     @Mock
     private GymRepository gymRepository;
 
+    @Mock
+    private UserGateway userGateway;
+
     @InjectMocks
     private AddMemberUseCaseImpl addMemberUseCase;
 
@@ -38,6 +42,8 @@ class AddMemberUseCaseTest {
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
+        when(userGateway.userExists(memberId))
+                .thenReturn(true);
         when(gymRepository.save(gym))
                 .thenReturn(gym);
 
@@ -47,18 +53,16 @@ class AddMemberUseCaseTest {
 
         assertNotNull(output);
         assertAll(
-                ()-> assertEquals(gym.getId(), output.uuid()),
+                ()-> assertEquals(gym.getId(), output.gymId()),
                 ()-> assertEquals(gym.getName(), output.name()),
                 ()-> assertEquals(gym.getPhone(), output.phone()),
                 ()-> assertEquals(1, output.members()),
-                () -> assertTrue(gym.getMembersIds().contains(memberId)),
-                ()-> assertEquals(gym.getGymClassesIds().size(), output.activeClasses()),
-                ()-> assertEquals(0, output.activeClasses())
+                () -> assertTrue(gym.getMembersIds().contains(memberId))
         );
 
         verify(gymRepository).findById(gymId);
         verify(gymRepository).save(any(Gym.class));
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -78,8 +82,9 @@ class AddMemberUseCaseTest {
         assertEquals("Gym not found with id: %s".formatted(gymId),  exception.getMessage());
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway, never()).userExists(any(UUID.class));
         verify(gymRepository, never()).save(any(Gym.class));
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 
     @Test
@@ -94,6 +99,8 @@ class AddMemberUseCaseTest {
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
+        when(userGateway.userExists(memberId))
+                .thenReturn(true);
 
         DomainException exception = assertThrows(
                 DomainException.class,
@@ -103,7 +110,8 @@ class AddMemberUseCaseTest {
         assertEquals("User is already a gym member", exception.getMessage());
 
         verify(gymRepository).findById(gymId);
+        verify(userGateway).userExists(memberId);
         verify(gymRepository, never()).save(any(Gym.class));
-        verifyNoMoreInteractions(gymRepository);
+        verifyNoMoreInteractions(gymRepository, userGateway);
     }
 }

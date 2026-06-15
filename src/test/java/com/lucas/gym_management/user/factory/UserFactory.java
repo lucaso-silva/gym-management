@@ -85,8 +85,7 @@ public class UserFactory {
                 "manager-phone-number",
                 buildAddress(),
                 LocalDateTime.now().minusMinutes(10),
-                LocalDateTime.now(),
-                "any-gym-name");
+                LocalDateTime.now());
     }
 
     public static Student buildStudent() {

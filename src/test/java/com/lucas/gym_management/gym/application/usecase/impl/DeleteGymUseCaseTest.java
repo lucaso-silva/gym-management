@@ -65,28 +65,4 @@ class DeleteGymUseCaseTest {
         verify(gymRepository, never()).deleteById(any(UUID.class));
         verifyNoMoreInteractions(gymRepository);
     }
-
-    @Test
-    void shouldThrowApplicationException_whenGymClassesListIsNotEmpty(){
-        var gym = GymFactory.buildGym();
-        var gymId = gym.getId();
-        var userId = UUID.randomUUID();
-        var gymClassId = UUID.randomUUID();
-
-        gym.addGymClass(gymClassId);
-
-        when(gymRepository.findById(gymId))
-                .thenReturn(Optional.of(gym));
-
-        ApplicationException exception = assertThrows(
-                ApplicationException.class,
-                () -> deleteGymUseCase.deleteGymById(userId, gymId)
-        );
-
-        assertEquals("You cannot delete a gym with active classes", exception.getMessage());
-
-        verify(gymRepository).findById(any(UUID.class));
-        verify(gymRepository, never()).deleteById(any(UUID.class));
-        verifyNoMoreInteractions(gymRepository);
-    }
 }

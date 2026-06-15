@@ -31,9 +31,7 @@ public class UserJPAMapper {
             userEntity.setCref(((Instructor) user).getCref());
             userEntity.setSpecialty(((Instructor) user).getSpecialty());
         }
-        if(user instanceof Manager) {
-            userEntity.setGymName(((Manager) user).getGymName());
-        }
+
         if(user instanceof Student) {
             userEntity.setBirthDate(((Student) user).getBirthDate());
             userEntity.setActiveMembership(((Student) user).isActiveMembership());
@@ -48,7 +46,6 @@ public class UserJPAMapper {
         extraFields.put("activeMembership", userJPAEntity.getActiveMembership());
         extraFields.put("cref", userJPAEntity.getCref());
         extraFields.put("specialty", userJPAEntity.getSpecialty());
-        extraFields.put("gymName", userJPAEntity.getGymName());
 
         UserType userType = UserType.valueOf(userJPAEntity.getUserType().name());
 

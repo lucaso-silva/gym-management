@@ -5,7 +5,7 @@ import com.lucas.gym_management.user.application.domain.model.Manager;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
 import com.lucas.gym_management.user.application.dto.user.UserOutput;
 import com.lucas.gym_management.user.application.exceptions.ConflictException;
-import com.lucas.gym_management.user.application.exceptions.NotAuthorizedException;
+import com.lucas.gym_management.user.application.exceptions.ForbiddenOperationException;
 import com.lucas.gym_management.user.application.exceptions.NotFoundException;
 import com.lucas.gym_management.user.application.ports.inbound.update.UpdateUserInput;
 import com.lucas.gym_management.user.application.ports.inbound.update.UpdateUserUseCase;
@@ -27,7 +27,7 @@ public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
                     .orElseThrow(()-> new NotFoundException("User with id %s not found".formatted(loggedInUserId)));
 
             if(!(loggedInUser instanceof Manager))
-                throw new NotAuthorizedException("Logged in user is not allowed to perform update");
+                throw new ForbiddenOperationException("Logged in user is not allowed to perform update");
         }
 
         var userById = userRepository.findById(userId)

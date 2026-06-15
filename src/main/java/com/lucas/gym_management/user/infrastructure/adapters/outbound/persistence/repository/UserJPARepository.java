@@ -1,6 +1,7 @@
 package com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.repository;
 
 import com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.entities.UserJPAEntity;
+import com.lucas.gym_management.user.infrastructure.adapters.outbound.persistence.entities.UserTypeJPA;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,8 @@ public interface UserJPARepository extends JpaRepository<UserJPAEntity, UUID> {
     boolean existsByLogin(String login);
 
     boolean existsByEmailAndIdNot(String email, UUID id);
+
+    boolean existsByIdAndUserType(UUID userId, UserTypeJPA userType);
+
+    boolean existsByIdAndUserTypeAndActiveMembership(UUID id, UserTypeJPA type, boolean active);
 }
