@@ -41,6 +41,12 @@ class CreateGymClassUseCaseTest {
                 .thenReturn(true);
         when(gymMemberValidator.isInstructorFromGym(gymId, instructorId))
                 .thenReturn(true);
+        when(gymClassRepository.hasScheduleConflict(gymId,
+                gymClassInput.schedule().dayOfWeek(),
+                gymClassInput.schedule().room(),
+                gymClassInput.schedule().startTime(),
+                gymClassInput.schedule().endTime()))
+                .thenReturn(false);
         when(gymClassRepository.save(any(GymClass.class)))
                 .thenReturn(gymClass);
 
@@ -60,6 +66,10 @@ class CreateGymClassUseCaseTest {
 
         verify(gymGateway).gymExists(gymId);
         verify(gymMemberValidator).isInstructorFromGym(gymId, instructorId);
+        verify(gymClassRepository).hasScheduleConflict(gymId,gymClassInput.schedule().dayOfWeek(),
+                gymClassInput.schedule().room(),
+                gymClassInput.schedule().startTime(),
+                gymClassInput.schedule().endTime());
         verify(gymClassRepository).save(any(GymClass.class));
         verifyNoMoreInteractions(gymGateway, gymMemberValidator, gymClassRepository);
     }

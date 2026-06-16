@@ -1,7 +1,6 @@
 package com.lucas.gym_management.user.application.domain.model;
 
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
-import com.lucas.gym_management.user.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.user.application.domain.model.exceptions.InvalidDataException;
 import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
@@ -19,7 +18,7 @@ public class Student extends User {
 
     private Student(String name, String email, String login, String password, String phone, Address address, LocalDate birthDate) {
         super(name, email, login, password, phone, address);
-        fixBirthDate(birthDate);
+        setBirthDate(birthDate);
         activateMembership();
     }
 
@@ -48,7 +47,7 @@ public class Student extends User {
         boolean updated = false;
 
         if(data.birthDate() != null){
-            this.fixBirthDate(data.birthDate());
+            this.setBirthDate(data.birthDate());
             updated = true;
         }
 
@@ -68,7 +67,7 @@ public class Student extends User {
         return updated;
     }
 
-    private void fixBirthDate(LocalDate birthDate) {
+    private void setBirthDate(LocalDate birthDate) {
         if(birthDate == null){
             throw new RequiredFieldException("Birth date cannot be empty");
         }

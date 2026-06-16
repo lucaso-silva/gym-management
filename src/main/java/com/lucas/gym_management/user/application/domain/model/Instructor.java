@@ -1,7 +1,6 @@
 package com.lucas.gym_management.user.application.domain.model;
 
 import com.lucas.gym_management.user.application.domain.command.UpdateUserData;
-import com.lucas.gym_management.user.application.domain.model.exceptions.DomainException;
 import com.lucas.gym_management.user.application.domain.model.exceptions.RequiredFieldException;
 import com.lucas.gym_management.user.application.domain.model.valueObjects.Address;
 import lombok.Getter;

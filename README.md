@@ -20,7 +20,7 @@ The focus is on behavior and business rules rather than database-driven developm
 
 ## 2. Project Status
 
-This project is actively evolving and currently includes:
+**This project is actively evolving** and currently includes:
 * User management
 * Gym management
 * Gym class management

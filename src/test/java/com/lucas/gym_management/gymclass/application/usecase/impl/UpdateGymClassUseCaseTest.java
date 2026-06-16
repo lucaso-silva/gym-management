@@ -41,6 +41,8 @@ class UpdateGymClassUseCaseTest {
                 .thenReturn(Optional.of(gymClass));
         when(gymMemberValidator.isInstructorFromGym(gymId, newInstructorId))
                 .thenReturn(true);
+        when(gymClassRepository.hasScheduleConflict(gymId, gymClassId, updateGymClassInput.schedule().dayOfWeek(), updateGymClassInput.schedule().room(), updateGymClassInput.schedule().startTime(), updateGymClassInput.schedule().endTime()))
+                .thenReturn(false);
         when(gymClassRepository.save(any(GymClass.class)))
                 .thenReturn(gymClass);
 
@@ -59,6 +61,7 @@ class UpdateGymClassUseCaseTest {
 
         verify(gymClassRepository).findById(gymClassId);
         verify(gymMemberValidator).isInstructorFromGym(gymId, newInstructorId);
+        verify(gymClassRepository).hasScheduleConflict(gymId, gymClassId, updateGymClassInput.schedule().dayOfWeek(), updateGymClassInput.schedule().room(), updateGymClassInput.schedule().startTime(), updateGymClassInput.schedule().endTime());
         verify(gymClassRepository).save(gymClass);
         verifyNoMoreInteractions(gymMemberValidator);
         verifyNoMoreInteractions(gymClassRepository);

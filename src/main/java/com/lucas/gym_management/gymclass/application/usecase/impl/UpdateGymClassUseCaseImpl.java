@@ -4,6 +4,7 @@ import com.lucas.gym_management.gymclass.application.domain.model.valueobjects.S
 import com.lucas.gym_management.gymclass.application.dto.GymClassOutput;
 import com.lucas.gym_management.gymclass.application.exceptions.InvalidMemberException;
 import com.lucas.gym_management.gymclass.application.exceptions.GymNotFoundException;
+import com.lucas.gym_management.gymclass.application.exceptions.ScheduleConflictException;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassInput;
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
@@ -40,6 +41,15 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
         }
 
         if(input.schedule() != null){
+            if(gymClassRepository.hasScheduleConflict(gymClass.getGymId(),
+                    gymClass.getId(),
+                    input.schedule().dayOfWeek(),
+                    input.schedule().room(),
+                    input.schedule().startTime(),
+                    input.schedule().endTime())){
+                throw new ScheduleConflictException("There is already a class scheduled for this room and time");
+            }
+
             gymClass.defineSchedule(new Schedule(input.schedule().dayOfWeek(),
                     input.schedule().room(),
                     input.schedule().startTime(),
