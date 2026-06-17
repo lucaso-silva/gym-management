@@ -1,6 +1,7 @@
 package com.lucas.gym_management.gym.infrastructure.adapters.outbound.persistence;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
+import com.lucas.gym_management.gym.application.domain.model.valueObjects.GymAddress;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.infrastructure.adapters.outbound.persistence.mapper.GymJPAMapper;
 import com.lucas.gym_management.gym.infrastructure.adapters.outbound.persistence.repository.GymJPARepository;
@@ -39,5 +40,14 @@ public class GymRepositoryAdapter implements GymRepository {
     @Override
     public void deleteById(UUID id) {
         gymJPARepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByAddress(GymAddress gymAddress) {
+        return gymJPARepository.existsByAddress(gymAddress.getStreet(),
+                gymAddress.getNumber(),
+                gymAddress.getNeighborhood(),
+                gymAddress.getCity(),
+                gymAddress.getState());
     }
 }

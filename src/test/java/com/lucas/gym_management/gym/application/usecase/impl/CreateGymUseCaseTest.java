@@ -28,6 +28,8 @@ class CreateGymUseCaseTest {
         var gymInput = GymFactory.buildCreateGymInput();
         var gym = GymFactory.buildGym();
 
+        when(gymRepository.existsByAddress(gym.getAddress()))
+                .thenReturn(false);
         when(gymRepository.save(any(Gym.class)))
                 .thenReturn(gym);
 
@@ -40,6 +42,7 @@ class CreateGymUseCaseTest {
                 () -> assertEquals(gym.getPhone(), output.phone())
         );
 
+        verify(gymRepository).existsByAddress(gym.getAddress());
         verify(gymRepository).save(any(Gym.class));
         verifyNoMoreInteractions(gymRepository);
     }

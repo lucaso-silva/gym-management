@@ -1,9 +1,11 @@
 package com.lucas.gym_management.gym.application.domain.model.valueObjects;
 
 import com.lucas.gym_management.gym.application.domain.model.exceptions.RequiredFieldException;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode
 public class GymAddress {
     private String street;
     private String number;

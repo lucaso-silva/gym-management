@@ -36,7 +36,7 @@ public class UpdateGymClassUseCaseImpl implements UpdateGymClassUseCase {
             gymClass.rename(input.name());
         }
 
-        if(input.capacity() != null){
+        if(input.capacity() != null && input.capacity() > 0){
             gymClass.defineCapacity(input.capacity());
         }
 
