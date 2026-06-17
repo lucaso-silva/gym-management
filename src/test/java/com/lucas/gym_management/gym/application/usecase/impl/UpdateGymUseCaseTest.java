@@ -1,6 +1,7 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
+import com.lucas.gym_management.gym.application.domain.model.valueObjects.GymAddress;
 import com.lucas.gym_management.gym.application.dto.GymAddressDTO;
 import com.lucas.gym_management.gym.application.dto.GymOutput;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
@@ -45,6 +46,8 @@ class UpdateGymUseCaseTest {
                 .thenReturn(Optional.of(gym));
         when(userGateway.managerExists(updateGymInput.managerId()))
                         .thenReturn(true);
+        when(gymRepository.existsByAddress(updatedGym.getAddress()))
+                .thenReturn(false);
         when(gymRepository.save(any(Gym.class)))
                 .thenReturn(updatedGym);
 
@@ -55,6 +58,7 @@ class UpdateGymUseCaseTest {
 
         verify(gymRepository).findById(gymId);
         verify(userGateway).managerExists(updateGymInput.managerId());
+        verify(gymRepository).existsByAddress(updatedGym.getAddress());
         verify(gymRepository).save(gym);
         verifyNoMoreInteractions(gymRepository, userGateway);
     }
@@ -120,11 +124,18 @@ class UpdateGymUseCaseTest {
                 "updated-neighborhood",
                 "updated-city",
                 "updated-state"));
+        var newAddress = GymAddress.newAddress("updated-street-name",
+                "updated-number",
+                "updated-neighborhood",
+                "updated-city",
+                "updated-state");
 
         gym.updatePhone("updated-phone-num");
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
+        when(gymRepository.existsByAddress(newAddress))
+                .thenReturn(false);
         when(gymRepository.save(any(Gym.class)))
                 .thenReturn(gym);
 
@@ -135,6 +146,7 @@ class UpdateGymUseCaseTest {
 
         verify(gymRepository).findById(gymId);
         verify(userGateway, never()).managerExists(any(UUID.class));
+        verify(gymRepository).existsByAddress(newAddress);
         verify(gymRepository).save(gym);
         verifyNoMoreInteractions(gymRepository, userGateway);
     }
