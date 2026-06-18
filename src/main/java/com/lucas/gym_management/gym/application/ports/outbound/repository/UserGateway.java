@@ -7,5 +7,5 @@ public interface UserGateway {
 
     boolean userExists(UUID uuid);
 
-    boolean canUserBeRemoved(UUID userID);
+    boolean studentHasActiveMembership(UUID memberId);
 }

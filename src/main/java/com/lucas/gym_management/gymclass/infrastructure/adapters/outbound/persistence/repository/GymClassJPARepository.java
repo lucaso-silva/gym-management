@@ -44,4 +44,6 @@ public interface GymClassJPARepository extends JpaRepository<GymClassJPAEntity, 
                                 @Param("room") String room,
                                 @Param("startTime") LocalTime startTime,
                                 @Param("endTime") LocalTime endTime);
+
+    boolean existsByGymIdAndInstructorId(UUID gymId, UUID instructorId);
 }

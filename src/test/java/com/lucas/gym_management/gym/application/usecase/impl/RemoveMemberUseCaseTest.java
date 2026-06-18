@@ -1,10 +1,11 @@
 package com.lucas.gym_management.gym.application.usecase.impl;
 
 import com.lucas.gym_management.gym.application.domain.model.Gym;
-import com.lucas.gym_management.gym.application.exceptions.ApplicationException;
+import com.lucas.gym_management.gym.application.domain.model.exceptions.UserNotMemberException;
 import com.lucas.gym_management.gym.application.exceptions.GymNotFoundException;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
+import com.lucas.gym_management.gym.application.usecase.validator.MemberRemovalValidator;
 import com.lucas.gym_management.gym.factory.GymFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,6 +29,9 @@ class RemoveMemberUseCaseTest {
     @Mock
     private UserGateway userGateway;
 
+    @Mock
+    private MemberRemovalValidator memberRemovalValidator;
+
     @InjectMocks
     private RemoveMemberUseCaseImpl removeMemberUseCase;
 
@@ -42,8 +46,6 @@ class RemoveMemberUseCaseTest {
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
-        when(userGateway.canUserBeRemoved(memberId))
-                .thenReturn(true);
         when(gymRepository.save(any(Gym.class)))
                 .thenReturn(gym);
 
@@ -82,7 +84,6 @@ class RemoveMemberUseCaseTest {
         assertEquals("Gym not found with id: %s".formatted(gymId),exception.getMessage());
 
         verify(gymRepository).findById(any(UUID.class));
-        verify(userGateway, never()).canUserBeRemoved(any(UUID.class));
         verify(gymRepository, never()).save(any(Gym.class));
         verifyNoMoreInteractions(gymRepository);
     }
@@ -90,7 +91,7 @@ class RemoveMemberUseCaseTest {
     //TODO: @Test void shouldThrowApplicationException_whenMemberCannotBeRemoved()
 
     @Test
-    void shouldThrowDomainException_whenMemberDoesNotExist(){
+    void shouldThrowUserNotMemberException_whenMemberDoesNotExist(){
         var gym = GymFactory.buildGym();
         var gymId = gym.getId();
         var memberId = UUID.randomUUID();
@@ -101,15 +102,13 @@ class RemoveMemberUseCaseTest {
 
         when(gymRepository.findById(gymId))
                 .thenReturn(Optional.of(gym));
-        when(userGateway.canUserBeRemoved(anotherMemberId))
-                .thenReturn(false);
 
-        ApplicationException exception = assertThrows(
-                ApplicationException.class,
+        UserNotMemberException exception = assertThrows(
+                UserNotMemberException.class,
                 () -> removeMemberUseCase.removeMember(userId,gymId,anotherMemberId)
         );
 
-        assertEquals("User cannot be removed because they are still associated with the system", exception.getMessage());
+        assertEquals("User is not a gym member", exception.getMessage());
 
         verify(gymRepository).findById(any(UUID.class));
         verify(gymRepository, never()).save(any(Gym.class));

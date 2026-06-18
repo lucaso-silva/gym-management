@@ -9,6 +9,7 @@ import com.lucas.gym_management.gymclass.application.ports.inbound.manage_studen
 import com.lucas.gym_management.gymclass.application.ports.inbound.update.UpdateGymClassUseCase;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymClassRepository;
 import com.lucas.gym_management.gymclass.application.ports.outbound.repository.GymGateway;
+import com.lucas.gym_management.gymclass.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.gymclass.application.usecase.impl.*;
 import com.lucas.gym_management.gymclass.application.usecase.validator.GymMemberValidator;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GymClassUseCasesConfig {
+
+    @Bean
+    public GymMemberValidator gymMemberValidator(GymGateway gymGateway, UserGateway userGateway){
+        return new GymMemberValidator(gymGateway, userGateway);
+    }
+
     @Bean
     public CreateGymClassUseCase createGymClassUseCase(GymClassRepository gymClassRepository, GymGateway gymGateway, GymMemberValidator gymMemberValidator){
         return new CreateGymClassUseCaseImpl(gymClassRepository, gymGateway, gymMemberValidator);

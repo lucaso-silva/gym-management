@@ -7,14 +7,22 @@ import com.lucas.gym_management.gym.application.ports.inbound.list.ListGymsUseCa
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.AddMemberUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.manage_members.RemoveMemberUseCase;
 import com.lucas.gym_management.gym.application.ports.inbound.update.UpdateGymUseCase;
+import com.lucas.gym_management.gym.application.ports.outbound.repository.GymClassGateway;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.GymRepository;
 import com.lucas.gym_management.gym.application.ports.outbound.repository.UserGateway;
 import com.lucas.gym_management.gym.application.usecase.impl.*;
+import com.lucas.gym_management.gym.application.usecase.validator.MemberRemovalValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GymUseCasesConfig {
+
+    @Bean
+    public MemberRemovalValidator memberRemovalValidator(UserGateway userGateway, GymClassGateway gymClassGateway) {
+        return new MemberRemovalValidator(userGateway, gymClassGateway);
+    }
+
     @Bean
     public CreateGymUseCase createGymUseCase(GymRepository gymRepository){
         return new CreateGymUseCaseImpl(gymRepository);
@@ -46,7 +54,7 @@ public class GymUseCasesConfig {
     }
 
     @Bean
-    public RemoveMemberUseCase removeMemberUseCase(GymRepository gymRepository, UserGateway userGateway){
-        return new RemoveMemberUseCaseImpl(gymRepository, userGateway);
+    public RemoveMemberUseCase removeMemberUseCase(GymRepository gymRepository, MemberRemovalValidator memberRemovalValidator){
+        return new RemoveMemberUseCaseImpl(gymRepository, memberRemovalValidator);
     }
 }
